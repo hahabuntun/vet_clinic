@@ -1,0 +1,58 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.filter-container {
+    text-align: center;
+    padding: 20px;
+    background-color: #f3f3f3;
+    margin-top: 60px; /* учитываем высоту навигационного меню */
+}
+
+ul.info { /* Стили применяются только к списку с классом "info" */
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    margin-top: 1%;
+  }
+  
+  ul.info li {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    margin: 3px 30%;
+    text-align: left;
+  }
+  
+  ul.info li:hover {
+    background-color: #e0e0e0;
+  }
+
+.appointments {
+    margin-top: 20px;
+}
+
+.appointment {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 2%;
+}
+
+
+
+.appointment button {
+    background-color: #4CAF50; /* Зеленый цвет для кнопки Одобрить */
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.appointment button.reject {
+    background-color: #f44336; /* Красный цвет для кнопки Отказать */
+}

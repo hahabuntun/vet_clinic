@@ -1,0 +1,28 @@
+for each person in client data make similar list of pets with dummy data. also make it so that pets list is inside clientsData for each person
+also for each pet add list of its tests(each test contains test name, filename, date)
+const clientsData = [
+            { passport: 123412234, fatherName:"Андреевич", firstName: 'Иван', lastName: 'Петров', email: 'ivan@example.com', phone: '123456789', id: 1 },
+            { passport: 12341243, fatherName:"Ильгизович", firstName: 'Мария', lastName: 'Сидорова', email: 'maria@example.com', phone: '987654321', id: 2 },
+            { passport: 123412, fatherName:"Анатольевич", firstName: 'Иван', lastName: 'Петров', email: 'ivan@example.com', phone: '123456789', id: 1 },
+            { passport: 123523, fatherName:"Сергеевич", firstName: 'Мария', lastName: 'Сидорова', email: 'maria@example.com', phone: '987654321', id: 2 },
+            { passport: 1223, fatherName:"Алексеевич", firstName: 'Иван', lastName: 'Петров', email: 'ivan@example.com', phone: '123456789', id: 1 },
+            { passport: 121123, fatherName:"Антонов", firstName: 'Мария', lastName: 'Сидорова', email: 'maria@example.com', phone: '987654321', id: 2 }
+        ];
+
+const pets = [
+    {id: 1, name: 'Кот', passport: '123456789', nickname: 'Мурзик', age: '5 лет', weight: '4 кг', breed: 'Шотландская вислоухая', icon: 'cat-icon.png'},
+    {id: 2, name: 'Собака', passport: '987654321', nickname: 'Рекс', age: '3 года', weight: '10 кг', breed: 'Лабрадор', icon: 'dog-icon.png'},
+    {id: 3, name: 'Хомяк', passport: '555555555', nickname: 'Буся', age: '1 год', weight: '0.2 кг', breed: 'Джунгарский хомяк', icon: 'hamster-icon.png'},
+    {id: 4, name: 'Попугай', passport: '777777777', nickname: 'Кеша', age: '2 года', weight: '0.5 кг', breed: 'Ара', icon: 'parrot-icon.png'}
+];
+
+
+also for each pet make a list of its medical appointments. each appointment should contain information: appointment_type, date_time, doctor_name, doctor_surname, doctor_thirdname, list of diagnosys(names and dates), list of procedures that were conducted
+nested structure should look like this: clientsData = [{pets: [{id: 1, name: 'Кот', passport: '123456789', nickname: 'Мурзик', age: '5 лет', weight: '4 кг', breed: 'Шотландская вислоухая', icon: 'cat-icon.png', appointments:[{id: 1, appointment_type: "test", doctor_name: "василий"...},...],
+tests:[
+    {id: 1, name: "blood test", filename: "blood.pdf", date: '24-12-2002'},...
+]},...],
+ passport: 123412234, fatherName:"Андреевич", firstName: 'Иван', lastName: 'Петров', email: 'ivan@example.com', phone: '123456789', id: 1 },...]
+for each person add 4 animals, for each animal add 4 test results and 4 appointments, for each appointment add 2 diagnosis and 4 conducted procedures
+return me result with data which is similar to real world, not the code
+add data for all pets and for all clients do not shorten your result

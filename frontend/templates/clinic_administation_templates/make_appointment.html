@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../../static/css/make_appointment.css">
+<link rel="stylesheet" href="../../static/css/basic_nav.css">
+<link rel="stylesheet" href="../../static/css/list.css">
+<link rel="stylesheet" href="../../static/css/bookings.css">
+<title>Veterinary Clinic Booking</title>
+</head>
+<body>
+    <header>
+        <!-- Navbar -->
+        <nav>
+            <ul>
+                <li><a href="clients.html">Управлять клиентами</a></li>
+                <li><a href="doctor_schedule.html">Управлять расписанием врачей</a></li>
+                <li><a href="confirmed_bookings.html">Подтвержденные записи</a></li>
+                <li><a href="unconfirmed_bookings.html">Неподтвержденные записи</a></li>
+                <li><a href="make_appointment.html">Записть клиента</a></li>
+                <li><a href="#">Выход</a></li>
+            </ul>
+        </nav>
+    </header>
+    <h1>Запись в ветеринарную клинику</h1>
+    <div id="booking_filter" class="filter-container">
+        <input type="text" class="dataInput" id="passportSearch" placeholder="Серия и номер пасспорта">
+        <button id="searchButton">Поиск клиента</button>
+        <ul class="info">
+            <li>ID</li>
+            <li>Имя</li>
+            <li>Фамилия</li>
+            <li>Отчество</li>
+            <li>Пасспорт</li>
+            <li>Телефон</li>
+            <li>Email</li>
+        </ul>
+    </div>
+    
+
+    <label for="service">Выберите услугу:</label>
+    <select id="service">
+        <option value="service1">Service 1</option>
+        <option value="service2">Service 2</option>
+        <option value="service3">Service 3</option>
+    </select>
+    <label for="date">Выберите дату:</label>
+    <input type="date" id="date">
+    <label for="doctor">Select Doctor:</label>
+    <select id="doctor">
+        <option value="doctor1">Doctor 1</option>
+        <option value="doctor2">Doctor 2</option>
+    </select>
+    <label for="time">Выберите время:</label>
+    <select id="time">
+        <option value="time1">Time 1</option>
+        <option value="time2">Time 2</option>
+    </select>
+    <label for="pet">Выберите питомца:</label>
+    <select id="pet">
+        <option value="pet1">Pet 1</option>
+        <option value="pet2">Pet 2</option>
+    </select>
+    <button onclick="bookAppointment()">Book Appointment</button>
+    <script>
+        function bookAppointment() {
+    const service = document.getElementById('service').value;
+    const selectedDate = document.getElementById('date').value;
+    const doctor = document.getElementById('doctor').value;
+    const time = document.getElementById('time').value;
+    const pet = document.getElementById('pet').value;
+
+    // Here you can add logic to check if the selected date, service, and doctor are available for booking
+    // If available, proceed with the booking process, else show an alert that the slot is not available
+    // You can also send this information to the server for recording the appointment
+}
+    </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+-finish html and css on all of the pages
+---finish logical structure
+---finish design of existing pages
+---fix login pages
+---make client pages
+
+-make dummy data for interaction with js
+---client data
+---animal data for each client
+---doctor data
+---doctor schedule data
+---doctor appointment data(confirmed and uncofirmed bookings and finished appointments)
+
+-finish js
+
+-make js call to api endpoints
+
+
+-make endpoints
+
+-move fake data to database
+
+-finish endpointsS
+
+19-23:web
+23-1:paps
+1-3:vuc
