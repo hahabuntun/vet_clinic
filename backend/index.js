@@ -1,9 +1,6 @@
 const mongoose = require("mongoose");
 const express = require("express");
 
-const Client = require("./models/client.js");
-
-Client.create();
 
 var app = express();
 
