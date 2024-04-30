@@ -11,3 +11,6 @@ router.post('/doctor_login', verify_doctor_token, login_worker);
 router.post('/receptionist_login', verify_receptionist_token, login_worker);
 
 router.post('/admin_login', verify_admin_token, login_worker);
+
+
+module.exports = router;

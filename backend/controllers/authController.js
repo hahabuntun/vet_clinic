@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const Worker = require("./models/worker.js");
+const Worker = require("../models/worker.js");
 const Client = require("../models/client.js");
 
 
 
-exports.register_worker =  async (req, res) => {
+module.exports.register_worker =  async (req, res) => {
   try {
     const { email, password, name, second_name, third_name, phone, passport, type } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -22,7 +22,7 @@ exports.register_worker =  async (req, res) => {
   };
 
 
-  exports.register_client = async (req, res) => {
+module.exports.register_client = async (req, res) => {
     try {
       const { email, password, name, second_name, third_name, phone, passport } = req.body;
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -36,7 +36,7 @@ exports.register_worker =  async (req, res) => {
     }
     };
 
-exports.login_worker = async (req, res) => {
+module.exports.login_worker = async (req, res) => {
   try {
     const { email, password } = req.body;
     const worker = await Worker.findOne({ email });
@@ -57,7 +57,7 @@ exports.login_worker = async (req, res) => {
   };
 
 
-  exports.login_client = async (req, res) => {
+module.exports.login_client = async (req, res) => {
     try {
       const { email, password } = req.body;
       const client = await Client.findOne({ email });

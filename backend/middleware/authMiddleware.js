@@ -1,7 +1,7 @@
 
 const jwt = require('jsonwebtoken');
 
-const Worker = require("./models/worker.js");
+const Worker = require("../models/worker.js");
 const Client = require("../models/client.js");
 
 

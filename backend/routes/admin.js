@@ -5,3 +5,6 @@ const { verify_admin_token } = require("../middleware/authMiddleware");
 
 
 router.post('/add_worker', verify_admin_token, register_worker);
+
+
+module.exports = router;

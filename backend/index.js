@@ -4,27 +4,14 @@ const express = require("express");
 
 var app = express();
 
+
+const login_routes = require("./routes/login");
+const admin_routes = require("./routes/admin");
+
 app.use(express.json())
 
-
-app.get('/',(req,res,next)=>{
-    //Создадим новый handler который сидить по пути `/`
-    res.send('Hello, World!');
-    // Отправим привет миру!
-});
-
-
-
-
-
-app.get("/", (req, res) =>{
-    res.send("Hello from node api")
-});
-
-
-app.post("/api/clients", (req, res)=>{
-
-});
+app.use('/', login_routes);
+app.use('/', admin_routes);
 
 
 mongoose.connect("mongodb://root:root@127.0.0.1:27017/").then(()=>{
