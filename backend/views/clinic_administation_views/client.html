@@ -1,0 +1,123 @@
+<!-- системный администратор добавляет врачей и администраторов в систему -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Добавление сотрудника</title>
+<link rel="stylesheet" href="../../static/css/basic_list.css">
+<link rel="stylesheet" href="../../static/css/basic_form.css">
+<link rel="stylesheet" href="../../static/css/basic_nav.css">
+<link rel="stylesheet" href="../../static/css/list.css">
+</head>
+<body>
+    <header>
+        <!-- Navbar -->
+        <nav>
+            <ul>
+                <li><a href="clients.html">Управлять клиентами</a></li>
+                <li><a href="doctor_schedule.html">Управлять расписанием врачей</a></li>
+                <li><a href="confirmed_bookings.html">Подтвержденные записи</a></li>
+                <li><a href="unconfirmed_bookings.html">Неподтвержденные записи</a></li>
+                <li><a href="make_appointment.html">Записть клиента</a></li>
+                <li><a href="#">Выход</a></li>
+            </ul>
+        </nav>
+    </header>
+    <ul class="info">
+        <li>ID</li>
+        <li>Имя</li>
+        <li>Фамилия</li>
+        <li>Отчество</li>
+        <li>Пасспорт</li>
+        <li>Телефон</li>
+        <li>Email</li>
+    </ul>
+
+    <h2 style="text-align: center;">Животные</h1>
+
+    <div class="add-container">
+        <input type="text" class="dataInput" id="nameAdd" placeholder="Название">
+        <input type="text" class="dataInput" id="breedAdd" placeholder="Порода">
+        <input type="text" class="dataInput" id="nicknameAdd" placeholder="Кличка">
+        <input type="text" class="dataInput" id="passportAdd" placeholder="Пасспорт животного">
+        <input type="text" class="dataInput" id="ageAdd" placeholder="Возраст">
+        <input type="text" class="dataInput" id="weightAdd" placeholder="Вес">
+        <input type="text" class="dataInput" id="imageAdd" placeholder="Картинка">
+        <button id="addButton">Добавить</button>
+    </div>
+
+    <div class="edit-container">
+        <input type="text" class="dataInput" id="nameEdit" placeholder="Название">
+        <input type="text" class="dataInput" id="breedEdit" placeholder="Порода">
+        <input type="text" class="dataInput" id="nicknameEdit" placeholder="Кличка">
+        <input type="text" class="dataInput" id="passportEdit" placeholder="Пасспорт животного">
+        <input type="text" class="dataInput" id="ageEdit" placeholder="Возраст">
+        <input type="text" class="dataInput" id="weightEdit" placeholder="Вес">
+        <input type="text" class="dataInput" id="imageEdit" placeholder="Картинка">
+        <button id="editButton">Изменить</button>
+    </div>
+
+    <div class="filter-container">
+        <input type="text" class="dataInput" id="idSearch" placeholder="ID">
+        <input type="text" class="dataInput" id="nameSearch" placeholder="Название">
+        <input type="text" class="dataInput" id="breedSearch" placeholder="Порода">
+        <input type="text" class="dataInput" id="nicknameSearch" placeholder="Кличка">
+        <input type="text" class="dataInput" id="passportSearch" placeholder="Пасспорт животного">
+        <input type="text" class="dataInput" id="ageSearch" placeholder="Возраст">
+        <input type="text" class="dataInput" id="weightSearch" placeholder="Вес">
+        <input type="text" class="dataInput" id="imageSearch" placeholder="Картинка">
+        <button id="searchButton">Поиск</button>
+    </div>
+
+
+    <div class="pet-list" id="petListContainer">
+        <div id="petTableContainer">
+            <table class="pet-table" id="petTable">
+
+            </table>
+        </div>
+    </div>
+    <script>
+
+
+const pets = [
+    {id: 1, name: 'Кот', passport: '123456789', nickname: 'Мурзик', age: '5 лет', weight: '4 кг', breed: 'Шотландская вислоухая', icon: 'cat-icon.png'},
+    {id: 2, name: 'Собака', passport: '987654321', nickname: 'Рекс', age: '3 года', weight: '10 кг', breed: 'Лабрадор', icon: 'dog-icon.png'},
+    {id: 3, name: 'Хомяк', passport: '555555555', nickname: 'Буся', age: '1 год', weight: '0.2 кг', breed: 'Джунгарский хомяк', icon: 'hamster-icon.png'},
+    {id: 4, name: 'Попугай', passport: '777777777', nickname: 'Кеша', age: '2 года', weight: '0.5 кг', breed: 'Ара', icon: 'parrot-icon.png'}
+];
+        function renderPetList() {
+            const table = document.getElementById('petTable');
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th width="5%">ID</th>
+                        <th width="15%">Название</th>
+                        <th width="15%">Порода</th>
+                        <th width="15%">Кличка</th>
+                        <th width="15%">Пасспорт животного</th>
+                        <th width="15%">Возраст</th>
+                        <th width="10%">Вес</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${pets.map(pet => `
+                        <tr>
+                            <td width="10%">${pet.id}</td>
+                            <td width="15%">${pet.name}</td>
+                            <td width="15%">${pet.breed}</td>
+                            <td width="15%">${pet.nickname}</td>
+                            <td width="15%">${pet.passport}</td>
+                            <td width="15%">${pet.age}</td>
+                            <td width="15%">${pet.weight}</td>
+                        </tr>`).join('')}
+                </tbody>
+            `;
+        }
+
+        renderPetList();
+    </script>
+</body>
+</html>

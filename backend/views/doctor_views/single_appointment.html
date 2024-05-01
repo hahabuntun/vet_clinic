@@ -1,0 +1,120 @@
+<!-- На этой странице врач заполняет перечень проведенных процедур
+На основе этого перечня с клиента будет взыматься плата(не входит в рамки системы)
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Информация по текущему приему</title>
+    <link rel="stylesheet" href="../../static/css/appointment_info.css">
+    <link rel="stylesheet" href="../../static/css/basic_nav.css">
+</head>
+<body>
+    <header>
+        <!-- Navbar -->
+        <nav>
+            <ul>
+                <li><a href="view_appointments.html">Приемы</a></li>
+                <li><a href="animal_card.html">Поиск животного</a></li>
+                <li><a href="booking_schedule.html">Расписание записей</a></li>
+                <li><a href="#">Выход</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div id="page-container">
+        <h1>Информация по текущему приему</h1>
+
+        <h2>Детали приема:</h2>
+        <p>Тип приема: </p>
+        <p>Дата и время приема: <span id="datetime"></span></p>
+        <p>Принимающий врач: </p>
+        <p>Имя животного: <span id="animalName"></span></p>
+        <p>Порода: <span id="breed"></span></p>
+        <p>Возраст: <span id="age"></span></p>
+        <a href="./animal_card.html">Карточка животного</a>
+        <hr>
+
+        <h2>Проведенные операции:</h2>
+        <ul id="operationsList">
+            <!-- Здесь будут отображаться проведенные операции -->
+        </ul>
+        <form id="operationForm">
+            <label for="operationName">Название операции:</label>
+            <input type="text" id="operationName" name="operationName">
+            <button type="button" onclick="addOperation()">Добавить операцию</button>
+        </form>
+        <hr>
+
+        <h2>Симптомы животного: </h2>
+        <ul id="symptomsList">
+            <!-- Здесь будут отображаться проведенные операции -->
+        </ul>
+        <form id="symptomForm">
+            <label for="symptomName">Название симптома:</label>
+            <input type="text" id="symptomName" name="symptomName">
+            <button type="button" onclick="addSymptom()">Добавить симптом</button>
+        </form>
+        <hr>
+
+        <h2>Поставленный диагноз: </h2>
+        <p id="diagnosys">Цироз</p>
+        <form id="diagnosysForm">
+            <label for="diagnosysName">Диагноз:</label>
+            <input type="text" id="diagnosysName" name="diagnosysName">
+            <button type="button" onclick="addDiagnosys()">Поставить диагноз</button>
+        </form>
+        <hr>
+
+        <h2>Завершить прием:</h2>
+        <button type="button" onclick="finishAppointment()">Завершить прием</button>
+    </div>
+    
+
+    <script>
+        // Функция для добавления операции в список
+        function addOperation() {
+            const operationName = document.getElementById("operationName").value;
+            const newListElement = document.createElement("li");
+            newListElement.textContent = operationName;
+            document.getElementById("operationsList").appendChild(newListElement);
+            document.getElementById("operationForm").reset(); // Очистить форму после добавления
+        }
+
+        function addSymptom() {
+            const symptomName = document.getElementById("symptomName").value;
+            const newListElement = document.createElement("li");
+            newListElement.textContent = symptomName;
+            document.getElementById("symptomsList").appendChild(newListElement);
+            document.getElementById("symptomForm").reset(); // Очистить форму после добавления
+        }
+
+        function addDiagnosys() {
+            const diagnosysName = document.getElementById("diagnosysName").value;
+            document.getElementById("diagnosys").innerText = diagnosysName;
+            document.getElementById("operationForm").reset(); // Очистить форму после добавления
+        }
+
+        // Функция для завершения приема
+        function finishAppointment() {
+            // Дополнительные действия по завершению приема (можно добавить здесь)
+            alert("Прием завершен!");
+        }
+
+        // Дата и время приема
+        const currentDate = new Date().toLocaleDateString();
+        const currentTime = new Date().toLocaleTimeString();
+        document.getElementById("datetime").textContent = currentDate + " " + currentTime;
+
+        // Заполнение информации о животном
+        const animalName = "Рекс";
+        const breed = "Лабрадор";
+        const age = "3 года";
+        document.getElementById("animalName").textContent = animalName;
+        document.getElementById("breed").textContent = breed;
+        document.getElementById("age").textContent = age;
+    </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!-- системный администратор добавляет врачей и администраторов в систему -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Добавление сотрудника</title>
+<link rel="stylesheet" href="/styles/css/basic_list.css">
+<link rel="stylesheet" href="/styles/css/basic_form.css">
+<link rel="stylesheet" href="/styles/css/basic_nav.css">
+</head>
+<body>
+    <header>
+        <!-- Navbar -->
+        <nav>
+            <ul>
+                <li><a href="/workers">Управлять персоналом</a></li>
+                <li><a href="/services">Управлять услугами</a></li>
+                <li><a href="#">Выход</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="add-container">
+        <input type="text" class="dataInput" id="nameAdd" placeholder="Имя">
+        <input type="text" class="dataInput" id="surnameAdd" placeholder="Фамилия">
+        <input type="text" class="dataInput" id="fatherNameAdd" placeholder="Отчество">
+        <input type="text" class="dataInput" id="emailAdd" placeholder="Email">
+        <input type="text" class="dataInput" id="passwordAdd" placeholder="Пароль">
+        <input type="text" class="dataInput" id="phoneAdd" placeholder="Телефон">
+        <button id="addButton">Добавить</button>
+    </div>
+
+    <div class="edit-container">
+        <input type="text" class="dataInput" id="nameEdit" placeholder="Имя">
+        <input type="text" class="dataInput" id="surnameEdit" placeholder="Фамилия">
+        <input type="text" class="dataInput" id="fatherNameEdit" placeholder="Отчество">
+        <input type="text" class="dataInput" id="emailEdit" placeholder="Email">
+        <input type="text" class="dataInput" id="passwordEdit" placeholder="Пароль">
+        <input type="text" class="dataInput" id="phoneEdit" placeholder="Телефон">
+        <button id="editButton">Изменить</button>
+    </div>
+
+    <div class="filter-container">
+        <input type="text" class="dataInput" id="idSearch" placeholder="ID">
+        <input type="text" class="dataInput" id="nameSearch" placeholder="Имя">
+        <input type="text" class="dataInput" id="surnameSearch" placeholder="Фамилия">
+        <input type="text" class="dataInput" id="fatherNameSearch" placeholder="Отчество">
+        <input type="text" class="dataInput" id="emailSearch" placeholder="Email">
+        <input type="text" class="dataInput" id="phoneSearch" placeholder="Телефон">
+        <button id="searchButton">Поиск</button>
+    </div>
+
+    <div class="remove-container">
+        <input type="text" class="dataInput" id="idDelete" placeholder="ID">
+        <button id="removeButton">Удалить</button>
+    </div>
+
+
+
+    <div class="employee-list" id="employeeListContainer">
+        <div id="employeeTableContainer">
+            <table class="employee-table" id="employeeTable">
+                <thead>
+                    <tr>
+                        <th width="20%">Passport</th>
+                        <th width="20%">Email</th>
+                        <th width="15%">Имя</th>
+                        <th width="15%">Фамилия</th>
+                        <th width="15%">Отчество</th>
+                        <th width="15%">Телефон</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% employees %>
+                    <% employees.forEach(employee => { %>
+                        <tr>
+                            <td width="20%"><%= employee.passport %></td>
+                            <td width="20%"><%= employee.email %></td>
+                            <td width="15%"><%= employee.name %></td>
+                            <td width="15%"><%= employee.second_name %></td>
+                            <td width="15%"><%= employee.third_name %></td>
+                            <td width="15%"><%= employee.phone %></td>
+                        </tr>
+                      <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+    </script>
+</body>
+</html>

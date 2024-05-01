@@ -1,0 +1,116 @@
+<!-- системный администратор добавляет врачей и администраторов в систему -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Добавление сотрудника</title>
+<link rel="stylesheet" href="../../static/css/basic_list.css">
+<link rel="stylesheet" href="../../static/css/basic_form.css">
+<link rel="stylesheet" href="../../static/css/basic_nav.css">
+</head>
+<body>
+    <header>
+        <!-- Navbar -->
+        <nav>
+            <ul>
+                <li><a href="clients.html">Управлять клиентами</a></li>
+                <li><a href="doctor_schedule.html">Управлять расписанием врачей</a></li>
+                <li><a href="confirmed_bookings.html">Подтвержденные записи</a></li>
+                <li><a href="unconfirmed_bookings.html">Неподтвержденные записи</a></li>
+                <li><a href="make_appointment.html">Записть клиента</a></li>
+                <li><a href="#">Выход</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="add-container">
+        <input type="text" class="dataInput" id="nameAdd" placeholder="Имя">
+        <input type="text" class="dataInput" id="surnameAdd" placeholder="Фамилия">
+        <input type="text" class="dataInput" id="fatherNameAdd" placeholder="Отчество">
+        <input type="text" class="dataInput" id="emailAdd" placeholder="Email">
+        <input type="text" class="dataInput" id="passportAdd" placeholder="Серия и номер пасспорта">
+        <input type="text" class="dataInput" id="passwordAdd" placeholder="Пароль">
+        <input type="text" class="dataInput" id="phoneAdd" placeholder="Телефон">
+        <button id="addButton">Добавить</button>
+    </div>
+
+    <div class="edit-container">
+        <input type="text" class="dataInput" id="nameEdit" placeholder="Имя">
+        <input type="text" class="dataInput" id="surnameEdit" placeholder="Фамилия">
+        <input type="text" class="dataInput" id="fatherNameEdit" placeholder="Отчество">
+        <input type="text" class="dataInput" id="emailEdit" placeholder="Email">
+        <input type="text" class="dataInput" id="passportEdit" placeholder="Серия и номер пасспорта">
+        <input type="text" class="dataInput" id="passwordEdit" placeholder="Пароль">
+        <input type="text" class="dataInput" id="phoneEdit" placeholder="Телефон">
+        <button id="editButton">Изменить</button>
+    </div>
+
+    <div class="filter-container">
+        <input type="text" class="dataInput" id="idSearch" placeholder="ID">
+        <input type="text" class="dataInput" id="nameSearch" placeholder="Имя">
+        <input type="text" class="dataInput" id="surnameSearch" placeholder="Фамилия">
+        <input type="text" class="dataInput" id="fatherNameSearch" placeholder="Отчество">
+        <input type="text" class="dataInput" id="emailSearch" placeholder="Email">
+        <input type="text" class="dataInput" id="passportSearch" placeholder="Серия и номер пасспорта">
+        <input type="text" class="dataInput" id="phoneSearch" placeholder="Телефон">
+        <button id="searchButton">Поиск</button>
+    </div>
+
+
+
+    <div class="client-list" id="clientListContainer">
+        <div id="clientTableContainer">
+            <table class="client-table" id="clientTable">
+
+            </table>
+        </div>
+    </div>
+    <script>
+
+
+        const clientsData = [
+            { passport: 1234123, fatherName:"Андреевич", firstName: 'Иван', lastName: 'Петров', email: 'ivan@example.com', phone: '123456789', id: 1 },
+            { passport: 1234123, fatherName:"Ильгизович", firstName: 'Мария', lastName: 'Сидорова', email: 'maria@example.com', phone: '987654321', id: 2 },
+            { passport: 1234123, fatherName:"Анатольевич", firstName: 'Иван', lastName: 'Петров', email: 'ivan@example.com', phone: '123456789', id: 1 },
+            { passport: 1234123, fatherName:"Сергеевич", firstName: 'Мария', lastName: 'Сидорова', email: 'maria@example.com', phone: '987654321', id: 2 },
+            { passport: 1234123, fatherName:"Алексеевич", firstName: 'Иван', lastName: 'Петров', email: 'ivan@example.com', phone: '123456789', id: 1 },
+            { passport: 1234123, fatherName:"Антонов", firstName: 'Мария', lastName: 'Сидорова', email: 'maria@example.com', phone: '987654321', id: 2 }
+        ];
+
+        function renderClientList() {
+            const table = document.getElementById('clientTable');
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th width="5%">ID</th>
+                        <th width="15%">Email</th>
+                        <th width="15%">Имя</th>
+                        <th width="15%">Фамилия</th>
+                        <th width="15%">Отчество</th>
+                        <th width="15%">Номер и серия пасспорта</th>
+                        <th width="10%">Телефон</th>
+                        <th width="10%">Страница клиента</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${clientsData.map(client => `
+                        <tr>
+                            <td width="5%">${client.id}</td>
+                            <td width="15%">${client.email}</td>
+                            <td width="15%">${client.firstName}</td>
+                            <td width="15%">${client.lastName}</td>
+                            <td width="15%">${client.fatherName}</td>
+                            <td width="15%">${client.passport}</td>
+                            <td width="10%">${client.phone}</td>
+                            <td width="10%"><a href="./client.html">Больше</a></td>
+                        </tr>`).join('')}
+                </tbody>
+            `;
+        }
+
+        renderClientList();
+    </script>
+</body>
+</html>

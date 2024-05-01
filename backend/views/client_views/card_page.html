@@ -1,0 +1,73 @@
+<!-- На этой странице врач заполняет перечень проведенных процедур
+На основе этого перечня с клиента будет взыматься плата(не входит в рамки системы)
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Информация по текущему приему</title>
+    <link rel="stylesheet" href="../../static/css/appointment_info.css">
+    <link rel="stylesheet" href="../../static/css/basic_nav.css">
+</head>
+<body>
+    <header>
+        <!-- Navbar -->
+        <nav>
+            <ul>
+                <li><a href="main.html">Животные</a></li>
+                <li><a href="bookings.html">Записи</a></li>
+                <li><a href="#">Выход</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div id="page-container">
+
+        <p>Тип приема: Осмотр</p>
+        <p>Дата и время приема: <span id="datetime"></span></p>
+        <p>Принимающий врач: </p>
+        <p>Имя животного: <span id="animalName"></span></p>
+        <p>Порода: <span id="breed"></span></p>
+        <p>Возраст: <span id="age"></span></p>
+        <a href="./animal_card.html">Карточка животного</a>
+        <hr>
+
+        <h2>Проведенные операции:</h2>
+        <ul id="operationsList">
+            <li>operation1</li>
+            <li>operation2</li>
+        </ul>
+    
+        <hr>
+
+        <h2>Симптомы животного: </h2>
+        <ul id="symptomsList">
+            <li>1</li><!-- Здесь будут отображаться проведенные операции -->
+            <li>2</li>
+        </ul>
+        <hr>
+
+        <h2>Поставленный диагноз: </h2>
+        <p id="diagnosys">Цироз</p>
+        <hr>
+    </div>
+    
+
+    <script>
+        // Дата и время приема
+        const currentDate = new Date().toLocaleDateString();
+        const currentTime = new Date().toLocaleTimeString();
+        document.getElementById("datetime").textContent = currentDate + " " + currentTime;
+
+        // Заполнение информации о животном
+        const animalName = "Рекс";
+        const breed = "Лабрадор";
+        const age = "3 года";
+        document.getElementById("animalName").textContent = animalName;
+        document.getElementById("breed").textContent = breed;
+        document.getElementById("age").textContent = age;
+    </script>
+</body>
+</html>
