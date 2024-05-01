@@ -2,9 +2,10 @@ const mongoose = require("mongoose");
 const express = require("express");
 
 
+
 var app = express();
 
-
+const Worker = require("./models/worker")
 const login_routes = require("./routes/login");
 const admin_routes = require("./routes/admin");
 
@@ -14,7 +15,7 @@ app.use('/', login_routes);
 app.use('/', admin_routes);
 
 
-mongoose.connect("mongodb://root:root@127.0.0.1:27017/").then(()=>{
+mongoose.connect("mongodb://127.0.0.1:27017/").then(()=>{
     console.log("Connected to database");
     app.listen(3000, ()=>{
         console.log("Server is running on port 3000")

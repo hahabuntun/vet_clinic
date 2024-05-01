@@ -47,9 +47,10 @@ module.exports.login_worker = async (req, res) => {
     if (!passwordMatch) {
     return res.status(401).json({ error: 'Authentication failed' });
     }
-    const token = jwt.sign({ id: worker._id }, 'your-secret-key', {
+    const token = jwt.sign({ email: email }, "secret", {
     expiresIn: '1h',
     });
+    console.log(token.length);
     res.status(200).json({ token });
   } catch (error) {
     res.status(500).json({ error: 'Login failed' });
@@ -68,7 +69,7 @@ module.exports.login_client = async (req, res) => {
       if (!passwordMatch) {
       return res.status(401).json({ error: 'Authentication failed' });
       }
-      const token = jwt.sign({ id: client._id }, 'your-secret-key', {
+      const token = jwt.sign({ email: client.email }, "secret", {
       expiresIn: '1h',
       });
       res.status(200).json({ token });

@@ -10,32 +10,33 @@ async function verifyClientToken(req, res, next) {
     const token = req.header('Authorization');
     if (!token) return res.status(401).json({ error: 'Access denied' });
     try {
-        const decoded = jwt.verify(token, 'your-secret-key');
-        req.id = decoded.id;
-        const client = await Client.findOne({ _id:id });
+        
+        const decoded = jwt.verify(token.substring(7), "secret");
+        req.email = decoded.email;
+        const client = await Client.findOne({ email:decoded.email });
         if (!client){
-            throw new Error('client does not exist');
+            return res.status(401).json({ error: 'client does not exist or does not have permission' });
         }
         next();
     } catch (error) {
-        res.status(401).json({ error: 'Invalid token' });
+        res.status(401).json({ error: error.message });
     }
  };
 
 
- async function verifyAdminToken(req, res, next) {
+async function verifyAdminToken(req, res, next) {
     const token = req.header('Authorization');
     if (!token) return res.status(401).json({ error: 'Access denied' });
     try {
-        const decoded = jwt.verify(token, 'your-secret-key');
-        req.id = decoded.id;
-        const worker = await Worker.findOne({ _id:id });
+        const decoded = jwt.verify(token.substring(7), "secret");
+        req.email = decoded.email;
+        const worker = await Worker.findOne({ email:decoded.email });
         if (!worker || worker.type != "admin"){
-            throw new Error('worker does not exist or does not have permission');
+            return res.status(401).json({ error: 'worker does not exist or does not have permission' });
         }
         next();
     } catch (error) {
-        res.status(401).json({ error: 'Invalid token' });
+        res.status(401).json({ error: error.message, "hello": "world" });
     }
  };
 
@@ -44,15 +45,15 @@ async function verifyClientToken(req, res, next) {
     const token = req.header('Authorization');
     if (!token) return res.status(401).json({ error: 'Access denied' });
     try {
-        const decoded = jwt.verify(token, 'your-secret-key');
-        req.id = decoded.id;
-        const worker = await Worker.findOne({ _id:id });
+        const decoded = jwt.verify(token.substring(7), "secret");
+        req.email = decoded.email;
+        const worker = await Worker.findOne({ email:decoded.email });
         if (!worker || worker.type != "doctor"){
-            throw new Error('worker does not exist or does not have permission');
+            return res.status(401).json({ error: 'worker does not exist or does not have permission' });
         }
         next();
     } catch (error) {
-        res.status(401).json({ error: 'Invalid token' });
+        res.status(401).json({ error: error.message });
     }
  };
 
@@ -61,15 +62,15 @@ async function verifyClientToken(req, res, next) {
     const token = req.header('Authorization');
     if (!token) return res.status(401).json({ error: 'Access denied' });
     try {
-        const decoded = jwt.verify(token, 'your-secret-key');
-        req.id = decoded.id;
-        const worker = await Worker.findOne({ _id:id });
+        const decoded = jwt.verify(token.substring(7), "secret");
+        req.email = decoded.email;
+        const worker = await Worker.findOne({ email:decoded.email });
         if (!worker || worker.type != "receptionist"){
-            throw new Error('worker does not exist or does not have permission');
+            return res.status(401).json({ error: 'worker does not exist or does not have permission' });
         }
         next();
     } catch (error) {
-        res.status(401).json({ error: 'Invalid token' });
+        res.status(401).json({ error: error.message });
     }
  };
 
