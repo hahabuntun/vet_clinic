@@ -26,13 +26,12 @@
         </nav>
     </header>
     <ul class="info">
-        <li>ID</li>
-        <li>Имя</li>
-        <li>Фамилия</li>
-        <li>Отчество</li>
-        <li>Пасспорт</li>
-        <li>Телефон</li>
-        <li>Email</li>
+        <li>Имя - <%= client.name %></li>
+        <li>Фамилия - <%= client.second_name %></li>
+        <li>Отчество - <%= client.third_name %></li>
+        <li>Пасспорт - <%= client.passport %></li>
+        <li>Телефон - <%= client.phone %></li>
+        <li>Email - <%= client.email %></li>
     </ul>
 
     <h2 style="text-align: center;">Животные</h1>
@@ -75,49 +74,32 @@
     <div class="pet-list" id="petListContainer">
         <div id="petTableContainer">
             <table class="pet-table" id="petTable">
-
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Кличка</th>
+                        <th>Порода</th>
+                        <th>Пасспорт животного</th>
+                        <th>Возраст</th>
+                        <th>Карточка животного</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% pets.forEach(pet => { %>
+                        <tr>
+                            <td><%= pet.type %></td>
+                            <td><%= pet.name %></td>
+                            <td><%= pet.breed %></td>
+                            <td><%= pet.animal_passport %></td>
+                            <td><%= pet.age %></td>
+                            <td><a href="/clients/<%= client._id %>/pets/<%= pet._id %>">Больше</a></td>
+                        </tr>
+                      <% }); %>
+                </tbody>
             </table>
         </div>
     </div>
     <script>
-
-
-const pets = [
-    {id: 1, name: 'Кот', passport: '123456789', nickname: 'Мурзик', age: '5 лет', weight: '4 кг', breed: 'Шотландская вислоухая', icon: 'cat-icon.png'},
-    {id: 2, name: 'Собака', passport: '987654321', nickname: 'Рекс', age: '3 года', weight: '10 кг', breed: 'Лабрадор', icon: 'dog-icon.png'},
-    {id: 3, name: 'Хомяк', passport: '555555555', nickname: 'Буся', age: '1 год', weight: '0.2 кг', breed: 'Джунгарский хомяк', icon: 'hamster-icon.png'},
-    {id: 4, name: 'Попугай', passport: '777777777', nickname: 'Кеша', age: '2 года', weight: '0.5 кг', breed: 'Ара', icon: 'parrot-icon.png'}
-];
-        function renderPetList() {
-            const table = document.getElementById('petTable');
-            table.innerHTML = `
-                <thead>
-                    <tr>
-                        <th width="5%">ID</th>
-                        <th width="15%">Название</th>
-                        <th width="15%">Порода</th>
-                        <th width="15%">Кличка</th>
-                        <th width="15%">Пасспорт животного</th>
-                        <th width="15%">Возраст</th>
-                        <th width="10%">Вес</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${pets.map(pet => `
-                        <tr>
-                            <td width="10%">${pet.id}</td>
-                            <td width="15%">${pet.name}</td>
-                            <td width="15%">${pet.breed}</td>
-                            <td width="15%">${pet.nickname}</td>
-                            <td width="15%">${pet.passport}</td>
-                            <td width="15%">${pet.age}</td>
-                            <td width="15%">${pet.weight}</td>
-                        </tr>`).join('')}
-                </tbody>
-            `;
-        }
-
-        renderPetList();
     </script>
 </body>
 </html>

@@ -62,12 +62,13 @@ module.exports.delete_client_pet = async (req, res) => {
 module.exports.get_all_client_pets = async (req, res) => {
     try {
       const clientId = req.params.clientId;
-  
+      
       const pets = await Animal.find({ client_id: clientId });
-      const client = await Client.findById({ clientId })
-  
-      data = { client: client, pets: pets };
-      res.render(path.join('clinic_administration_views', 'client'), data);
+      console.log(pets);
+      const client = await Client.find({ _id: clientId })
+      data = { client: client[0], pets: pets };
+      
+      res.render(path.join('clinic_administation_views', 'client'), data);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Failed to retrieve pets' });

@@ -71,11 +71,21 @@
                         <th>Фамилия</th>
                         <th>Отчество</th>
                         <th>Телефон</th>
-                        <th>>Питомцы</th>
+                        <th>Питомцы</th>
                     </tr>
                 </thead>
                 <tbody>
-                    
+                    <% clients.forEach(client => { %>
+                        <tr>
+                            <td><%= client.passport %></td>
+                            <td><%= client.email %></td>
+                            <td><%= client.name %></td>
+                            <td><%= client.second_name %></td>
+                            <td><%= client.third_name %></td>
+                            <td><%= client.phone %></td>
+                            <td><a href="/clients/<%= client._id %>/pets">Больше</a></td>
+                        </tr>
+                      <% }); %>
                 </tbody>
             </table>
         </div>

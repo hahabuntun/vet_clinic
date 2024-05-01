@@ -19,13 +19,13 @@ const { add_service, get_all_services, edit_service, delete_service} = require("
 
 router.get("/workers",  get_all_workers);
 router.post('/workers', verify_admin_token, add_worker);
-router.patch('/workers/:workerId', edit_worker);
-router.delete('/workers/:workerId', delete_worker);
+router.patch('/workers/:workerId', verify_admin_token, edit_worker);
+router.delete('/workers/:workerId', verify_admin_token, delete_worker);
 
 
 router.get("/services", get_all_services);
 router.post('/services', verify_admin_token, add_service);
-router.patch('/services/:serviceId', edit_service)
-router.delete('/services/:serviceId', delete_service)
+router.patch('/services/:serviceId', verify_admin_token, edit_service)
+router.delete('/services/:serviceId', verify_admin_token, delete_service)
 
 module.exports = router;
