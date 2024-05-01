@@ -1,42 +1,51 @@
-
-const serviceTable = document.getElementById('serviceTable');
+const employeeTable = document.getElementById('employeeTable');
 const editModal = document.getElementById('editModal');
 const closeButton = document.querySelector('.close-button');
 const editForm = document.getElementById('editForm');
 const addForm = document.getElementById('addForm');
 const filterForm = document.getElementById('filterForm');
-var serviceId = "";
+var workerId = "";
 
 
-// Open modal and populate form
-serviceTable.addEventListener('click', (event) => {
+employeeTable.addEventListener('click', (event) => {
     const clickedElement = event.target;
     if (clickedElement.tagName === 'BUTTON' && clickedElement.textContent.trim() === 'Изменить') {
-        serviceId  = clickedElement.id.substring(3);
-        const serviceName = clickedElement.parentNode.parentNode.querySelector('td:first-child').textContent;
-        const servicePrice = clickedElement.parentNode.parentNode.querySelector('td:nth-child(2)').textContent;
+        workerId  = clickedElement.id.substring(3);
+        const employeePassport = clickedElement.parentNode.parentNode.querySelector('td:first-child').textContent;
+        const employeeName = clickedElement.parentNode.parentNode.querySelector('td:nth-child(2)').textContent;
+        const employeeSecondName = clickedElement.parentNode.parentNode.querySelector('td:nth-child(3)').textContent;
+        const employeeThirdName = clickedElement.parentNode.parentNode.querySelector('td:nth-child(4)').textContent;
+        const employeeEmail = clickedElement.parentNode.parentNode.querySelector('td:nth-child(5)').textContent;
+        const employeePhone = clickedElement.parentNode.parentNode.querySelector('td:nth-child(6)').textContent;
+        const employeeType = clickedElement.parentNode.parentNode.querySelector('td:nth-child(7)').textContent;
 
-        document.getElementById('serviceName').value = serviceName;
-        document.getElementById('servicePrice').value = servicePrice;
+        document.getElementById('employeePassport').value = employeePassport;
+        document.getElementById('employeeName').value = employeeName;
+        document.getElementById('employeeSecondName').value = employeeSecondName;
+        document.getElementById('employeeThirdName').value = employeeThirdName;
+        document.getElementById('employeeEmail').value = employeeEmail;
+        document.getElementById('employeePhone').value = employeePhone;
+        document.getElementById('employeeType').value = employeeType;
         editModal.style.display = 'block';
     }
     else if(clickedElement.tagName === 'BUTTON' && clickedElement.textContent.trim() === 'Удалить'){
-        serviceId  = clickedElement.id.substring(3);
-        deleteService(serviceId);
+        workerId  = clickedElement.id.substring(3);
+        deleteEmployee(workerId);
     }
 });
 
-// Close modal
+
 closeButton.addEventListener('click', () => {
     editModal.style.display = 'none';
 });
+
 
 // Handle form submission
 editForm.addEventListener('submit',  (event) => {
     event.preventDefault();
     const formData = new FormData(editForm);
     console.log(formData)
-    fetch(`/services/${serviceId}`, {
+    fetch(`/workers/${workerId}`, {
         method: 'PATCH',
         body: formData
     })
@@ -54,16 +63,13 @@ editForm.addEventListener('submit',  (event) => {
 
 // Close modal when clicking outside of modal content
 window.onclick = function(event) {
-if (event.target === editModal) {
-    editModal.style.display = 'none';
-}
+    if (event.target === editModal) {
+        editModal.style.display = 'none';
+    }
 };
 
-
-
-
-function deleteService(serviceId){
-    fetch(`/services/${serviceId}`, { // Replace with your actual endpoint
+function deleteEmployee(workerId){
+    fetch(`/workers/${workerId}`, { // Replace with your actual endpoint
         method: 'DELETE'
     })
     .then(response => {
@@ -75,7 +81,7 @@ function deleteService(serviceId){
         // You might want to refresh the table or update the UI here
         })
         .catch(error => {
-        console.error('Error deleting service:', error);
+        console.error('Error deleting worker:', error);
         // Handle errors
         });
 }
@@ -87,12 +93,12 @@ addForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
     // Создаем объект с данными для отправки на сервер
-    const formData = new FormData(addForm);
-    console.log(formData);
+    const fData = new FormData(addForm);
+    console.log(fData);
     // Отправляем POST запрос на сервер с помощью fetch API
-    fetch('/services/', {
+    fetch('/workers/', {
         method: 'POST',
-        body: formData
+        body: fData
     })
     .then(response => {
         if (response.status == 201){
@@ -120,5 +126,5 @@ filterForm.addEventListener('submit', (event) => {
         
     });
     console.log(queryParams.toString());
-    window.location.href = `/services?${queryParams.toString()}`
+    window.location.href = `/workers?${queryParams.toString()}`
 });

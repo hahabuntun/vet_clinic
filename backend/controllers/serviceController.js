@@ -11,8 +11,9 @@ module.exports.add_service = async (req, res) => {
         // Get the service data from the request body
         const data = JSON.parse(JSON.stringify(req.body));
         const { name, price } = data;
+        console.log(data);
 
-        const serv = await Service.find({name: name});
+        const serv = await Service.findOne({name: name});
         if (serv){
           return  res.status(400).json({ message: 'Service with this name already exists' });
         }
@@ -39,8 +40,6 @@ module.exports.edit_service = async (req, res) => {
     const serv = await Service.findOne({name: updates.name});
     console.log(serv)
     if (serv && serv._id != req.params.serviceId){
-      console.log(serv._id);
-      console.log(req.params.serviceId);
       return  res.status(400).json({ message: 'Service with this name already exists' });
     }
 
