@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
-
 const bcrypt = require('bcrypt');
-
+const path = require('path');
 
 const Client = require("../models/client.js");
 
@@ -13,7 +12,7 @@ module.exports.get_all_clients  = async (req, res) => {
     data = {
         clients: clients
     }
-    res.render(path.join('clinic_administration_views', 'clients'), data);
+    res.render(path.join('clinic_administation_views', 'clients'), data);
 };
 
 

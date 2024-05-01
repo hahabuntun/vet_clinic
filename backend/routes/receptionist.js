@@ -16,3 +16,5 @@ router.post('/clients/:clientId/pets', add_pet_to_client);
 router.get("/clients/:clientId/pets", get_all_client_pets)
 router.patch('/clients/:clientId/pets/:petId', edit_client_pet)
 router.delete('/clients/:clientId/pets/:petId', delete_client_pet)
+
+module.exports = router;

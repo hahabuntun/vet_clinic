@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
+const path = require('path');
+
 const Client = require("../models/client.js");
 const Animal = require("../models/animal.js");
+
+
 
 
 module.exports.add_pet_to_client = async (req, res) => {

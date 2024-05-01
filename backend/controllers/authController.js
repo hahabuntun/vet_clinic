@@ -7,11 +7,6 @@ const Client = require("../models/client.js");
 
 
 
-
-
-
-
-
 module.exports.login_worker = async (req, res) => {
   try {
     const { email, password } = req.body;

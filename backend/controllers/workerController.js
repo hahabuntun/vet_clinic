@@ -1,10 +1,8 @@
 const mongoose = require("mongoose");
-
 const bcrypt = require('bcrypt');
-const Worker = require("../models/worker.js");
-
-
 const path = require('path');
+
+const Worker = require("../models/worker.js");
 
 
 module.exports.get_all_workers  = async (req, res) => {
