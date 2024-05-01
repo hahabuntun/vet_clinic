@@ -51,44 +51,24 @@
     <div class="service-list" id="serviceListContainer">
         <div id="serviceTableContainer">
             <table class="service-table" id="serviceTable">
+                <thead>
+                    <tr>
+                        <th width="50%">Название</th>
+                        <th width="50%">Стоимость</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% services.forEach(service => { %>
+                        <tr>
+                            <td width="50%"><%= service.name %></td>
+                            <td width="50%"><%= service.price %></td>
+                        </tr>
+                      <% }); %>
+                </tbody>
             </table>
         </div>
     </div>
     <script>
-
-        // Данные о сотрудниках для временного отображения
-        const serviceData = [
-            { id: 1, title: 'Анализы', price: 2000},
-            { id: 2, title: 'Прическа', price: 3000},
-            { id: 3, title: 'Мытье', price: 4000},
-            { id: 4, title: 'Укол', price: 5000},
-            { id: 5, title: 'Осмотр', price: 6000},
-            { id: 6, title: 'Стрижка', price: 7000}
-        ];
-
-        // Вывод списка сотрудников
-        function renderServiceList() {
-            const table = document.getElementById('serviceTable');
-            table.innerHTML = `
-                <thead>
-                    <tr>
-                        <th width="20%">ID</th>
-                        <th width="40%">Название</th>
-                        <th width="40%">Стоимость</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${serviceData.map(service => `
-                        <tr>
-                            <td width="20%">${service.id}</td>
-                            <td width="40%">${service.title}</td>
-                            <td width="40%">${service.price}</td>
-                        </tr>`).join('')}
-                </tbody>
-            `;
-        }
-
-        renderServiceList();
     </script>
 </body>
 </html>

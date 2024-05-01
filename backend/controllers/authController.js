@@ -7,34 +7,10 @@ const Client = require("../models/client.js");
 
 
 
-module.exports.register_worker =  async (req, res) => {
-  try {
-    const { email, password, name, second_name, third_name, phone, passport, type } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const worker = new Worker({ email: email, password: hashedPassword, name: name,
-                              second_name: second_name, third_name: third_name,
-                              phone: phone, passport: passport, type: type });
-    await worker.save();
-    res.status(201).json({ message: 'Worker registered successfully' });
-  } catch (error) {
-  res.status(500).json({ error: 'Registration failed' });
-  }
-  };
 
 
-module.exports.register_client = async (req, res) => {
-    try {
-      const { email, password, name, second_name, third_name, phone, passport } = req.body;
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const client = new Client({ email: email, password: hashedPassword, name: name,
-                                second_name: second_name, third_name: third_name,
-                                phone: phone, passport: passport });
-      await client.save();
-      res.status(201).json({ message: 'Client registered successfully' });
-    } catch (error) {
-    res.status(500).json({ error: 'Registration failed' });
-    }
-    };
+
+
 
 module.exports.login_worker = async (req, res) => {
   try {
