@@ -55,6 +55,7 @@ table {
         border-radius: 5px;
         cursor: pointer;
     }
+    
     #addButton {
         padding: 5px 10px;
         margin-left: 10px;
@@ -63,4 +64,7 @@ table {
         border: none;
         border-radius: 5px;
         cursor: pointer;
+    }
+    .redBtn{
+        background-color: red;
     }
