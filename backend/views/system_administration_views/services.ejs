@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="/styles/css/basic_list.css">
 <link rel="stylesheet" href="/styles/css/basic_form.css">
 <link rel="stylesheet" href="/styles/css/basic_nav.css">
+<link rel="stylesheet" href="/styles/css/modal.css">
 </head>
 <body>
     <header>
@@ -28,40 +29,48 @@
         <button id="addButton">Добавить</button>
     </div>
 
-    <div class="edit-container">
-        <input type="text" class="dataInput" id="titleEdit" placeholder="Название">
-        <input type="text" class="dataInput" id="priceEdit" placeholder="Стоимость">
-        <button id="editButton">Изменить</button>
-    </div>
-
     <div class="filter-container">
-        <input type="text" class="dataInput" id="idSearch" placeholder="ID">
         <input type="text" class="dataInput" id="titleSearch" placeholder="Название">
         <input type="text" class="dataInput" id="priceSearch" placeholder="Стоимость">
         <button id="searchButton">Поиск</button>
     </div>
 
     <div class="remove-container">
-        <input type="text" class="dataInput" id="idDelete" placeholder="ID">
+        <input type="text" class="dataInput" id="idDelete" placeholder="Название">
         <button id="removeButton">Удалить</button>
     </div>
 
-
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+          <span class="close-button">&times;</span>
+          <h2>Edit Service</h2>
+          <form id="editForm">
+            <input type="hidden" id="serviceId" name="serviceId">
+            <label for="serviceName">Name:</label>
+            <input type="text" id="serviceName" name="serviceName" required>
+            <label for="servicePrice">Price:</label>
+            <input type="number" id="servicePrice" name="servicePrice" required>
+            <button type="submit">Save Changes</button>
+          </form>
+        </div>
+      </div>
 
     <div class="service-list" id="serviceListContainer">
         <div id="serviceTableContainer">
             <table class="service-table" id="serviceTable">
                 <thead>
                     <tr>
-                        <th width="50%">Название</th>
-                        <th width="50%">Стоимость</th>
+                        <th width="30%">Название</th>
+                        <th width="30%">Стоимость</th>
+                        <th width="40%">Изменить</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% services.forEach(service => { %>
                         <tr>
-                            <td width="50%"><%= service.name %></td>
-                            <td width="50%"><%= service.price %></td>
+                            <td width="30%"><%= service.name %></td>
+                            <td width="30%"><%= service.price %></td>
+                            <td widht="40%"><button id="<%= service._id %>">Изменить</button></td>
                         </tr>
                       <% }); %>
                 </tbody>
@@ -69,6 +78,61 @@
         </div>
     </div>
     <script>
+
+        const serviceTable = document.getElementById('serviceTable');
+        const editModal = document.getElementById('editModal');
+        const closeButton = document.querySelector('.close-button');
+        const editForm = document.getElementById('editForm');
+
+        // Open modal and populate form
+        serviceTable.addEventListener('click', (event) => {
+        const clickedElement = event.target;
+        if (clickedElement.tagName === 'BUTTON') {
+            const serviceId = clickedElement.id;
+            const serviceName = clickedElement.parentNode.parentNode.querySelector('td:first-child').textContent;
+            const servicePrice = clickedElement.parentNode.parentNode.querySelector('td:nth-child(2)').textContent;
+
+            document.getElementById('serviceId').value = serviceId;
+            document.getElementById('serviceName').value = serviceName;
+            document.getElementById('servicePrice').value = servicePrice;
+            editModal.style.display = 'block';
+        }
+        });
+
+        // Close modal
+        closeButton.addEventListener('click', () => {
+        editModal.style.display = 'none';
+        });
+
+        // Handle form submission
+        editForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const formData = new FormData(editForm);
+
+        fetch(`/services/${formData.get('serviceId')}`, { // Replace with your actual endpoint
+            method: 'PATCH',
+            body: formData
+        })
+            .then(response => {
+            // Handle successful update
+            console.log('Service updated successfully!');
+            editModal.style.display = 'none';
+            // You might want to refresh the table or update the UI here
+            })
+            .catch(error => {
+            console.error('Error updating service:', error);
+            // Handle errors
+            });
+        });
+
+        // Close modal when clicking outside of modal content
+        window.onclick = function(event) {
+        if (event.target === editModal) {
+            editModal.style.display = 'none';
+        }
+        };
+
+
     </script>
 </body>
 </html>
