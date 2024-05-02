@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="/styles/css/basic_list.css">
 <link rel="stylesheet" href="/styles/css/basic_form.css">
 <link rel="stylesheet" href="/styles/css/basic_nav.css">
+<link rel="stylesheet" href="/styles/css/modal.css">
 </head>
 <body>
     <header>
@@ -26,37 +27,51 @@
     </header>
 
     <div class="add-container">
-        <input type="text" class="dataInput" id="nameAdd" placeholder="Имя">
-        <input type="text" class="dataInput" id="surnameAdd" placeholder="Фамилия">
-        <input type="text" class="dataInput" id="fatherNameAdd" placeholder="Отчество">
-        <input type="text" class="dataInput" id="emailAdd" placeholder="Email">
-        <input type="text" class="dataInput" id="passportAdd" placeholder="Серия и номер пасспорта">
-        <input type="text" class="dataInput" id="passwordAdd" placeholder="Пароль">
-        <input type="text" class="dataInput" id="phoneAdd" placeholder="Телефон">
-        <button id="addButton">Добавить</button>
-    </div>
-
-    <div class="edit-container">
-        <input type="text" class="dataInput" id="nameEdit" placeholder="Имя">
-        <input type="text" class="dataInput" id="surnameEdit" placeholder="Фамилия">
-        <input type="text" class="dataInput" id="fatherNameEdit" placeholder="Отчество">
-        <input type="text" class="dataInput" id="emailEdit" placeholder="Email">
-        <input type="text" class="dataInput" id="passportEdit" placeholder="Серия и номер пасспорта">
-        <input type="text" class="dataInput" id="passwordEdit" placeholder="Пароль">
-        <input type="text" class="dataInput" id="phoneEdit" placeholder="Телефон">
-        <button id="editButton">Изменить</button>
+        <form id="addForm">
+            <input name="name" type="text" class="dataInput" id="nameAdd" placeholder="Имя">
+            <input name="second_name" type="text" class="dataInput" id="surnameAdd" placeholder="Фамилия">
+            <input name="third_name" type="text" class="dataInput" id="fatherNameAdd" placeholder="Отчество">
+            <input name="email" type="text" class="dataInput" id="emailAdd" placeholder="Email">
+            <input name="passport" type="text" class="dataInput" id="passportAdd" placeholder="Пасспорт">
+            <input name="password" type="text" class="dataInput" id="passwordAdd" placeholder="Пароль">
+            <input name="phone" type="text" class="dataInput" id="phoneAdd" placeholder="Телефон">
+            <button type="submit" id="addButton">Добавить</button>
+        </form>
     </div>
 
     <div class="filter-container">
-        <input type="text" class="dataInput" id="idSearch" placeholder="ID">
-        <input type="text" class="dataInput" id="nameSearch" placeholder="Имя">
-        <input type="text" class="dataInput" id="surnameSearch" placeholder="Фамилия">
-        <input type="text" class="dataInput" id="fatherNameSearch" placeholder="Отчество">
-        <input type="text" class="dataInput" id="emailSearch" placeholder="Email">
-        <input type="text" class="dataInput" id="passportSearch" placeholder="Серия и номер пасспорта">
-        <input type="text" class="dataInput" id="phoneSearch" placeholder="Телефон">
-        <button id="searchButton">Поиск</button>
+        <form id="filterForm">
+            <input name="name" type="text" class="dataInput" id="nameSearch" placeholder="Имя">
+            <input name="second_name" type="text" class="dataInput" id="surnameSearch" placeholder="Фамилия">
+            <input name="third_name" type="text" class="dataInput" id="fatherNameSearch" placeholder="Отчество">
+            <input name="email" type="text" class="dataInput" id="emailSearch" placeholder="Email">
+            <input name="passport" type="text" class="dataInput" id="passportSearch" placeholder="Пасспорт">
+            <input name="phone" type="text" class="dataInput" id="phoneSearch" placeholder="Телефон">
+            <button type="submit" id="searchButton">Поиск</button>
+        </form>
     </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+          <span class="close-button">&times;</span>
+          <h2>Edit Service</h2>
+          <form id="editForm">
+            <label for="clientPassport">Пасспорт:</label>
+            <input type="text" name="passport"  id="clientPassport" placeholder="Пасспорт">
+            <label for="clientName">Имя:</label>
+            <input type="text" name="name" id="clientName" placeholder="Имя">
+            <label for="clientSecondName">Фамилия:</label>
+            <input type="text" name="second_name" id="clientSecondName" placeholder="Фамилия">
+            <label for="clientThirdName">Отчество:</label>
+            <input type="text" name="third_name" id="clientThirdName" placeholder="Отчество">
+            <label for="clientEmail">Email:</label>
+            <input type="text" name="email" id="clientEmail" placeholder="Email">
+            <label for="clientPhone">Телефон:</label>
+            <input type="text" name="phone" id="clientPhone" placeholder="Телефон">
+            <button type="submit">Save Changes</button>
+          </form>
+        </div>
+      </div>
 
 
 
@@ -65,12 +80,14 @@
             <table class="client-table" id="clientTable">
                 <thead>
                     <tr>
-                        <th>Passport</th>
-                        <th>Email</th>
+                        <th>Пасспорт</th>
                         <th>Имя</th>
                         <th>Фамилия</th>
                         <th>Отчество</th>
+                        <th>Email</th>
                         <th>Телефон</th>
+                        <th>Изменить</th>
+                        <th>Удалить</th>
                         <th>Питомцы</th>
                     </tr>
                 </thead>
@@ -78,11 +95,13 @@
                     <% clients.forEach(client => { %>
                         <tr>
                             <td><%= client.passport %></td>
-                            <td><%= client.email %></td>
                             <td><%= client.name %></td>
                             <td><%= client.second_name %></td>
                             <td><%= client.third_name %></td>
+                            <td><%= client.email %></td>
                             <td><%= client.phone %></td>
+                            <td><button id="edt<%= client._id %>">Изменить</button></td>
+                            <td><button class="redBtn" id="del<%= client._id %>">Удалить</button></td>
                             <td><a href="/clients/<%= client._id %>/pets">Больше</a></td>
                         </tr>
                       <% }); %>
@@ -90,7 +109,7 @@
             </table>
         </div>
     </div>
-    <script>
+    <script src="/scripts/clients.js">
     </script>
 </body>
 </html>

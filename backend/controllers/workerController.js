@@ -65,7 +65,6 @@ module.exports.add_worker =  async (req, res) => {
     try {
 
       const data = JSON.parse(JSON.stringify(req.body));
-      console.log(data);
       const { email, password, name, second_name, third_name, phone, passport, type } = data;
       const qworker = await Worker.findOne({passport: passport});
       if (qworker)
