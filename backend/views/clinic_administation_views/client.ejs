@@ -37,43 +37,53 @@
     <h2 style="text-align: center;">Животные</h1>
 
     <div class="add-container">
-        <input type="text" class="dataInput" id="nameAdd" placeholder="Название">
-        <input type="text" class="dataInput" id="breedAdd" placeholder="Порода">
-        <input type="text" class="dataInput" id="nicknameAdd" placeholder="Кличка">
-        <input type="text" class="dataInput" id="passportAdd" placeholder="Пасспорт животного">
-        <input type="text" class="dataInput" id="ageAdd" placeholder="Возраст">
-        <input type="text" class="dataInput" id="weightAdd" placeholder="Вес">
-        <input type="text" class="dataInput" id="imageAdd" placeholder="Картинка">
-        <button id="addButton">Добавить</button>
-    </div>
-
-    <div class="edit-container">
-        <input type="text" class="dataInput" id="nameEdit" placeholder="Название">
-        <input type="text" class="dataInput" id="breedEdit" placeholder="Порода">
-        <input type="text" class="dataInput" id="nicknameEdit" placeholder="Кличка">
-        <input type="text" class="dataInput" id="passportEdit" placeholder="Пасспорт животного">
-        <input type="text" class="dataInput" id="ageEdit" placeholder="Возраст">
-        <input type="text" class="dataInput" id="weightEdit" placeholder="Вес">
-        <input type="text" class="dataInput" id="imageEdit" placeholder="Картинка">
-        <button id="editButton">Изменить</button>
+        <form id="addForm">
+            <input name="type" type="text" class="dataInput" id="nameAdd" placeholder="Название">
+            <input name="breed" type="text" class="dataInput" id="breedAdd" placeholder="Порода">
+            <input name="name" type="text" class="dataInput" id="nicknameAdd" placeholder="Кличка">
+            <input name="animal_passport" type="text" class="dataInput" id="passportAdd" placeholder="Пасспорт животного">
+            <input name="age" type="text" class="dataInput" id="ageAdd" placeholder="Возраст">
+            <button type="submit" id="addButton">Добавить</button>
+        </form>
     </div>
 
     <div class="filter-container">
-        <input type="text" class="dataInput" id="idSearch" placeholder="ID">
-        <input type="text" class="dataInput" id="nameSearch" placeholder="Название">
-        <input type="text" class="dataInput" id="breedSearch" placeholder="Порода">
-        <input type="text" class="dataInput" id="nicknameSearch" placeholder="Кличка">
-        <input type="text" class="dataInput" id="passportSearch" placeholder="Пасспорт животного">
-        <input type="text" class="dataInput" id="ageSearch" placeholder="Возраст">
-        <input type="text" class="dataInput" id="weightSearch" placeholder="Вес">
-        <input type="text" class="dataInput" id="imageSearch" placeholder="Картинка">
-        <button id="searchButton">Поиск</button>
+        <form class="filterForm">
+            <input name="type" type="text" class="dataInput" id="nameSearch" placeholder="Название">
+            <input name="breed" type="text" class="dataInput" id="breedSearch" placeholder="Порода">
+            <input name="name" type="text" class="dataInput" id="nicknameSearch" placeholder="Кличка">
+            <input name="animal_passport" type="text" class="dataInput" id="passportSearch" placeholder="Пасспорт животного">
+            <input name="age" type="text" class="dataInput" id="ageSearch" placeholder="Возраст">
+            <button type="submit" id="searchButton">Поиск</button>
+        </form>
     </div>
+
+
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+          <span class="close-button">&times;</span>
+          <h2>Edit Service</h2>
+          <form id="editForm">
+            <label for="animalPassport">Пасспорт животного:</label>
+            <input type="text" name="animal_passport"  id="animalPassport" placeholder="Пасспорт животного">
+            <label for="animalName">Кличка:</label>
+            <input type="text" name="name" id="animalName" placeholder="Кличка">
+            <label for="animalType">Название:</label>
+            <input type="text" name="type" id="animalType" placeholder="Название">
+            <label for="animalBreed">Отчество:</label>
+            <input type="text" name="breed" id="animalBreed" placeholder="Порода">
+            <label for="animalAge">Восзраст:</label>
+            <input type="text" name="age" id="animalAge" placeholder="Возраст">
+            <button type="submit">Save Changes</button>
+          </form>
+        </div>
+      </div>
 
 
     <div class="pet-list" id="petListContainer">
         <div id="petTableContainer">
-            <table class="pet-table" id="petTable">
+            <table class="pet-table" id="animalTable">
                 <thead>
                     <tr>
                         <th>Название</th>
@@ -81,6 +91,8 @@
                         <th>Порода</th>
                         <th>Пасспорт животного</th>
                         <th>Возраст</th>
+                        <th>Изменить</th>
+                        <th>Удалить</th>
                         <th>Карточка животного</th>
                     </tr>
                 </thead>
@@ -92,6 +104,8 @@
                             <td><%= pet.breed %></td>
                             <td><%= pet.animal_passport %></td>
                             <td><%= pet.age %></td>
+                            <td><button id="edt<%= pet._id %>">Изменить</button></td>
+                            <td><button class="redBtn" id="del<%= pet._id %>">Удалить</button></td>
                             <td><a href="/clients/<%= client._id %>/pets/<%= pet._id %>">Больше</a></td>
                         </tr>
                       <% }); %>
@@ -99,7 +113,7 @@
             </table>
         </div>
     </div>
-    <script>
+    <script src="scripts/client.js">
     </script>
 </body>
 </html>
