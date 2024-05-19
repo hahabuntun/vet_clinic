@@ -27,119 +27,43 @@
         <input type="date" id="date">
         <label for="service">Услуга:</label>
         <select id="service">
-            <option value="service1">Услуга 1</option>
-            <option value="service2">Услуга 2</option>
+            <% services.forEach(service => { %>
+                <option value="<%= service._id %>"><%= service.name %></option>
+            <% }); %>
         </select>
         <label for="doctor">Врач:</label>
-        <select id="doctor">
-            <option value="doctor1">Врач 1</option>
-            <option value="doctor2">Врач 2</option>
-        </select>
         <button id="filterBtn">Применить фильтры</button>
     </div>
 
     <div class="schedule">
         <div class="doctorSchedule">
-            <div class="doctorInfo">
-                <h2>Врач 1</h2>
-                <div class="scheduleEntry">
-                    <span>10:00 - Услуга 1</span>
-                    <button class="deleteBtn">&#10006;</button>
+            <% doctors.forEach(doctor => { %>
+                <div class="doctorInfo">
+                    <p><%= doctor.name %> <%= doctor.second_name %> <%= doctor.third_name %></p>
+                    
+                    <div class="scheduleEntry">
+                        <span>10:00 - Услуга 1</span>
+                        <button class="deleteBtn">&#10006;</button>
+                    </div>
+                    <div class="scheduleEntry">
+                        <span>11:00 - Услуга 2</span>
+                        <button class="deleteBtn">&#10006;</button>
+                    </div>
+                    <hr>
+                    <form class="add-entry-form">
+                        <input type="hidden" name="doctor_id" value="<%= doctor._id %>">
+                        <input type="hidden" name="date" value="<%= doctor._id %>">
+                        <input name="appointment_time" type="time" placeholder="Time">
+                        <select name="service_id" id="service_type">
+                            <% services.forEach(service => { %>
+                                <option  value="<%= service._id %>"><%= service.name %></option>
+                            <% }); %>
+                        </select>
+                        <br>
+                        <button type="submit" class="addBtn">Добавить</button>
+                    </form>
                 </div>
-                <div class="scheduleEntry">
-                    <span>11:00 - Услуга 2</span>
-                    <button class="deleteBtn">&#10006;</button>
-                </div>
-                <hr>
-                <input type="text" placeholder="Time">
-                <select id="service_type">
-                    <option value="service1">Услуга 1</option>
-                    <option value="service2">Услуга 2</option>
-                </select>
-                <br>
-                <button class="addBtn">Добавить</button>
-            </div>
-            
-            <div class="doctorInfo">
-                <h2>Врач 1</h2>
-                <div class="scheduleEntry">
-                    <span>10:00 - Услуга 1</span>
-                    <button class="deleteBtn">&#10006;</button>
-                </div>
-                <div class="scheduleEntry">
-                    <span>11:00 - Услуга 2</span>
-                    <button class="deleteBtn">&#10006;</button>
-                </div>
-                <hr>
-                <input type="text" placeholder="Time">
-                <select id="service_type">
-                    <option value="service1">Услуга 1</option>
-                    <option value="service2">Услуга 2</option>
-                </select>
-                <br>
-                <button class="addBtn">Добавить</button>
-            </div>
-
-            <div class="doctorInfo">
-                <h2>Врач 1</h2>
-                <div class="scheduleEntry">
-                    <span>10:00 - Услуга 1</span>
-                    <button class="deleteBtn">&#10006;</button>
-                </div>
-                <div class="scheduleEntry">
-                    <span>11:00 - Услуга 2</span>
-                    <button class="deleteBtn">&#10006;</button>
-                </div>
-                <hr>
-                <input type="text" placeholder="Time">
-                <select id="service_type">
-                    <option value="service1">Услуга 1</option>
-                    <option value="service2">Услуга 2</option>
-                </select>
-                <br>
-                <button class="addBtn">Добавить</button>
-            </div>
-
-            <div class="doctorInfo">
-                <h2>Врач 1</h2>
-                <div class="scheduleEntry">
-                    <span>10:00 - Услуга 1</span>
-                    <button class="deleteBtn">&#10006;</button>
-                </div>
-                <div class="scheduleEntry">
-                    <span>11:00 - Услуга 2</span>
-                    <button class="deleteBtn">&#10006;</button>
-                </div>
-                <hr>
-                <input type="text" placeholder="Time">
-                <select id="service_type">
-                    <option value="service1">Услуга 1</option>
-                    <option value="service2">Услуга 2</option>
-                </select>
-                <br>
-                <button class="addBtn">Добавить</button>
-            </div>
-
-            <div class="doctorInfo">
-                <h2>Врач 1</h2>
-                <div class="scheduleEntry">
-                    <span>10:00 - Услуга 1</span>
-                    <button class="deleteBtn">&#10006;</button>
-                </div>
-                <div class="scheduleEntry">
-                    <span>11:00 - Услуга 2</span>
-                    <button class="deleteBtn">&#10006;</button>
-                </div>
-                <hr>
-                <input type="text" placeholder="Time">
-                <select id="service_type">
-                    <option value="service1">Услуга 1</option>
-                    <option value="service2">Услуга 2</option>
-                </select>
-                <br>
-                <button class="addBtn">Добавить</button>
-            </div>
-
+            <% }); %>
         </div>
 
         <!-- Добавьте расписание для других врачей -->
@@ -167,10 +91,28 @@
         });
     });
 
-    const addButtons = document.querySelectorAll('.addBtn');
-    addButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Implement add logic here
+    const addEntryForms = document.querySelectorAll('.add-entry-form');
+    addEntryForms.forEach(addEntryForm => {
+        addEntryForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = new FormData(addEntryForm);
+            console.log(formData);
+
+
+            fetch(`/doctor_schedule`, {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                // Handle successful update
+                if (response.status == 200){
+                    console.log(response);
+                    location.reload();
+                }
+                })
+                .catch(error => {
+                    console.log(error);
+            });
         });
     });
 </script>
