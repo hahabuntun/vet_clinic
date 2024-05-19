@@ -9,12 +9,10 @@ router.post('/clients', add_client);
 router.get("/clients", get_all_clients)
 router.patch('/clients/:clientId',  edit_client)
 router.delete('/clients/:clientId',  delete_client)
-
-
-
-router.post('/clients/:clientId/pets',  add_pet_to_client);
 router.get("/clients/:clientId/pets", get_all_client_pets)
-router.patch('/clients/:clientId/pets/:petId',  edit_client_pet)
-router.delete('/clients/:clientId/pets/:petId', delete_client_pet)
+
+router.post('/pets',  add_pet_to_client);
+router.patch('/pets/:petId',  edit_client_pet)
+router.delete('/pets/:petId', delete_client_pet)
 
 module.exports = router;

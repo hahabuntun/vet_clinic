@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="/styles/css/basic_list.css">
 <link rel="stylesheet" href="/styles/css/basic_form.css">
 <link rel="stylesheet" href="/styles/css/basic_nav.css">
+<link rel="stylesheet" href="/styles/css/modal.css">
 <link rel="stylesheet" href="/styles/css/list.css">
 </head>
 <body>
@@ -32,12 +33,16 @@
         <li>Пасспорт - <%= client.passport %></li>
         <li>Телефон - <%= client.phone %></li>
         <li>Email - <%= client.email %></li>
+        <li style="display: none;">
+            <span class="client-id"><%= client._id %></span> 
+        </li> 
     </ul>
 
     <h2 style="text-align: center;">Животные</h1>
 
     <div class="add-container">
         <form id="addForm">
+            <input type="hidden" name="client_id" value="<%= client._id %>"> 
             <input name="type" type="text" class="dataInput" id="nameAdd" placeholder="Название">
             <input name="breed" type="text" class="dataInput" id="breedAdd" placeholder="Порода">
             <input name="name" type="text" class="dataInput" id="nicknameAdd" placeholder="Кличка">
@@ -48,7 +53,7 @@
     </div>
 
     <div class="filter-container">
-        <form class="filterForm">
+        <form id="filterForm">
             <input name="type" type="text" class="dataInput" id="nameSearch" placeholder="Название">
             <input name="breed" type="text" class="dataInput" id="breedSearch" placeholder="Порода">
             <input name="name" type="text" class="dataInput" id="nicknameSearch" placeholder="Кличка">
@@ -106,14 +111,14 @@
                             <td><%= pet.age %></td>
                             <td><button id="edt<%= pet._id %>">Изменить</button></td>
                             <td><button class="redBtn" id="del<%= pet._id %>">Удалить</button></td>
-                            <td><a href="/clients/<%= client._id %>/pets/<%= pet._id %>">Больше</a></td>
+                            <td><a href="/pets/<%= pet._id %>">Больше</a></td>
                         </tr>
                       <% }); %>
                 </tbody>
             </table>
         </div>
     </div>
-    <script src="scripts/client.js">
+    <script src="/scripts/client.js">
     </script>
 </body>
 </html>
