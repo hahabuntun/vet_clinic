@@ -22,29 +22,24 @@
     </nav>
 </header>
 <main>
-    <div class="filters">
-        <form action="/doctor_schedule" id="filter-schedule">
-            <label for="date">Дата:</label>
-            <input id="selected-date" name="date" type="date" id="date">
-            <label for="service">Услуга:</label>
-            <button type="submit" id="filterBtn">Применить фильтры</button>
-        </form>
-    </div>
-
+    <h1>Врачи</h1>
     <div class="schedule">
         <div class="doctorSchedule">
             <% doctors.forEach(doctor => { %>
                 <div class="doctorInfo">
                     <p><%= doctor.name %> <%= doctor.second_name %> <%= doctor.third_name %></p>
+                    <label for="date">Дата:</label>
+                    <input id="<%= doctor._id %>" name="date" type="date">
                     <% doctor.appointments.forEach(appointment => { %>
                     <div class="scheduleEntry">
-                        <span><%= appointment.service_name %> - <%= appointment.time %></span>
-                        <button class="deleteBtn">&#10006;</button>
+                            <span><%= appointment.service_name %> - <%= appointment.time %></span>
+                            <button class="deleteBtn">&#10006;</button>
                     </div>
                     <% }); %>
                     <hr>
                     <form class="add-entry-form">
                         <input type="hidden" name="doctor_id" value="<%= doctor._id %>">
+                        <label for="time">Время:</label>
                         <input name="appointment_time" type="time" placeholder="Time">
                         <select name="service_id" id="service_type">
                             <% services.forEach(service => { %>
@@ -63,87 +58,141 @@
 
 <script>
 
-    function refresh_doctor(parent, doctor_id){
-        
-        
-        const scheduleEntries = parent.querySelectorAll('.scheduleEntry');
-        scheduleEntries.forEach(entry => {
-            entry.remove();
+    
+
+    async function set_date(){
+        const dateInputs = document.querySelectorAll('input[type="date"]');
+        dateInputs.forEach(async (dateInput) => {
+            const selected_date = new Date().toISOString().slice(0, 10);
+            dateInput.value = selected_date;
+            dateInput.dispatchEvent(new Event('change'));
         });
+    }
+    
 
-
-        fetch(`/doctor_schedule/${doctor_id}`, {
-            method: 'get',
-        }).then(response => {
-            console.log(response);
-        }).catch(error => {
+    async function refresh_doctor_div(doctor_div, doctor_id, date){
+        try{
+            const response = await fetch(`/doctor_schedule/${doctor_id}?date=${date}`, {
+                    method: 'get',
+            });
+            const data = await response.json();
+            const scheduleEntries = doctor_div.querySelectorAll('.scheduleEntry');
+            scheduleEntries.forEach(async (entry) => {
+                entry.remove();
+            });
+            const helper = doctor_div.querySelector('hr');
+            const appointments = data.appointments;
+            appointments.forEach(async (appointment) =>{
+                    var schedEntry = document.createElement('div');
+                    schedEntry.className = "scheduleEntry";
+                    var span = document.createElement('span');
+                    span.textContent = `${appointment.service_name} - ${appointment.time}`;
+                    schedEntry.appendChild(span);
+                    var btn = document.createElement('button');
+                    btn.className = "deleteBtn";
+                    btn.innerHTML = "\&#10006;";
+                    schedEntry.appendChild(btn);
+                    helper.insertAdjacentElement('beforebegin', schedEntry);
+            })
+        }catch(error){
             console.log(error);
-        });
-        const pTag = parent.querySelector('p');
+        }
+        
     }
 
-    const addEntryForms = document.querySelectorAll('.add-entry-form');
-    addEntryForms.forEach(addEntryForm => {
-        addEntryForm.addEventListener('submit', (event) => {
+    async function handleDateChange(event) {
+        try {
+            const selectedDate = event.target.value;
+            const doctor_id = event.target.id;
+            var date = new Date();
+            if (selectedDate != ""){
+                date = new Date(selectedDate);
+            }
+            await refresh_doctor_div(event.target.parentElement, doctor_id, date)
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+
+    async function handleEntryAdded(event) {
+        const selectedDate = event.target.parentElement.querySelectorAll('input[type="date"]')[0].value;
+        const doctor_id = event.target.parentElement.querySelectorAll('input[type="date"]')[0].id;
+        var date = new Date();
+        if (selectedDate != ""){
+            date = new Date(selectedDate);
+        }
+        try{
+            //send post request
             event.preventDefault();
-            const formData = new FormData(addEntryForm);
-            const date = document.getElementById("selected-date").value;
+            const formData = new FormData(event.target);
             formData.append('date', date); 
-
-
-            fetch(`/doctor_schedule`, {
+            await fetch(`/doctor_schedule`, {
                 method: 'POST',
                 body: formData
             })
-                .then(response => {
-                // Handle successful update
-                if (response.status == 201){
-                    const parent = addEntryForm.parentElement;
-                    console.log(response);
-                    //refresh_doctor(parent);
-                }
-                })
-                .catch(error => {
-                    console.log(error);
+            .then(async (response) => {
+            // Handle successful update
+            if (response.status == 201){
+                await refresh_doctor_div(event.target.parentElement, doctor_id, date);
+            }
+            })
+            .catch(error => {
+                console.log(error);
             });
+        }catch(error){
+            console.log(error);
+        }
+    }
+
+
+    async function handleEntryDeleted(event) {
+        try {
+            const doctor_id = event.target.parentElement.querySelectorAll('input[type="date"]')[0].id;
+            await fetch(`/doctor_schedule/${doctor_id}`, {
+                method: 'delete',
+            })
+            .then(async (response) => {
+            // Handle successful update
+            if (response.status == 201){
+                await refresh_doctor_div(event.target.parentElement, doctor_id, date);
+            }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function add_change_date_handlers(){
+        const dateInputs = document.querySelectorAll('input[type="date"]');
+        dateInputs.forEach(async (dateInput) => {
+            dateInput.addEventListener('change', handleDateChange);
         });
-    });
+    }
 
-    // var filter_schedule = document.getElementById('filter-schedule');
+    async function add_insert_schedule_entry_handlers(){
+        const addEntryForms = document.querySelectorAll('.add-entry-form');
+        addEntryForms.forEach(addEntryForm => {
+            addEntryForm.addEventListener('submit',  handleEntryAdded);
+        });
+    }
 
-    // filter_schedule.addEventListener('submit', (event) => {
-    //     event.preventDefault();
-    //     const date = document.getElementById('date').value;
-    //     const serviceId = document.getElementById('service').value;
-    //     // You might want to get the doctor ID as well if you have a doctor selection
+    async function add_delete_schedule_entry_handlers(){
+        const deleteEntryBtns = document.querySelectorAll('.deleteBtn');
+        deleteEntryBtns.forEach(deleteEntryBtn => {
+            deleteEntryBtn.addEventListener('click',  handleEntryDeleted);
+        });
+    }
 
-    //     // Create an object to send as data
-    //     const formData = {
-    //         date: date,
-    //         serviceId: serviceId,
-    //     };
-
-    //     // Send the data to the server using fetch (or another method like Axios)
-    //     fetch('/doctor_schedule', {
-    //         method: 'GET',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify(formData)
-    //     })
-    //     .then(response => {
-    //         if (!response.ok) {
-    //             throw new Error('Network response was not ok');
-    //         }
-    //         return response.json(); // Assuming your server sends back JSON data
-    //     })
-    //     .then(data => {
-    //         console.log('Server Response:', data); 
-    //     })
-    //     .catch(error => {
-    //         console.error('Error:', error);
-    //     });
-    // });
+    
+    
+    add_change_date_handlers();
+    set_date();
+    add_insert_schedule_entry_handlers();
+    add_delete_schedule_entry_handlers();
 </script>
 </body>
 </html>
