@@ -13,7 +13,7 @@ const AppointmentSchema = mongoose.Schema(
         },
         animal_id: {
             type: String,
-            required: true
+            required: false
         },
         appointment_time: {
             type: Date,
@@ -22,7 +22,9 @@ const AppointmentSchema = mongoose.Schema(
         confirmed: {
             type: Boolean,
             required: true
-        }
+        },
+        service_name: {type: String},
+        time: {type: String}
     },
     {
         timestamps: true

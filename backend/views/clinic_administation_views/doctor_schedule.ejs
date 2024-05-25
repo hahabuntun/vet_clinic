@@ -23,16 +23,12 @@
 </header>
 <main>
     <div class="filters">
-        <label for="date">Дата:</label>
-        <input type="date" id="date">
-        <label for="service">Услуга:</label>
-        <select id="service">
-            <% services.forEach(service => { %>
-                <option value="<%= service._id %>"><%= service.name %></option>
-            <% }); %>
-        </select>
-        <label for="doctor">Врач:</label>
-        <button id="filterBtn">Применить фильтры</button>
+        <form action="/doctor_schedule" id="filter-schedule">
+            <label for="date">Дата:</label>
+            <input id="selected-date" name="date" type="date" id="date">
+            <label for="service">Услуга:</label>
+            <button type="submit" id="filterBtn">Применить фильтры</button>
+        </form>
     </div>
 
     <div class="schedule">
@@ -40,19 +36,15 @@
             <% doctors.forEach(doctor => { %>
                 <div class="doctorInfo">
                     <p><%= doctor.name %> <%= doctor.second_name %> <%= doctor.third_name %></p>
-                    
+                    <% doctor.appointments.forEach(appointment => { %>
                     <div class="scheduleEntry">
-                        <span>10:00 - Услуга 1</span>
+                        <span><%= appointment.service_name %> - <%= appointment.time %></span>
                         <button class="deleteBtn">&#10006;</button>
                     </div>
-                    <div class="scheduleEntry">
-                        <span>11:00 - Услуга 2</span>
-                        <button class="deleteBtn">&#10006;</button>
-                    </div>
+                    <% }); %>
                     <hr>
                     <form class="add-entry-form">
                         <input type="hidden" name="doctor_id" value="<%= doctor._id %>">
-                        <input type="hidden" name="date" value="<%= doctor._id %>">
                         <input name="appointment_time" type="time" placeholder="Time">
                         <select name="service_id" id="service_type">
                             <% services.forEach(service => { %>
@@ -65,38 +57,38 @@
                 </div>
             <% }); %>
         </div>
-
-        <!-- Добавьте расписание для других врачей -->
     </div>
 </main>
 
 
 <script>
-    // script.js
-    document.getElementById('filterBtn').addEventListener('click', function() {
-        // Implement filter logic here
-    });
 
-    const editButtons = document.querySelectorAll('.editBtn');
-    editButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Implement edit logic here
+    function refresh_doctor(parent, doctor_id){
+        
+        
+        const scheduleEntries = parent.querySelectorAll('.scheduleEntry');
+        scheduleEntries.forEach(entry => {
+            entry.remove();
         });
-    });
 
-    const deleteButtons = document.querySelectorAll('.deleteBtn');
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Implement delete logic here
+
+        fetch(`/doctor_schedule/${doctor_id}`, {
+            method: 'get',
+        }).then(response => {
+            console.log(response);
+        }).catch(error => {
+            console.log(error);
         });
-    });
+        const pTag = parent.querySelector('p');
+    }
 
     const addEntryForms = document.querySelectorAll('.add-entry-form');
     addEntryForms.forEach(addEntryForm => {
         addEntryForm.addEventListener('submit', (event) => {
             event.preventDefault();
             const formData = new FormData(addEntryForm);
-            console.log(formData);
+            const date = document.getElementById("selected-date").value;
+            formData.append('date', date); 
 
 
             fetch(`/doctor_schedule`, {
@@ -105,9 +97,10 @@
             })
                 .then(response => {
                 // Handle successful update
-                if (response.status == 200){
+                if (response.status == 201){
+                    const parent = addEntryForm.parentElement;
                     console.log(response);
-                    location.reload();
+                    //refresh_doctor(parent);
                 }
                 })
                 .catch(error => {
@@ -115,6 +108,42 @@
             });
         });
     });
+
+    // var filter_schedule = document.getElementById('filter-schedule');
+
+    // filter_schedule.addEventListener('submit', (event) => {
+    //     event.preventDefault();
+    //     const date = document.getElementById('date').value;
+    //     const serviceId = document.getElementById('service').value;
+    //     // You might want to get the doctor ID as well if you have a doctor selection
+
+    //     // Create an object to send as data
+    //     const formData = {
+    //         date: date,
+    //         serviceId: serviceId,
+    //     };
+
+    //     // Send the data to the server using fetch (or another method like Axios)
+    //     fetch('/doctor_schedule', {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify(formData)
+    //     })
+    //     .then(response => {
+    //         if (!response.ok) {
+    //             throw new Error('Network response was not ok');
+    //         }
+    //         return response.json(); // Assuming your server sends back JSON data
+    //     })
+    //     .then(data => {
+    //         console.log('Server Response:', data); 
+    //     })
+    //     .catch(error => {
+    //         console.error('Error:', error);
+    //     });
+    // });
 </script>
 </body>
 </html>

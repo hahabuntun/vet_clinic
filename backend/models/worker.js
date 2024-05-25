@@ -31,6 +31,7 @@ const WorkerSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        appointments: [],
         type:{
             type: String,
             required: true
