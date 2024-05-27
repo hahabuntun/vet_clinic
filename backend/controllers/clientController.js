@@ -30,12 +30,14 @@ module.exports.edit_client = async (req, res) => {
         { $set: updates }, // Update with the fields in updates
         { new: true } // Return the updated document
     );
-  
+      
       if (!updatedClient) {
         return res.status(404).json({ message: 'Client not found' });
       }
   
-      res.json({ message: 'Client updated successfully', client: updatedClient });
+      res.status(200).json({ email: updatedClient.email, name: updatedClient.name,
+        second_name: updatedClient.second_name, third_name: updatedClient.third_name,
+        phone: updatedClient.phone, passport: updatedClient.passport, _id: updatedClient._id });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Failed to update client' });
@@ -75,7 +77,9 @@ module.exports.add_client = async (req, res) => {
                                 second_name: second_name, third_name: third_name,
                                 phone: phone, passport: passport });
       await client.save();
-      res.status(201).json({ message: 'Client registered successfully' });
+      res.status(201).json({ email: client.email, name: client.name,
+        second_name: client.second_name, third_name: client.third_name,
+        phone: client.phone, passport: client.passport, _id: client._id });
     } catch (error) {
     res.status(500).json({ error: 'Registration failed' });
     }
