@@ -19,7 +19,6 @@ router.delete('/pets/:petId', delete_client_pet)
 router.get("/doctor_schedule", get_doctor_shedule);
 router.get("/doctor_schedule/:id", get_single_doctor_shedule);
 router.post("/doctor_schedule", add_schedule_entry);
-router.put("/doctor_schedule/:id", change_schedule_entry);
 router.delete("/doctor_schedule/:id", delete_schedule_entry);
 
 

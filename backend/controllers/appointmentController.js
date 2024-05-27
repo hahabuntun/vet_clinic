@@ -6,6 +6,11 @@ const Service = require("../models/service.js");
 const Appointment = require("../models/appointment.js");
 
 
+//need to add following
+//1)sort the appointments before returning
+//2)don't allow to add appointments that are at the same time as others
+//3)fix time localization
+
 
 module.exports.get_doctor_shedule = async (req, res) => {
     var queryDate = new Date();
@@ -46,7 +51,6 @@ module.exports.get_doctor_shedule = async (req, res) => {
 module.exports.get_single_doctor_shedule = async(req, res) => {
     try{
         var queryDate = req.query.date;
-        console.log(queryDate);
         queryDate = new Date(queryDate);
         const appointments = await Appointment.find({
             doctor_id: req.params.id,
@@ -77,10 +81,17 @@ module.exports.get_single_doctor_shedule = async(req, res) => {
 
 module.exports.add_schedule_entry = async (req, res) => {
     try {
-        const data = JSON.parse(JSON.stringify(req.body));
+        var data = JSON.parse(JSON.stringify(req.body));
         console.log(data);
-        const { service_id, doctor_id, appointment_time, date } = data;
-        const fullAppointmentTime = new Date(date);
+        var { service_id, doctor_id, appointment_time, date } = data;
+        date = new Date(date);
+        const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        const [hours, minutes] = appointment_time.split(':').map(Number);
+
+        // Create a new Date object with the combined date and time
+        const fullAppointmentTime = new Date(dateOnly);
+        fullAppointmentTime.setHours(hours);
+        fullAppointmentTime.setMinutes(minutes);
         const appointment = new Appointment({ service_id: service_id, doctor_id: doctor_id, appointment_time: fullAppointmentTime, confirmed: false});
         await appointment.save();
         res.status(201).json({ message: "success" });
@@ -88,13 +99,24 @@ module.exports.add_schedule_entry = async (req, res) => {
     catch (error) {
         //console.log(error);
         res.status(500).json({ error: 'Addition of schedule entry failed' });
+        console.log(error);
     }
 }
 
-module.exports.change_schedule_entry = async (req, res) => {
-
-}
-
 module.exports.delete_schedule_entry = async (req, res) => {
-
+    try{
+        console.log("here");
+        const appointment_id = req.params.id;
+        const deletedAppointment = await Appointment.findByIdAndDelete(appointment_id);
+        if (deletedAppointment) {
+            return res.status(200).json({ message: 'successfully deleted' });
+        } 
+        else 
+        {
+            return res.status(404).json({ error: 'Appointment not found' });
+        }
+    }
+    catch(error){
+        return res.status(500).json({error: "error occured when deleting object"});
+    }
 }

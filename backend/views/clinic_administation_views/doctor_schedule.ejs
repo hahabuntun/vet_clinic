@@ -31,9 +31,9 @@
                     <label for="date">Дата:</label>
                     <input id="<%= doctor._id %>" name="date" type="date">
                     <% doctor.appointments.forEach(appointment => { %>
-                    <div class="scheduleEntry">
-                            <span><%= appointment.service_name %> - <%= appointment.time %></span>
-                            <button class="deleteBtn">&#10006;</button>
+                    <div id="<%= appointment._id %>" class="scheduleEntry">
+                        <span><%= appointment.service_name %> - <%= appointment.time %></span>
+                        <button class="deleteBtn">&#10006;</button>
                     </div>
                     <% }); %>
                     <hr>
@@ -60,9 +60,9 @@
 
     
 
-    async function set_date(){
+    function set_date(){
         const dateInputs = document.querySelectorAll('input[type="date"]');
-        dateInputs.forEach(async (dateInput) => {
+        dateInputs.forEach((dateInput) => {
             const selected_date = new Date().toISOString().slice(0, 10);
             dateInput.value = selected_date;
             dateInput.dispatchEvent(new Event('change'));
@@ -85,6 +85,7 @@
             appointments.forEach(async (appointment) =>{
                     var schedEntry = document.createElement('div');
                     schedEntry.className = "scheduleEntry";
+                    schedEntry.id = appointment._id;
                     var span = document.createElement('span');
                     span.textContent = `${appointment.service_name} - ${appointment.time}`;
                     schedEntry.appendChild(span);
@@ -94,6 +95,7 @@
                     schedEntry.appendChild(btn);
                     helper.insertAdjacentElement('beforebegin', schedEntry);
             })
+            add_delete_schedule_entry_handlers();
         }catch(error){
             console.log(error);
         }
@@ -148,14 +150,21 @@
 
     async function handleEntryDeleted(event) {
         try {
-            const doctor_id = event.target.parentElement.querySelectorAll('input[type="date"]')[0].id;
-            await fetch(`/doctor_schedule/${doctor_id}`, {
+            const selectedDate = event.target.parentElement.parentElement.querySelectorAll('input[type="date"]')[0].value;
+            const doctor_id = event.target.parentElement.parentElement.querySelectorAll('input[type="date"]')[0].id;
+            const appointment_id = event.target.parentElement.id;
+            console.log(appointment_id);
+            var date = new Date();
+            if (selectedDate != ""){
+                date = new Date(selectedDate);
+            }
+            await fetch(`/doctor_schedule/${appointment_id}`, {
                 method: 'delete',
             })
             .then(async (response) => {
             // Handle successful update
-            if (response.status == 201){
-                await refresh_doctor_div(event.target.parentElement, doctor_id, date);
+            if (response.status == 200){
+                await refresh_doctor_div(event.target.parentElement.parentElement, doctor_id, date);
             }
             })
             .catch(error => {
@@ -166,24 +175,26 @@
         }
     }
 
-    async function add_change_date_handlers(){
+    function add_change_date_handlers(){
         const dateInputs = document.querySelectorAll('input[type="date"]');
-        dateInputs.forEach(async (dateInput) => {
+        dateInputs.forEach((dateInput) => {
             dateInput.addEventListener('change', handleDateChange);
         });
     }
 
-    async function add_insert_schedule_entry_handlers(){
+    function add_insert_schedule_entry_handlers(){
         const addEntryForms = document.querySelectorAll('.add-entry-form');
         addEntryForms.forEach(addEntryForm => {
+            console.log("aaa");
             addEntryForm.addEventListener('submit',  handleEntryAdded);
         });
     }
 
-    async function add_delete_schedule_entry_handlers(){
+    function add_delete_schedule_entry_handlers(){
         const deleteEntryBtns = document.querySelectorAll('.deleteBtn');
-        deleteEntryBtns.forEach(deleteEntryBtn => {
-            deleteEntryBtn.addEventListener('click',  handleEntryDeleted);
+        
+        deleteEntryBtns.forEach((btn) => {
+            btn.addEventListener('click',  handleEntryDeleted);
         });
     }
 
