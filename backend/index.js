@@ -17,7 +17,13 @@ const receptionis_routes = require("./routes/receptionist");
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"))
 
-app.use(express.static('static'));
+app.use(express.static('static', { 
+    setHeaders: (res, path, stat) => {
+        if (path.endsWith('.js')) {
+            res.setHeader('Content-Type', 'text/javascript');
+        }
+    }
+}));
 
 app.use(express.json())
 app.use(upload.none());

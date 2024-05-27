@@ -6,11 +6,6 @@ const Service = require("../models/service.js");
 const Appointment = require("../models/appointment.js");
 
 
-//need to add following
-//1)sort the appointments before returning
-//2)don't allow to add appointments that are at the same time as others
-//3)fix time localization
-
 
 module.exports.get_doctor_shedule = async (req, res) => {
     var queryDate = new Date();
@@ -34,7 +29,17 @@ module.exports.get_doctor_shedule = async (req, res) => {
             appointment.time = timeStr;
             return appointment;
         })
-        doctor.appointments = await Promise.all(appointment_promises);
+        var temp_appointments = await Promise.all(appointment_promises);
+        doctor.appointments = temp_appointments.sort((a, b) => {
+            const [aHour, aMinute] = a.time.split(':').map(Number);
+            const [bHour, bMinute] = b.time.split(':').map(Number);
+
+            if (aHour !== bHour) {
+                return aHour - bHour;
+            } else {
+                return aMinute - bMinute;
+            }
+          });
         return doctor;
     });
 
@@ -52,11 +57,25 @@ module.exports.get_single_doctor_shedule = async(req, res) => {
     try{
         var queryDate = req.query.date;
         queryDate = new Date(queryDate);
-        const appointments = await Appointment.find({
-            doctor_id: req.params.id,
-            appointment_time: { $gte: queryDate, $lt: new Date(queryDate.getTime() + 24 * 60 * 60 * 1000) }
-        });
-        
+        var today = new Date();
+        var temp = [];
+        if (queryDate.getMonth() >= today.getMonth() && queryDate.getDate() >= today.getDate()){
+            
+            if (queryDate.getMonth() == today.getMonth() && queryDate.getDate() == today.getDate()){
+                temp = await Appointment.find({
+                    doctor_id: req.params.id,
+                    appointment_time: { $gte: today, $lt: new Date(queryDate.getTime() + 24 * 60 * 60 * 1000) }
+                });
+            }
+            else{
+                temp = await Appointment.find({
+                    doctor_id: req.params.id,
+                    appointment_time: { $gte: queryDate, $lt: new Date(queryDate.getTime() + 24 * 60 * 60 * 1000) }
+                });
+            }
+            
+        }
+        appointments = temp;
         const appointment_promises = appointments.map(async (appointment) => {
             const serv = await Service.find({_id: appointment.service_id});
             const service_name = serv[0].name;
@@ -68,7 +87,20 @@ module.exports.get_single_doctor_shedule = async(req, res) => {
             appointment.time = timeStr;
             return appointment;
         })
-        const updated_appointments = await Promise.all(appointment_promises);
+        var temp_appointments = await Promise.all(appointment_promises);
+        const updated_appointments = temp_appointments.sort((a, b) => {
+           // Extract hours and minutes from the time strings
+            const [aHour, aMinute] = a.time.split(':').map(Number);
+            const [bHour, bMinute] = b.time.split(':').map(Number);
+
+            // Compare hours first
+            if (aHour !== bHour) {
+                return aHour - bHour;
+            } else {
+                // If hours are equal, compare minutes
+                return aMinute - bMinute;
+            }
+          });
         return res.status(200).json({ appointments: updated_appointments });
     }catch(error){
         console.log(error);
@@ -82,14 +114,15 @@ module.exports.get_single_doctor_shedule = async(req, res) => {
 module.exports.add_schedule_entry = async (req, res) => {
     try {
         var data = JSON.parse(JSON.stringify(req.body));
-        console.log(data);
         var { service_id, doctor_id, appointment_time, date } = data;
         date = new Date(date);
+        
         const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         const [hours, minutes] = appointment_time.split(':').map(Number);
-
+        console.log(appointment_time);
         // Create a new Date object with the combined date and time
         const fullAppointmentTime = new Date(dateOnly);
+        //var already_exists = Appointment.find({doctor_id: doctor_id, appointment_time: })
         fullAppointmentTime.setHours(hours);
         fullAppointmentTime.setMinutes(minutes);
         const appointment = new Appointment({ service_id: service_id, doctor_id: doctor_id, appointment_time: fullAppointmentTime, confirmed: false});
@@ -105,7 +138,6 @@ module.exports.add_schedule_entry = async (req, res) => {
 
 module.exports.delete_schedule_entry = async (req, res) => {
     try{
-        console.log("here");
         const appointment_id = req.params.id;
         const deletedAppointment = await Appointment.findByIdAndDelete(appointment_id);
         if (deletedAppointment) {
