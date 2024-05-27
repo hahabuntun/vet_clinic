@@ -11,6 +11,7 @@ const ServiceSchema = mongoose.Schema(
             type: Number,
             required: true,
         },
+        appointments: []
     },
     {
         timestamps: true

@@ -60,7 +60,6 @@ module.exports.get_single_doctor_shedule = async(req, res) => {
         var today = new Date();
         var temp = [];
         if (queryDate.getMonth() >= today.getMonth() && queryDate.getDate() >= today.getDate()){
-            
             if (queryDate.getMonth() == today.getMonth() && queryDate.getDate() == today.getDate()){
                 temp = await Appointment.find({
                     doctor_id: req.params.id,
@@ -73,7 +72,6 @@ module.exports.get_single_doctor_shedule = async(req, res) => {
                     appointment_time: { $gte: queryDate, $lt: new Date(queryDate.getTime() + 24 * 60 * 60 * 1000) }
                 });
             }
-            
         }
         appointments = temp;
         const appointment_promises = appointments.map(async (appointment) => {
@@ -101,6 +99,7 @@ module.exports.get_single_doctor_shedule = async(req, res) => {
                 return aMinute - bMinute;
             }
           });
+          console.log(updated_appointments);
         return res.status(200).json({ appointments: updated_appointments });
     }catch(error){
         console.log(error);
@@ -151,4 +150,18 @@ module.exports.delete_schedule_entry = async (req, res) => {
     catch(error){
         return res.status(500).json({error: "error occured when deleting object"});
     }
+}
+
+
+module.exports.get_appointment_page = async (req, res) => {
+    var doctors = await Worker.find({type: "doctor"});
+    data = {
+        doctors: doctors
+    }
+    res.render(path.join('clinic_administation_views', 'make_appointment'), data);
+}
+
+
+module.exports.make_appointment = async (req, res) => {
+    res.render(path.join('clinic_administation_views', 'make_appointment'));
 }

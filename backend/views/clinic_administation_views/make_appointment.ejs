@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="/styles/css/basic_nav.css">
 <link rel="stylesheet" href="/styles/css/list.css">
 <link rel="stylesheet" href="/styles/css/bookings.css">
+<link rel="stylesheet" href="/styles/css/doctor_schedule.css">
 <title>Veterinary Clinic Booking</title>
 </head>
 <body>
@@ -25,8 +26,10 @@
     </header>
     <h1>Запись в ветеринарную клинику</h1>
     <div id="booking_filter" class="filter-container">
-        <input type="text" class="dataInput" id="passportSearch" placeholder="Серия и номер пасспорта">
-        <button id="searchButton">Поиск клиента</button>
+        <form action="/clients/find_by_passport">
+            <input name="passport" type="text" class="dataInput" id="passportSearch" placeholder="Серия и номер пасспорта">
+            <button type="submit" id="searchButton">Поиск клиента</button>
+        </form>
         <ul class="info">
             <li>ID</li>
             <li>Имя</li>
@@ -39,42 +42,85 @@
     </div>
     
 
-    <label for="service">Выберите услугу:</label>
-    <select id="service">
-        <option value="service1">Service 1</option>
-        <option value="service2">Service 2</option>
-        <option value="service3">Service 3</option>
-    </select>
-    <label for="date">Выберите дату:</label>
-    <input type="date" id="date">
-    <label for="doctor">Select Doctor:</label>
-    <select id="doctor">
-        <option value="doctor1">Doctor 1</option>
-        <option value="doctor2">Doctor 2</option>
-    </select>
-    <label for="time">Выберите время:</label>
-    <select id="time">
-        <option value="time1">Time 1</option>
-        <option value="time2">Time 2</option>
-    </select>
-    <label for="pet">Выберите питомца:</label>
-    <select id="pet">
-        <option value="pet1">Pet 1</option>
-        <option value="pet2">Pet 2</option>
-    </select>
-    <button onclick="bookAppointment()">Book Appointment</button>
+    <h1>Врачи</h1>
+    <div class="schedule">
+        <div class="doctorSchedule">
+            <% doctors.forEach(doctor => { %>
+                <div class="doctorInfo">
+                    <p><%= doctor.name %> <%= doctor.second_name %> <%= doctor.third_name %></p>
+                    <label for="date">Дата:</label>
+                    <input id="<%= doctor._id %>" name="date" type="date">
+                    <% doctor.appointments.forEach(appointment => { %>
+                    <div id="<%= appointment._id %>" class="scheduleEntry">
+                        <span><%= appointment.service_name %> - <%= appointment.time %></span>
+                        <button class="bookBtn">+</button>
+                    </div>
+                    <% }); %>
+                    <hr>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
-        function bookAppointment() {
-    const service = document.getElementById('service').value;
-    const selectedDate = document.getElementById('date').value;
-    const doctor = document.getElementById('doctor').value;
-    const time = document.getElementById('time').value;
-    const pet = document.getElementById('pet').value;
+        async function refresh_doctor_div(doctor_div, doctor_id, date) {
+            try {
+                date.setHours(date.getHours());
+                console.log(date);
+                const response = await $.ajax({
+                    url: `/doctor_schedule/${doctor_id}?date=${date}`,
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log(data);
+                        $(doctor_div).find('.scheduleEntry').remove();
+                        var helper = $(doctor_div).find('hr');
+                        var appointments = data.appointments;
+                        appointments.forEach(function(appointment) {
+                            var schedEntry = $('<div></div>').addClass('scheduleEntry').attr('id', appointment._id);
+                            var span = $('<span></span>').text(`${appointment.service_name} - ${appointment.time}`);
+                            var btn = $('<button></button>').addClass('bookBtn').text('+');
+                            schedEntry.append(span).append(btn);
+                            helper.before(schedEntry);
+                        });
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        }
 
-    // Here you can add logic to check if the selected date, service, and doctor are available for booking
-    // If available, proceed with the booking process, else show an alert that the slot is not available
-    // You can also send this information to the server for recording the appointment
-}
+        async function handleDateChange(event) {
+            try {
+                const selectedDate = $(event.target).val();
+                const doctor_id = $(event.target).attr('id');
+                var date = new Date();
+                if (selectedDate != "") {
+                    date = new Date(selectedDate);
+                }
+                await refresh_doctor_div($(event.target).parent(), doctor_id, date);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+
+        function set_date() {
+            $('input[type="date"]').each(function() {
+                var selected_date = new Date().toISOString().slice(0, 10);
+                $(this).val(selected_date).trigger('change');
+            });
+        }
+
+        function add_change_date_handlers() {
+            $('input[type="date"]').on('change', handleDateChange);
+        }
+
+        add_change_date_handlers();
+        set_date();
     </script>
 </body>
 </html>

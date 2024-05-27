@@ -7,7 +7,7 @@ $(document).ready(function() {
     var clientId = "";
 
 
-    $('#clientTable').on('click', 'button', function(event) {
+    $('#clientTable').on('click', 'button', async function(event) {
         const clickedElement = $(this);
         if (clickedElement.text().trim() === 'Изменить') {
             clientId = clickedElement.attr('id').substring(3);
@@ -28,7 +28,7 @@ $(document).ready(function() {
             editModal.css('display', 'block');
         } else if (clickedElement.text().trim() === 'Удалить') {
             clientId = clickedElement.attr('id').substring(3);
-            deleteClient(clientId);
+            await deleteClient(clientId);
         }
     });
 
@@ -83,14 +83,14 @@ $(document).ready(function() {
     });
 
     // Добавляем обработчик события клика на кнопку
-    addForm.on('submit', function(event) {
+    addForm.on('submit', async function(event) {
         event.preventDefault();
 
         // Создаем объект с данными для отправки на сервер
         const fData = new FormData(this);
         console.log(fData);
         // Отправляем POST запрос на сервер с помощью fetch API
-        fetch('/clients/', {
+        await fetch('/clients/', {
             method: 'POST',
             body: fData
         })
@@ -134,8 +134,8 @@ $(document).ready(function() {
         window.location.href = `/clients?${formData}`;
     });
 
-    function deleteClient(clientsId){
-        fetch(`/clients/${clientsId}`, { // Replace with your actual endpoint
+    async function deleteClient(clientsId){
+        await fetch(`/clients/${clientsId}`, { // Replace with your actual endpoint
             method: 'DELETE'
         })
         .then(response => {

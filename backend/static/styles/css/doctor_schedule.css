@@ -41,6 +41,10 @@ body {
         margin-left: 2%;
     }
 
+    .bookBtn{
+        margin-left: 5%;
+    }
+
     .addBtn {
         background-color: #007bff;
         color: #fff;

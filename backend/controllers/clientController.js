@@ -84,3 +84,19 @@ module.exports.add_client = async (req, res) => {
     res.status(500).json({ error: 'Registration failed' });
     }
     };
+
+module.exports.get_client = async (req, res) => {
+  try{
+    const { passport } = req.params;
+    const client = await Client.findOne({ passport });
+    if (!client) {
+      return res.status(404).json({ message: 'Client not found' });
+    }
+    // Return the found client
+    res.status(200).json(client);
+  }
+  catch(error)
+  {
+    res.status(500).json({ error: 'could not find client' });
+  }
+}

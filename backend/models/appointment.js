@@ -24,7 +24,8 @@ const AppointmentSchema = mongoose.Schema(
             required: true
         },
         service_name: {type: String},
-        time: {type: String}
+        doctor_full_name: {type: String},
+        time: {type: String},
     },
     {
         timestamps: true
