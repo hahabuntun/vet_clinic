@@ -1,7 +1,7 @@
 const { Timestamp } = require("mongodb");
 const mongoose = require("mongoose");
 
-const AnimalCardSchema = mongoose.Schema(
+const AnimalCardPageSchema = mongoose.Schema(
     {
         
         appointment_id: {
@@ -18,5 +18,5 @@ const AnimalCardSchema = mongoose.Schema(
     }
 );
 
-const AnimalCard = mongoose.model("AnimalCard", AnimalCardSchema);
-module.exports = AnimalCard;
+const AnimalCardPage = mongoose.model("AnimalCardPage", AnimalCardPageSchema);
+module.exports = AnimalCardPage;

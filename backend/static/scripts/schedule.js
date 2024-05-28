@@ -27,7 +27,17 @@ $(document).ready(function() {
                         var span = $('<span></span>').text(`${appointment.service_name} - ${appointment.time}`);
                         var btn = $('<button></button>').addClass('deleteBtn').html('&#10006;');
                         btn.on("click", handleEntryDeleted);
-                        schedEntry.append(span).append(btn);
+                        var marker = "";
+                        if(appointment.animal_card_page_id){
+                            marker = $('<span></span>').addClass('blue-text').text('п');
+                        }
+                        else if(appointment.animal_id){
+                            marker = $('<span></span>').addClass('green-text').text('з');
+                        }
+                        else{
+                            marker = $('<span></span>').addClass('red-text').text('нз');
+                        }
+                        schedEntry.append(span).append(btn).append(marker);
                         helper.before(schedEntry);
                     });
                 },

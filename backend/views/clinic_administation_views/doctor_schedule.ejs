@@ -6,6 +6,19 @@
 <title>Свободное расписание</title>
 <link rel="stylesheet" href="/styles/css/doctor_schedule.css">
 <link rel="stylesheet" href="/styles/css/basic_nav.css">
+
+<style>
+    .green-text {
+        color: green;
+    }
+
+    .red-text {
+        color: red;
+    }
+    .blue-text {
+        color: red;
+    }
+</style>
 </head>
 <body>
 
@@ -30,12 +43,6 @@
                     <p><%= doctor.name %> <%= doctor.second_name %> <%= doctor.third_name %></p>
                     <label for="date">Дата:</label>
                     <input id="<%= doctor._id %>" name="date" type="date">
-                    <% doctor.appointments.forEach(appointment => { %>
-                    <div id="<%= appointment._id %>" class="scheduleEntry">
-                        <span><%= appointment.service_name %> - <%= appointment.time %></span>
-                        <button class="deleteBtn">&#10006;</button>
-                    </div>
-                    <% }); %>
                     <hr>
                     <form class="add-entry-form">
                         <input type="hidden" name="doctor_id" value="<%= doctor._id %>">

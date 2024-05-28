@@ -6,50 +6,17 @@ const Service = require("../models/service.js");
 const Appointment = require("../models/appointment.js");
 const Animal = require("../models/animal.js");
 const Client = require("../models/client.js");
-
+const AnimalCardPage = require("../models/animal_card_page.js");
 
 
 module.exports.get_doctor_shedule = async (req, res) => {
-    var queryDate = new Date();
-
     var services = await Service.find();
     var doctors = await Worker.find({type: "doctor"});
     
-    const promises = doctors.map(async (doctor) => {
-        const appointments = await Appointment.find({
-            doctor_id: doctor._id,
-            appointment_time: { $gte: queryDate, $lt: new Date(queryDate.getTime() + 24 * 60 * 60 * 1000) }
-        });
-        const appointment_promises = appointments.map(async (appointment) => {
-            const serv = await Service.find({_id: appointment.service_id});
-            const service_name = serv[0].name;
-            appointment.service_name = service_name;
-
-            const hours = appointment.appointment_time.getHours().toString().padStart(2, '0');
-            const minutes = appointment.appointment_time.getMinutes().toString().padStart(2, '0');
-            const timeStr = `${hours}:${minutes}`;
-            appointment.time = timeStr;
-            return appointment;
-        })
-        var temp_appointments = await Promise.all(appointment_promises);
-        doctor.appointments = temp_appointments.sort((a, b) => {
-            const [aHour, aMinute] = a.time.split(':').map(Number);
-            const [bHour, bMinute] = b.time.split(':').map(Number);
-
-            if (aHour !== bHour) {
-                return aHour - bHour;
-            } else {
-                return aMinute - bMinute;
-            }
-          });
-        return doctor;
-    });
-
-    const updated_doctors = await Promise.all(promises);
 
     data = {
         services: services,
-        doctors: updated_doctors
+        doctors: doctors
     }
     res.render(path.join('clinic_administation_views', 'doctor_schedule'), data);
 }
@@ -59,32 +26,12 @@ module.exports.get_single_doctor_shedule = async(req, res) => {
     try{
         var queryDate = req.query.date;
         queryDate = new Date(queryDate);
-        var today = new Date();
         var temp = [];
-        if (queryDate.getMonth() >= today.getMonth() && queryDate.getDate() >= today.getDate()){
-            if (queryDate.getMonth() == today.getMonth() && queryDate.getDate() == today.getDate()){
-                temp = await Appointment.find({
-                    doctor_id: req.params.id,
-                    appointment_time: { $gte: today, $lt: new Date(queryDate.getTime() + 24 * 60 * 60 * 1000) },
-                    $or: [
-                        { animal_id: { $exists: false } },
-                        { animal_id: null },
-                        { animal_id: "" }
-                    ]
-                });
-            }
-            else{
-                temp = await Appointment.find({
-                    doctor_id: req.params.id,
-                    appointment_time: { $gte: queryDate, $lt: new Date(queryDate.getTime() + 24 * 60 * 60 * 1000) },
-                    $or: [
-                        { animal_id: { $exists: false } },
-                        { animal_id: null },
-                        { animal_id: "" }
-                    ]
-                });
-            }
-        }
+        temp = await Appointment.find({
+            doctor_id: req.params.id,
+            appointment_time: { $gte: queryDate, $lt: new Date(queryDate.getTime() + 24 * 60 * 60 * 1000) },
+
+        });
         appointments = temp;
         const appointment_promises = appointments.map(async (appointment) => {
             const serv = await Service.find({_id: appointment.service_id});
@@ -117,7 +64,6 @@ module.exports.get_single_doctor_shedule = async(req, res) => {
         return res.status(400).json({ error: error });
         
     }
-    
 }
 
 
@@ -178,7 +124,7 @@ module.exports.make_appointment = async (req, res) => {
         var {appointment_id, animal_id} = JSON.parse(JSON.stringify(req.body));
         const updatedAppointment = await Appointment.findOneAndUpdate(
             { _id: appointment_id },
-            { $set: { animal_id: animal_id } },
+            { $set: { animal_id: animal_id, confirmed: true } },
             { new: true }
           );
         return res.status(200).json({message: "success"});
@@ -196,24 +142,14 @@ module.exports.get_appointments = async (req, res) =>{
         var queryDate = req.query.date;
         var confirmed = req.query.confirmed;
         queryDate = new Date(queryDate);
-        var today = new Date();
         var temp = [];
-        if (queryDate.getMonth() >= today.getMonth() && queryDate.getDate() >= today.getDate()){
-            if (queryDate.getMonth() == today.getMonth() && queryDate.getDate() == today.getDate()){
-                temp = await Appointment.find({
-                    appointment_time: { $gte: today, $lt: new Date(queryDate.getTime() + 24 * 60 * 60 * 1000) },
-                    animal_id: { $exists: true },
-                    confirmed: confirmed,
-                });
-            }
-            else{
-                temp = await Appointment.find({
-                    appointment_time: { $gte: queryDate, $lt: new Date(queryDate.getTime() + 24 * 60 * 60 * 1000) },
-                    animal_id: { $exists: true },
-                    confirmed: confirmed,
-                });
-            }
-        }
+        temp = await Appointment.find({
+            appointment_time: { $gte: queryDate, $lt: new Date(queryDate.getTime() + 24 * 60 * 60 * 1000) },
+            animal_id: { $exists: true },
+            confirmed: confirmed,
+            animal_card_page_id:  { $exists: false},
+        });
+        
         appointments = temp;
     
         const appointment_promises = appointments.map(async (appointment) => {
@@ -304,4 +240,40 @@ module.exports.decline_appointment = async (req, res) => {
 
 module.exports.get_confirmed_bookings_page = async (req, res) =>{
     res.render(path.join('clinic_administation_views', 'confirmed_bookings'));
+}
+
+
+module.exports.start_appointment = async (req, res) => {
+    try{
+        var appointment_id = req.params.appointment_id;
+        var appointment = await Appointment.findOne({_id: appointment_id});
+        var animal_card_page = new AnimalCardPage({animal_id: appointment.animal_id, appointment_id: appointment._id});
+        await animal_card_page.save();
+        var updated_app = await Appointment.findOneAndUpdate(
+            { _id: appointment_id },
+            { $set: { animal_card_page_id: animal_card_page._id } },
+            { new: true }
+          );
+        
+        return res.status(201).json({message: "success"});
+    }catch(error){
+        console.log(error);
+        return res.status(500).json({error: "Could not approve appointment"});
+    }
+}
+
+module.exports.cancel_appointment = async (req, res) => {
+    try{
+        var appointment_id = req.params.appointment_id;
+        const updatedAppointment = await Appointment.findOneAndUpdate(
+            { _id: appointment_id },
+            { $unset: { animal_id: '' } },
+            { $set: { confirmed: false } },
+            { new: true }
+          );
+        return res.status(200).json({message: "success"});
+    }catch(error){
+        console.log(error);
+        return res.status(500).json({error: "Could not approve appointment"});
+    }
 }

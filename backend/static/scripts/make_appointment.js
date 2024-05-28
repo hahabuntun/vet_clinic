@@ -11,12 +11,14 @@ $(document).ready(function() {
                     var helper = $(doctor_div).find('hr');
                     var appointments = data.appointments;
                     appointments.forEach(function(appointment) {
-                        var schedEntry = $('<div></div>').addClass('scheduleEntry').attr('id', appointment._id);
-                        var span = $('<span></span>').text(`${appointment.service_name} - ${appointment.time}`);
-                        var btn = $('<button></button>').addClass('bookBtn').text('+');
-                        btn.on('click', handleBooked);
-                        schedEntry.append(span).append(btn);
-                        helper.before(schedEntry);
+                        if(!appointment.animal_id){
+                            var schedEntry = $('<div></div>').addClass('scheduleEntry').attr('id', appointment._id);
+                            var span = $('<span></span>').text(`${appointment.service_name} - ${appointment.time}`);
+                            var btn = $('<button></button>').addClass('bookBtn').text('+');
+                            btn.on('click', handleBooked);
+                            schedEntry.append(span).append(btn);
+                            helper.before(schedEntry);
+                        }
                     });
                 },
                 error: function(error) {

@@ -29,7 +29,8 @@ const AppointmentSchema = mongoose.Schema(
         client_data: {type: String},
         animal_data: {type: String},
         client_id: {type: String},
-        client_phone: {type: String}
+        client_phone: {type: String},
+        animal_card_page_id: {type: String}
     },
     {
         timestamps: true
