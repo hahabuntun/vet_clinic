@@ -31,6 +31,7 @@ const ClientSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        pets: [],
     },
     {
         timestamps: true

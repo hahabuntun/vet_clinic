@@ -63,7 +63,12 @@ module.exports.get_single_doctor_shedule = async(req, res) => {
             if (queryDate.getMonth() == today.getMonth() && queryDate.getDate() == today.getDate()){
                 temp = await Appointment.find({
                     doctor_id: req.params.id,
-                    appointment_time: { $gte: today, $lt: new Date(queryDate.getTime() + 24 * 60 * 60 * 1000) }
+                    appointment_time: { $gte: today, $lt: new Date(queryDate.getTime() + 24 * 60 * 60 * 1000) },
+                    $or: [
+                        { animal_id: { $exists: false } },
+                        { animal_id: null },
+                        { animal_id: "" }
+                    ]
                 });
             }
             else{
@@ -99,7 +104,6 @@ module.exports.get_single_doctor_shedule = async(req, res) => {
                 return aMinute - bMinute;
             }
           });
-          console.log(updated_appointments);
         return res.status(200).json({ appointments: updated_appointments });
     }catch(error){
         console.log(error);
@@ -163,5 +167,27 @@ module.exports.get_appointment_page = async (req, res) => {
 
 
 module.exports.make_appointment = async (req, res) => {
-    res.render(path.join('clinic_administation_views', 'make_appointment'));
+    try{
+        var {appointment_id, animal_id} = JSON.parse(JSON.stringify(req.body));
+        const updatedAppointment = await Appointment.findOneAndUpdate(
+            { _id: appointment_id },
+            { $set: { animal_id: animal_id } },
+            { new: true }
+          );
+        console.log(updatedAppointment.animal_id);
+        return res.status(200).json({message: "success"});
+    }catch(error)
+    {
+        console.log(error);
+        return res.status(500).json({error: "failed to make an appointment"});
+    }
+}
+
+
+module.exports.get_unconfirmed_bookings_page = async (req, res) =>{
+    res.render(path.join('clinic_administation_views', 'unconfirmed_bookings'));
+}
+
+module.exports.get_confirmed_bookings_page = async (req, res) =>{
+    res.render(path.join('clinic_administation_views', 'confirmed_bookings'));
 }

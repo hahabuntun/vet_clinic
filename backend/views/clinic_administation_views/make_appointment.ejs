@@ -26,19 +26,23 @@
     </header>
     <h1>Запись в ветеринарную клинику</h1>
     <div id="booking_filter" class="filter-container">
-        <form action="/clients/find_by_passport">
+        <form id="clientForm" action="/clients/find_by_passport">
             <input name="passport" type="text" class="dataInput" id="passportSearch" placeholder="Серия и номер пасспорта">
             <button type="submit" id="searchButton">Поиск клиента</button>
         </form>
-        <ul class="info">
-            <li>ID</li>
-            <li>Имя</li>
-            <li>Фамилия</li>
-            <li>Отчество</li>
-            <li>Пасспорт</li>
-            <li>Телефон</li>
-            <li>Email</li>
+        <ul id="clientInfo" class="info">
+            <li id="clientId">ID</li>
+            <li id="clientName">Имя</li>
+            <li id="clientSecondName">Фамилия</li>
+            <li id="clientThirdName">Отчество</li>
+            <li id="clientPassport">Пасспорт</li>
+            <li id="clientPhone">Телефон</li>
+            <li id="clientEmail">Email</li>
         </ul>
+        <label for="pet-select">Питомцы</label>
+        <select id="pet-select">
+
+        </select>
     </div>
     
 
@@ -62,65 +66,6 @@
         </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script>
-        async function refresh_doctor_div(doctor_div, doctor_id, date) {
-            try {
-                date.setHours(date.getHours());
-                console.log(date);
-                const response = await $.ajax({
-                    url: `/doctor_schedule/${doctor_id}?date=${date}`,
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(data) {
-                        console.log(data);
-                        $(doctor_div).find('.scheduleEntry').remove();
-                        var helper = $(doctor_div).find('hr');
-                        var appointments = data.appointments;
-                        appointments.forEach(function(appointment) {
-                            var schedEntry = $('<div></div>').addClass('scheduleEntry').attr('id', appointment._id);
-                            var span = $('<span></span>').text(`${appointment.service_name} - ${appointment.time}`);
-                            var btn = $('<button></button>').addClass('bookBtn').text('+');
-                            schedEntry.append(span).append(btn);
-                            helper.before(schedEntry);
-                        });
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                });
-            } catch (error) {
-                console.log(error);
-            }
-        }
-
-        async function handleDateChange(event) {
-            try {
-                const selectedDate = $(event.target).val();
-                const doctor_id = $(event.target).attr('id');
-                var date = new Date();
-                if (selectedDate != "") {
-                    date = new Date(selectedDate);
-                }
-                await refresh_doctor_div($(event.target).parent(), doctor_id, date);
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-
-
-        function set_date() {
-            $('input[type="date"]').each(function() {
-                var selected_date = new Date().toISOString().slice(0, 10);
-                $(this).val(selected_date).trigger('change');
-            });
-        }
-
-        function add_change_date_handlers() {
-            $('input[type="date"]').on('change', handleDateChange);
-        }
-
-        add_change_date_handlers();
-        set_date();
-    </script>
+    <script src="/scripts/make_appointment.js"></script>
 </body>
 </html>

@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const path = require('path');
 
 const Client = require("../models/client.js");
+const Animal = require("../models/animal.js");
 
 
 
@@ -92,6 +93,8 @@ module.exports.get_client = async (req, res) => {
     if (!client) {
       return res.status(404).json({ message: 'Client not found' });
     }
+    const pets = await Animal.find({client_id: client._id});
+    client.pets = pets;
     // Return the found client
     res.status(200).json(client);
   }

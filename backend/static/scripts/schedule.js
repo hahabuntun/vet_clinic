@@ -26,10 +26,10 @@ $(document).ready(function() {
                         var schedEntry = $('<div></div>').addClass('scheduleEntry').attr('id', appointment._id);
                         var span = $('<span></span>').text(`${appointment.service_name} - ${appointment.time}`);
                         var btn = $('<button></button>').addClass('deleteBtn').html('&#10006;');
+                        btn.on("click", handleEntryDeleted);
                         schedEntry.append(span).append(btn);
                         helper.before(schedEntry);
                     });
-                    add_delete_schedule_entry_handlers();
                 },
                 error: function(error) {
                     console.log(error);

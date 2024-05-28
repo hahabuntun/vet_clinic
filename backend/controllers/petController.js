@@ -81,7 +81,7 @@ module.exports.get_all_client_pets = async (req, res) => {
     console.log(qdata);
     qdata.client_id = clientId;
     console.log(qdata);
-    var pets = await Animal.find(  qdata );;
+    var pets = await Animal.find(  qdata );
     // if (Object.keys(qdata).length == 0){
     //   pets = await Animal.find({ client_id: clientId });
     // }
