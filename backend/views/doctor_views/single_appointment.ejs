@@ -18,7 +18,7 @@
         <nav>
             <ul>
                 <li><a href="/doctors/<%= doctor._id %>/appointments">Приемы</a></li>
-                <li><a href="/pets/card">Поиск животного</a></li>
+                <li><a href="/doctors/<%= doctor._id %>/find_pets">Поиск животного</a></li>
                 <li><a href="/doctors/<%= doctor._id %>/schedule">Расписание записей</a></li>
                 <li><a href="#">Выход</a></li>
             </ul>
@@ -26,95 +26,214 @@
     </header>
     <div id="page-container">
         <h1>Информация по текущему приему</h1>
-
-        <h2>Детали приема:</h2>
-        <p>Тип приема: </p>
-        <p>Дата и время приема: <span id="datetime"></span></p>
-        <p>Принимающий врач: </p>
-        <p>Имя животного: <span id="animalName"></span></p>
-        <p>Порода: <span id="breed"></span></p>
-        <p>Возраст: <span id="age"></span></p>
-        <a href="./animal_card.html">Карточка животного</a>
+        <input type="hidden" id="page-id" value="<%=appointment.animal_card_page_id %>">
+        <h2>Детали приема: </h2>
+        <p>Тип приема: <%= appointment.service_name %></p>
+        <p>Дата и время приема: <span id="datetime"><%= appointment.date %>  <%= appointment.time %></span></p>
+        <p>Принимающий врач: <%= animal_doctor.name %> <%= animal_doctor.second_name %> <%= animal_doctor.third_name %></p>
+        <p>Кличка животного: <span id="animalName"><%= animal.name %></span></p>
+        <p>Название животного: <%= animal.type %></p>
+        <p>Порода: <span id="breed"><%= animal.breed %></span></p>
+        <p>Возраст: <span id="age"><%= animal.age%></span></p>
+        <p id="status">Статус приема: <%= appointment.status %></p>
+        <a href="/doctors/<%= appointment.doctor_id %>/pets/<%= animal._id %>/card">Карточка животного</a>
         <hr>
 
         <h2>Проведенные операции:</h2>
-        <ul id="operationsList">
-            <!-- Здесь будут отображаться проведенные операции -->
+        <ul id="procedureList">
         </ul>
-        <form id="operationForm">
-            <label for="operationName">Название операции:</label>
-            <input type="text" id="operationName" name="operationName">
-            <button type="button" onclick="addOperation()">Добавить операцию</button>
+        <% if (doctor._id.equals(animal_doctor._id)) { %>
+        <form id="procedureForm">
+            <label for="procedure_name">Название операции:</label>
+            <input type="text" id="procedure_name" name="name">
+            <button type="submit">Добавить операцию</button>
         </form>
+        <% } %>
         <hr>
 
         <h2>Симптомы животного: </h2>
         <ul id="symptomsList">
-            <!-- Здесь будут отображаться проведенные операции -->
         </ul>
+        <% if (doctor._id.equals(animal_doctor._id)) { %>
         <form id="symptomForm">
-            <label for="symptomName">Название симптома:</label>
-            <input type="text" id="symptomName" name="symptomName">
-            <button type="button" onclick="addSymptom()">Добавить симптом</button>
+            <label for="symptom_name">Название симптома:</label>
+            <input type="text" id="symptom_name" name="name">
+            <button type="submit">Добавить симптом</button>
         </form>
+        <% } else { %>
+            <p>Условие не выполнено</p>
+        <% } %>
         <hr>
-
+        
         <h2>Поставленный диагноз: </h2>
-        <p id="diagnosys">Цироз</p>
-        <form id="diagnosysForm">
-            <label for="diagnosysName">Диагноз:</label>
-            <input type="text" id="diagnosysName" name="diagnosysName">
-            <button type="button" onclick="addDiagnosys()">Поставить диагноз</button>
+        <ul id="diagnosisList">
+        </ul>
+        <% if (doctor._id.equals(animal_doctor._id)) { %>
+        <form id="diagnosisForm">
+            <label for="diagnosis_name">Диагноз:</label>
+            <input type="text" id="diagnosis_name" name="name">
+            <button type="submit">Поставить диагноз</button>
         </form>
+        <% } %>
         <hr>
-
-        <h2>Завершить прием:</h2>
-        <button type="button" onclick="finishAppointment()">Завершить прием</button>
+        <% if (doctor._id.equals(animal_doctor._id) && appointment.status == "не завершен") { %>
+            <h2 id="finish-header">Завершить прием:</h2>
+            <button id="btn-finish">Завершить прием</button>
+        <% } %>
     </div>
     
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <script>
-        // Функция для добавления операции в список
-        function addOperation() {
-            const operationName = document.getElementById("operationName").value;
-            const newListElement = document.createElement("li");
-            newListElement.textContent = operationName;
-            document.getElementById("operationsList").appendChild(newListElement);
-            document.getElementById("operationForm").reset(); // Очистить форму после добавления
-        }
+        $(document).ready(function() {
+            $("#procedureForm").on("submit", handleSubmitProcedure);
+            $("#diagnosisForm").on("submit", handleSubmitDiagnosis);
+            $("#symptomForm").on("submit", handleSubmitSymptom);
+            if($('#btn-finish').length){
+                    $("#btn-finish").on("click", handle_finish);
+            }
+            
 
-        function addSymptom() {
-            const symptomName = document.getElementById("symptomName").value;
-            const newListElement = document.createElement("li");
-            newListElement.textContent = symptomName;
-            document.getElementById("symptomsList").appendChild(newListElement);
-            document.getElementById("symptomForm").reset(); // Очистить форму после добавления
-        }
+            async function handleSubmitProcedure(event){
+                event.preventDefault();
 
-        function addDiagnosys() {
-            const diagnosysName = document.getElementById("diagnosysName").value;
-            document.getElementById("diagnosys").innerText = diagnosysName;
-            document.getElementById("operationForm").reset(); // Очистить форму после добавления
-        }
+                try{
+                    const formData = new FormData(event.target);
+                    await fetch(`/appointments/${$('#page-id').val()}/procedures`, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(async (response) => {
+                    // Handle successful update
+                    if (response.status == 201){
+                        await refresh_procedures();
+                    }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+                }catch(error){
+                    console.log(error);
+                }
+            }
+            async function handleSubmitDiagnosis(event){
+                event.preventDefault();
+                try{
+                    const formData = new FormData(event.target);
+                    await fetch(`/appointments/${$('#page-id').val()}/diagnosis`, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(async (response) => {
+                    // Handle successful update
+                    if (response.status == 201){
+                        await refresh_diagnosis();
+                    }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+                }catch(error){
+                    console.log(error);
+                }
+            }
+            async function handleSubmitSymptom(event){
+                event.preventDefault();
+                try{
+                    const formData = new FormData(event.target);
+                    await fetch(`/appointments/${$('#page-id').val()}/symptoms`, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(async (response) => {
+                    // Handle successful update
+                    if (response.status == 201){
+                        await refresh_symptoms();
+                    }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+                }catch(error){
+                    console.log(error);
+                }
+            }
 
-        // Функция для завершения приема
-        function finishAppointment() {
-            // Дополнительные действия по завершению приема (можно добавить здесь)
-            alert("Прием завершен!");
-        }
 
-        // Дата и время приема
-        const currentDate = new Date().toLocaleDateString();
-        const currentTime = new Date().toLocaleTimeString();
-        document.getElementById("datetime").textContent = currentDate + " " + currentTime;
-
-        // Заполнение информации о животном
-        const animalName = "Рекс";
-        const breed = "Лабрадор";
-        const age = "3 года";
-        document.getElementById("animalName").textContent = animalName;
-        document.getElementById("breed").textContent = breed;
-        document.getElementById("age").textContent = age;
+            async function refresh_symptoms(){
+                var animal_card_page_id = $("#page-id").val();
+                var parent = $("#symptomsList");
+                await $.ajax({
+                url: `/appointments/${animal_card_page_id}/symptoms`,
+                method: 'GET',
+                success: function(data) {
+                    parent.empty();
+                    data.symptoms.forEach(symptom => {
+                        parent.append($(`<li>${symptom.name}</li>`))
+                    })
+                },
+                error: function(error) {
+                    console.error('Ошибка при отправке данных:', error);
+                }
+                });
+            }
+            async function refresh_diagnosis(){
+                var animal_card_page_id = $("#page-id").val();
+                var parent = $("#diagnosisList");
+                await $.ajax({
+                url: `/appointments/${animal_card_page_id}/diagnosis`,
+                method: 'GET',
+                success: function(data) {
+                    parent.empty();
+                    data.diagnosises.forEach(diagnosis => {
+                        parent.append($(`<li>${diagnosis.name}</li>`))
+                    })
+                },
+                error: function(error) {
+                    console.error('Ошибка при отправке данных:', error);
+                }
+                });
+            }
+            async function refresh_procedures(){
+                var animal_card_page_id = $("#page-id").val();
+                var parent = $("#procedureList");
+                await $.ajax({
+                url: `/appointments/${animal_card_page_id}/procedures`,
+                method: 'GET',
+                success: function(data) {
+                    parent.empty();
+                    data.procedures.forEach(procedure => {
+                        parent.append($(`<li>${procedure.name}</li>`))
+                    })
+                },
+                error: function(error) {
+                    console.error('Ошибка при отправке данных:', error);
+                }
+                });
+            }
+            async function handle_finish(event){
+                try{
+                    await fetch(`/appointments/${$('#page-id').val()}/finish`, {
+                        method: 'PATCH',
+                    })
+                    .then(async (response) => {
+                    // Handle successful update
+                    if (response.status == 200){
+                        $("#status").text("Статус приема: завершен");
+                        $('#finish-header, #btn-finish').remove();
+                    }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+                }catch(error){
+                    console.log(error);
+                }
+            }
+            refresh_symptoms()
+            refresh_procedures()
+            refresh_diagnosis()
+    });
     </script>
 </body>
 </html>

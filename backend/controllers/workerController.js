@@ -98,10 +98,16 @@ module.exports.get_single_doctor_shedule_page = async (req, res) =>{
 }
 
 module.exports.get_doctor_appointments_page = async (req, res) => {
-  var {doctor_id} = req.params;
+  try{
+    var {doctor_id} = req.params;
     var doctor = await Worker.findOne({_id: doctor_id});
     var data = {
       doctor: doctor
     }
-  res.render(path.join('doctor_views', 'appointments'), data);
+    res.render(path.join('doctor_views', 'appointments'), data);
+  }
+  catch(error){
+    res.status(500).json({ error: 'could not return page' });
+  }
+
 }

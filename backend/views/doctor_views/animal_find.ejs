@@ -1,0 +1,118 @@
+<!-- На этой странице врач смотрит/создает кароточку животного(все приемы и анализы) -->
+<!-- На этой странице врач добавляет результаты тестов к карточке животного -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Страница электронной карты</title>
+    <link rel="stylesheet" href="/styles/css/animal_card.css">
+    <link rel="stylesheet" href="/styles/css/basic_nav.css">
+</head>
+<body>
+    <header>
+        <!-- Navbar -->
+        <nav>
+            <ul>
+                <li><a href="/doctors/<%= doctor._id %>/appointments">Приемы</a></li>
+                <li><a href="/doctors/<%= doctor._id %>/find_pets">Поиск животного</a></li>
+                <li><a href="/doctors/<%= doctor._id %>/schedule">Расписание записей</a></li>
+                <li><a href="#">Выход</a></li>
+            </ul>
+        </nav>
+    </header>
+    <input type="hidden" id="doctor-id" value="<%= doctor._id %>" >
+    <div id="page-container">
+        <h2>Введите данные клиента</h2>
+        <form id="find-animal-by-client">
+            <div id="animal-search">
+                <input name="email" type="text" id="emailSearch" placeholder="Email">
+                <input name="passport" type="text" id="passportSearch" placeholder="Серия и номер пасспорта">
+                <input name="phone" type="text" id="phoneSearch" placeholder="Телефон">
+                <button type="submit">Поиск</button>
+            </div>
+        </form>
+    
+            <hr>
+    
+        <h2>Введите данные животного</h2>
+        <form id="find-animal-by-pet">
+            <div id="animal-search">
+                <input name="type" type="text" id="typeSearch" placeholder="Название">
+                <input name="breed" type="text" id="breedSearch" placeholder="Порода">
+                <input name="name" type="text" id="nameSearch" placeholder="Кличка">
+                <input name="animal_passport" type="text" id="animalPassportSearch" placeholder="Пасспорт животного">
+                <button type="submit">Поиск</button>
+            </div>
+        </form>
+            <br>
+        <label for="pet">Выберите питомца:</label>
+        <select id="pet">
+            <option value="not_selected">Не выбран</option>
+        </select>
+
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Функция для отправки GET запроса на сервер
+            function findPets(searchType) {
+                const url = '/find_pets';
+                const queryParams = { search_type: searchType };
+
+                // Добавляем параметры из форм
+                if (searchType === 'client') {
+                    queryParams.email = $('#emailSearch').val();
+                    queryParams.passport = $('#passportSearch').val();
+                    queryParams.phone = $('#phoneSearch').val();
+                } else if (searchType === 'animal') {
+                    queryParams.type = $('#typeSearch').val();
+                    queryParams.breed = $('#breedSearch').val();
+                    queryParams.name = $('#nameSearch').val(); 
+                    queryParams.animal_passport = $('#animalPassportSearch').val();
+                }
+
+                $.ajax({
+                url: url,
+                type: 'GET',
+                data: queryParams,
+                success: function(data) {
+                    $('#pet').empty();
+                    $('#pet').append('<option value="Не выбрано">Не выбрано</option>')
+                    $.each(data.animals, function(index, animal) {
+                        $('#pet').append('<option value="' + animal._id + '">' + animal.type + " " + animal.breed + " " + animal.name + " " + animal.animal_passport + '</option>'); // Используем animal.id, если есть
+                    });
+                },
+                error: function(error) {
+                    console.error('Ошибка при получении данных:', error);
+                }
+                });
+            }
+
+            // Функция для перехода на страницу питомца
+            function goToPetPage() {
+                const petId = $('#pet').val();
+                if (petId !== "Не выбрано") {
+                    window.location.href = `/doctors/${$('#doctor-id').val()}/pets/${petId}/card`;
+                } else {
+                    alert('Пожалуйста, выберите питомца.');
+                }
+            }
+
+            // Привязка обработчиков событий
+            $('#find-animal-by-client').submit(function(event) {
+                event.preventDefault();
+                findPets('client');
+            });
+
+            $('#find-animal-by-pet').submit(function(event) {
+                event.preventDefault();
+                findPets('animal');
+            });
+            $("#pet").on("change", goToPetPage)
+        });
+    </script>
+</body>
+</html>

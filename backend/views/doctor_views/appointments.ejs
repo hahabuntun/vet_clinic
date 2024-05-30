@@ -15,30 +15,28 @@
         <nav>
             <ul>
                 <li><a href="/doctors/<%= doctor._id %>/appointments">Приемы</a></li>
-                <li><a href="/pets/card">Поиск животного</a></li>
+                <li><a href="/doctors/<%= doctor._id %>/find_pets">Поиск животного</a></li>
                 <li><a href="/doctors/<%= doctor._id %>/schedule">Расписание записей</a></li>
                 <li><a href="#">Выход</a></li>
             </ul>
         </nav>
     </header>
-
+    <p>Ваши данные: <%= doctor.name %> <%= doctor.second_name %> <%= doctor.third_name %></p>
+    <h1>Расписание приемов:</h1>
+    <input type="hidden" id="doctor-id" value="<%= doctor._id %>" >
     <div class="filter-container">
         <!-- Фильтры по дате и времени -->
         <label for="date-filter">Фильтр по дате:</label>
         <input type="date" id="date-filter">
         <label for="pet-filt">Фильтр по питомцу:</label>
-        <select id="pet-filt">
-            <option value="pet1">Pet 1</option>
-            <option value="pet2">Pet 2</option>
-        </select>
-        <button onclick="applyFilters()">Поиск записей</button>
+        <button onclick="">Поиск записей</button>
 
     </div>
 
     <div class="appointments">
         <!-- Список приемов будет появляться здесь -->
     </div>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="/scripts/single_doctor_appointments.js"></script>
 </body>
 </html>

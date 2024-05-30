@@ -25,5 +25,5 @@ const AnalysisSchema = mongoose.Schema(
     }
 );
 
-const AnalysisCard = mongoose.model("Analysis", AnalysisSchema);
-module.exports = AnalysisCard;
+const Analysis = mongoose.model("Analysis", AnalysisSchema);
+module.exports = Analysis;

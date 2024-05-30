@@ -18,7 +18,7 @@ $(document).ready(function() {
                 var header = $('<h2></h2>').text(`Дата и Время: ${year}.${month}.${day} ${appointment.time}`);
                 appointment_div.append(header);
                 if (appointment.animal_id){
-                    var animal_p = $('<p></p>').html(`<a href="/pets/${appointment.animal_id}/card">Записанное животное: ${appointment.animal_data}</a>`);
+                    var animal_p = $('<p></p>').html(`<a href="/doctors/${doctor_id}/pets/${appointment.animal_id}/card">Записанное животное: ${appointment.animal_data}</a>`);
                     appointment_div.append(animal_p);
                     if(appointment.animal_card_page_id){
                         var extra = $('<p></p>').text("Прием осуществл(ен/яется)");

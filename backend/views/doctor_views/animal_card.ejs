@@ -9,6 +9,8 @@
     <title>Страница электронной карты</title>
     <link rel="stylesheet" href="/styles/css/animal_card.css">
     <link rel="stylesheet" href="/styles/css/basic_nav.css">
+    <link rel="stylesheet" href="/styles/css/list.css">
+    <link rel="stylesheet" href="/styles/css/bookings.css">
 </head>
 <body>
     <header>
@@ -16,139 +18,67 @@
         <nav>
             <ul>
                 <li><a href="/doctors/<%= doctor._id %>/appointments">Приемы</a></li>
-                <li><a href="/pets/card">Поиск животного</a></li>
+                <li><a href="/doctors/<%= doctor._id %>/find_pets">Поиск животного</a></li>
                 <li><a href="/doctors/<%= doctor._id %>/schedule">Расписание записей</a></li>
                 <li><a href="#">Выход</a></li>
             </ul>
         </nav>
     </header>
-    <div id="page-container">
-        <h2>Введите данные клиента</h2>
-        <div id="animal-search">
-            <input type="text" id="emailSearch" placeholder="Email">
-            <input type="text" id="passportSearch" placeholder="Серия и номер пасспорта">
-            <input type="text" id="phoneSearch" placeholder="Телефон">
-            <button id="searchButton">Поиск</button>
-        </div>
-
-        <hr>
-
-        <h2>Введите данные животного</h2>
-        <div id="animal-search">
-            <input type="text" id="nameSearch" placeholder="Название">
-            <input type="text" id="breedSearch" placeholder="Порода">
-            <input type="text" id="nicknameSearch" placeholder="Кличка">
-            <input type="text" id="passportSearch" placeholder="Пасспорт животного">
-            <button id="searchButton">Поиск</button>
-        </div>
-
-
-
-        <label for="pet">Выберите питомца:</label>
-        <select id="pet" onchange="searchPet(this)">
-            <option value="pet1">Pet 1</option>
-            <option value="pet2">Pet 2</option>
-        </select>
-
-
-        <hr>
-
-        <h1>
-            Данные о приемах
-        </h1>
-        <ul id="appointmentsList">
-            <!-- Здесь будут отображаться данные о приемах -->
+        <ul class="info">
+            <li>Кличка - <%= animal.name %></li>
+            <li>Название - <%= animal.type %></li>
+            <li>Порода - <%= animal.breed %></li>
+            <li>Пасспорт Животного - <%= animal.animal_passport %></li>
+            <li>Возраст - <%= animal.age %></li>
         </ul>
         <hr>
+
+        <h2>
+            Данные о приемах
+        </h2>
+        <div id="appointments">
+            <% appointments.forEach(appointment => { %>
+            <div class="appointment">
+                <p>Дата и время приема: <%= appointment.date %> <%= appointment.time %></p>
+                <p>Принимающий врач: <%= appointment.doctor_full_name %></p>
+                <p>Оказываемая услуга: <%= appointment.service_name %></p>
+                <p>Статус: <%= appointment.status %></p>
+                <a href="/doctors/<%= doctor._id %>/pets/<%= appointment.animal_id %>/card/<%= appointment.animal_card_page_id %>">Данные приема</a>
+            </div>
+            <% }); %>
+        </div>
+        <hr>
     
-        <h1>Тесты</h1>
+        <h2>Результаты анализов:</h2>
     
         
     
-        <div id="petDetails" style="display: none;">
-            <h2>Результаты анализов для питомца:</h2>
+        <div id="petDetails">
+            <h3>Результаты анализов для питомца:</h3>
             <div id="analysisResults">
-                <!-- Здесь будут отображаться результаты анализов -->
             </div>
-            <input type="file" id="analysisFile">
-            <button onclick="uploadAnalysis()">Прикрепить файл с результатами</button>
+            <h3>Добавить новый анализ:</h3>
+            <form>
+                <input name="analysis_file" type="file" id="analysisFile">
+                <input placeholder="Описание" name="analysis_description" type="text" id="analysisDescription">
+                <input placeholder="Название" name="analysis_name" type="text" id="analysisName">
+                <button>Прикрепить файл с результатами</button>
+            </form>
         </div>
     </div>
     
 
     <script>
-                // Mock data for pet analysis results
-        const analysisResults = [
-            { name: "ЭКГ", date: "24.02.2022" },
-            { name: "Анализ крови", date: "15.03.2022" }
-        ];
-
-        // Function to search for pet by ID
-        function searchPet(selectElement) {
-            const selectedValue = selectElement.value;
-            // Code to fetch pet details from server based on ID can be added here
-
-            // Mocking pet data retrieval
-            if (1 == 1) {
-                displayPetTests();
-                displayPetAppointments();
-            } else {
-                alert("Питомец не найден");
-            }
+        function searchPet() {
         }
-
-        // Function to display pet details and analysis results
         function displayPetTests() {
-            document.getElementById("petDetails").style.display = "block";
-            const analysisResultsContainer = document.getElementById("analysisResults");
-            analysisResultsContainer.innerHTML = "";
-
-            analysisResults.forEach(result => {
-                const resultElement = document.createElement("p");
-                const hrElement = document.createElement("hr");
-                resultElement.textContent = `${result.name} ${result.date}`;
-                analysisResultsContainer.appendChild(resultElement);
-                analysisResultsContainer.appendChild(hrElement)
-            });
         }
 
-        // Function to upload analysis file
         function uploadAnalysis() {
-            const file = document.getElementById("analysisFile").files[0];
-            // Code to send file to server for storage can be added here
-            alert("Файл с результатами отправлен на сервер");
         }
-
-
-
-        const appointments = [
-            { date: "10.02.2022", service: "Общий осмотр" },
-            { date: "15.03.2022", service: "Прививка" }
-        ];
-
-        // Function to display pet appointments
         function displayPetAppointments() {
-            const appointmentsList = document.getElementById("appointmentsList");
-            appointmentsList.display = 'block';
-            appointmentsList.innerHTML = "";
-            console.log(1);
-            appointments.forEach((appointment, index) => {
-                
-                const listItem = document.createElement("li");
-                listItem.innerHTML = `
-                    <p>Дата: ${appointment.date}</p>
-                    <p>Услуга: ${appointment.service}</p>
-                    <button onclick="viewMore(${index})">Смотреть больше</button>
-                    <hr>
-                `;
-                appointmentsList.appendChild(listItem);
-            });
         }
-
-        // Function to redirect to details page on "Смотреть больше" button click
         function viewMore(index) {
-            // Redirect to another page, passing appointment details if needed
-            window.location.href = "single_appointment.html";
         }
     </script>
 </body>

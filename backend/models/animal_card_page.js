@@ -12,6 +12,10 @@ const AnimalCardPageSchema = mongoose.Schema(
             type: String,
             required: true
         },
+        finished: {
+            type: Boolean,
+            default: false
+        }
     },
     {
         timestamps: true

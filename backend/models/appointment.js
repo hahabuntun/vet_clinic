@@ -26,11 +26,13 @@ const AppointmentSchema = mongoose.Schema(
         service_name: {type: String},
         doctor_full_name: {type: String},
         time: {type: String},
+        date: {type: String},
         client_data: {type: String},
         animal_data: {type: String},
         client_id: {type: String},
         client_phone: {type: String},
-        animal_card_page_id: {type: String}
+        animal_card_page_id: {type: String},
+        status: {type: String},
     },
     {
         timestamps: true
