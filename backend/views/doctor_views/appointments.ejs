@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список приемов</title>
+    <link rel="stylesheet" href="/styles/css/personal_schedule.css">
+    <link rel="stylesheet" href="/styles/css/basic_nav.css">
+    <link rel="stylesheet" href="/styles/css/doctor_appointments_booking.css">
+</head>
+<body>
+    <header>
+        <!-- Navbar -->
+        <nav>
+            <ul>
+                <li><a href="/doctors/<%= doctor._id %>/appointments">Приемы</a></li>
+                <li><a href="/pets/card">Поиск животного</a></li>
+                <li><a href="/doctors/<%= doctor._id %>/schedule">Расписание записей</a></li>
+                <li><a href="#">Выход</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="filter-container">
+        <!-- Фильтры по дате и времени -->
+        <label for="date-filter">Фильтр по дате:</label>
+        <input type="date" id="date-filter">
+        <label for="pet-filt">Фильтр по питомцу:</label>
+        <select id="pet-filt">
+            <option value="pet1">Pet 1</option>
+            <option value="pet2">Pet 2</option>
+        </select>
+        <button onclick="applyFilters()">Поиск записей</button>
+
+    </div>
+
+    <div class="appointments">
+        <!-- Список приемов будет появляться здесь -->
+    </div>
+
+    <script src="/scripts/single_doctor_appointments.js"></script>
+</body>
+</html>

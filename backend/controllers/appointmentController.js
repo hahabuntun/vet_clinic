@@ -42,6 +42,11 @@ module.exports.get_single_doctor_shedule = async(req, res) => {
             const minutes = appointment.appointment_time.getMinutes().toString().padStart(2, '0');
             const timeStr = `${hours}:${minutes}`;
             appointment.time = timeStr;
+            var animal = await Animal.findOne({_id: appointment.animal_id});
+            if (animal){
+                appointment.animal_data = animal.breed + " " +  animal.type + " " + animal.name;
+            }
+            
             return appointment;
         })
         var temp_appointments = await Promise.all(appointment_promises);

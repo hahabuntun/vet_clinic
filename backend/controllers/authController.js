@@ -7,26 +7,44 @@ const Client = require("../models/client.js");
 
 
 
+module.exports.get_login_page = async (req, res) =>{
+  try{
+    res.render("login.ejs");
+  }catch(error)
+  {
+    res.status(500).json({ error: error });
+  }
+ 
+}
+
 module.exports.login_worker = async (req, res) => {
   try {
     const { email, password } = req.body;
     const worker = await Worker.findOne({ email });
     if (!worker) {
-    return res.status(401).json({ error: 'Authentication failed' });
+      return res.status(401).json({ error: 'Authentication failed' });
     }
     const passwordMatch = await bcrypt.compare(password, worker.password);
     if (!passwordMatch) {
-    return res.status(401).json({ error: 'Authentication failed' });
+      return res.status(401).json({ error: 'Authentication failed' });
     }
-    const token = jwt.sign({ email: email }, "secret", {
-    expiresIn: '1h',
+      const token = jwt.sign({ email: email }, "secret", {
+      expiresIn: '1h',
     });
-    console.log(token.length);
-    res.status(200).json({ token });
+    var redirect_url = "";
+    if (worker.type == "doctor"){
+      redirect_url = `/doctors/${worker._id}/schedule`;
+    }else if(worker.type == "receptionist"){
+      redirect_url = `/clients`;
+    }
+    else if (worker.type == "admin"){
+      redirect_url = `/workers`
+    }
+    res.status(200).json({ token, redirect_url });
   } catch (error) {
     res.status(500).json({ error: 'Login failed' });
   }
-  };
+};
 
 
 module.exports.login_client = async (req, res) => {
@@ -47,4 +65,4 @@ module.exports.login_client = async (req, res) => {
     } catch (error) {
       res.status(500).json({ error: 'Login failed' });
     }
-    };
+  };

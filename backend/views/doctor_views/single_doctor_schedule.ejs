@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расписание записей</title>
+    <link rel="stylesheet" href="/styles/css/personal_schedule.css">
+    <link rel="stylesheet" href="/styles/css/basic_nav.css">
+    <link rel="stylesheet" href="/styles/css/doctor_appointments_booking.css">
+</head>
+<body>
+    <header>
+        <!-- Navbar -->
+        <nav>
+            <ul>
+                <li><a href="/doctors/<%= doctor._id %>/appointments">Приемы</a></li>
+                <li><a href="/pets/card">Поиск животного</a></li>
+                <li><a href="/doctors/<%= doctor._id %>/schedule">Расписание записей</a></li>
+                <li><a href="#">Выход</a></li>
+            </ul>
+        </nav>
+    </header>
+    <p>Ваши данные: <%= doctor.name %> <%= doctor.second_name %> <%= doctor.third_name %></p>
+    <h1>Расписание записей:</h1>
+    <input type="hidden" id="doctor-id" value="<%= doctor._id %>" >
+    <div class="filter-container">
+        <label for="date-filter">Фильтр по дате:</label>
+        <input type="date" id="date-filter">
+        <button>Поиск записей</button>
+    </div>
+
+    <div class="appointments">
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="/scripts/single_doctor_schedule.js"></script>
+</body>
+</html>
+

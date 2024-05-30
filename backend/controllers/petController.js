@@ -103,3 +103,11 @@ module.exports.get_all_client_pets = async (req, res) => {
     res.status(500).json({ message: 'Failed to retrieve pets' });
   }
 }
+
+module.exports.get_animal_card_view = async (req, res) => {
+  res.render(path.join('doctor_views', 'animal_card'));
+}
+
+module.exports.get_animal_card_page = async (req, res) => {
+  res.render(path.join('doctor_views', 'single_appointment'));
+}

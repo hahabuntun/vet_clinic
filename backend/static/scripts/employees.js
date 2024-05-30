@@ -12,10 +12,10 @@ employeeTable.addEventListener('click', (event) => {
     if (clickedElement.tagName === 'BUTTON' && clickedElement.textContent.trim() === 'Изменить') {
         workerId  = clickedElement.id.substring(3);
         const employeePassport = clickedElement.parentNode.parentNode.querySelector('td:first-child').textContent;
-        const employeeName = clickedElement.parentNode.parentNode.querySelector('td:nth-child(2)').textContent;
-        const employeeSecondName = clickedElement.parentNode.parentNode.querySelector('td:nth-child(3)').textContent;
-        const employeeThirdName = clickedElement.parentNode.parentNode.querySelector('td:nth-child(4)').textContent;
-        const employeeEmail = clickedElement.parentNode.parentNode.querySelector('td:nth-child(5)').textContent;
+        const employeeEmail = clickedElement.parentNode.parentNode.querySelector('td:nth-child(2)').textContent;
+        const employeeName = clickedElement.parentNode.parentNode.querySelector('td:nth-child(3)').textContent;
+        const employeeSecondName = clickedElement.parentNode.parentNode.querySelector('td:nth-child(4)').textContent;
+        const employeeThirdName = clickedElement.parentNode.parentNode.querySelector('td:nth-child(5)').textContent;
         const employeePhone = clickedElement.parentNode.parentNode.querySelector('td:nth-child(6)').textContent;
         const employeeType = clickedElement.parentNode.parentNode.querySelector('td:nth-child(7)').textContent;
 

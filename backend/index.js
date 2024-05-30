@@ -11,6 +11,7 @@ var app = express();
 const login_routes = require("./routes/login");
 const admin_routes = require("./routes/admin");
 const receptionis_routes = require("./routes/receptionist");
+const doctor_routes = require("./routes/doctor");
 
 
 
@@ -33,6 +34,7 @@ app.use(bodyParser.json());
 app.use('/', login_routes);
 app.use('/', admin_routes);
 app.use('/', receptionis_routes);
+app.use('/', doctor_routes);
 
 
 mongoose.connect("mongodb://127.0.0.1:27017/test").then(()=>{

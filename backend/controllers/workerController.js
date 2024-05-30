@@ -40,7 +40,7 @@ module.exports.edit_worker = async (req, res) => {
       console.error(error);
       res.status(500).json({ message: 'Failed to update worker' });
     }
-  }
+}
 
 module.exports.delete_worker = async (req, res) => {
     try {
@@ -59,7 +59,7 @@ module.exports.delete_worker = async (req, res) => {
       console.error(error);
       res.status(500).json({ message: 'Failed to delete worker' });
     }
-  }
+}
 
 module.exports.add_worker =  async (req, res) => {
     try {
@@ -81,4 +81,27 @@ module.exports.add_worker =  async (req, res) => {
         console.log(error)
     res.status(500).json({ error: 'Registration failed' });
     }
-    };
+};
+
+
+module.exports.get_single_doctor_shedule_page = async (req, res) =>{
+  try{
+    var {doctor_id} = req.params;
+    var doctor = await Worker.findOne({_id: doctor_id});
+    var data = {
+      doctor: doctor
+    }
+    res.render(path.join('doctor_views', 'single_doctor_schedule'), data);
+  }catch(error){
+    res.status(500).json({ error: 'could not return page' });
+  }
+}
+
+module.exports.get_doctor_appointments_page = async (req, res) => {
+  var {doctor_id} = req.params;
+    var doctor = await Worker.findOne({_id: doctor_id});
+    var data = {
+      doctor: doctor
+    }
+  res.render(path.join('doctor_views', 'appointments'), data);
+}
