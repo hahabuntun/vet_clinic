@@ -1,49 +1,43 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 0;
+}
+.navbar {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+}
+.filter {
+    margin-bottom: 10px;
+}
+.filter select {
+    padding: 5px;
+}
+.filter-container{
+    margin-top: 20px;
+    text-align: center;
     }
 
-    .navbar {
-        background-color: #333;
-        color: white;
-        padding: 10px;
-    }
-
-    .filter {
-        margin-bottom: 10px;
-    }
-
-    .filter select {
-        padding: 5px;
-    }
-    .filter-container{
-        margin-top: 20px;
-        text-align: center;
-        }
-
-    .appointments {
-        margin-top: 20px;
-    }
-
-    .appointment {
-        border: 1px solid #ccc;
-        padding: 10px;
-        margin-bottom: 10px;
-    }
-
-    .appointment a {
-        color: blue;
-        text-decoration: underline;
-    }
-
-    button {
-        padding: 10px 20px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        cursor: pointer;
-    }
-    button:hover {
-        background-color: #45a049;
-    }
+.appointments {
+    margin-top: 20px;
+}
+.appointment {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.appointment a {
+    color: blue;
+    text-decoration: underline;
+}
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #45a049;
+}

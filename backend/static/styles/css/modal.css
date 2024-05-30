@@ -9,7 +9,6 @@
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.4);
   }
-  
   .modal-content {
     background-color: #fefefe;
     margin: 15% auto;
@@ -17,14 +16,12 @@
     border: 1px solid #888;
     width: 30%;
   }
-  
   .close-button {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
   }
-  
   .close-button:hover,
   .close-button:focus {
     color: black;

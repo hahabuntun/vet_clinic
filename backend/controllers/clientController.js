@@ -6,11 +6,30 @@ const Client = require("../models/client.js");
 const Animal = require("../models/animal.js");
 
 
-
-
 module.exports.get_all_clients  = async (req, res) => {
     const qdata = req.query;
-    const clients = await Client.find(qdata);
+    var query = {};
+    if (qdata){
+      if(qdata.name && qdata.name != ""){
+        query.name = qdata.name;
+      }
+      if (qdata.second_name && qdata.second_name != ""){
+        query.second_name = qdata.second_name;
+      }
+      if (qdata.third_name && qdata.third_name != ""){
+        query.third_name = qdata.third_name;
+      }
+      if (qdata.email && qdata.email != ""){
+        query.email = qdata.email;
+      }
+      if (qdata.phone && qdata.phone != ""){
+        query.phone = qdata.phone;
+      }
+      if (qdata.passport && qdata.passport != ""){
+        query.passport = qdata.passport;
+      }
+    }
+    const clients = await Client.find(query);
     data = {
         clients: clients
     }
@@ -27,15 +46,13 @@ module.exports.edit_client = async (req, res) => {
         return  res.status(400).json({ message: 'Client with this passport already exists' });
       }
       const updatedClient = await Client.findOneAndUpdate(
-        { _id: req.params.clientId }, // Filter by serviceId
-        { $set: updates }, // Update with the fields in updates
-        { new: true } // Return the updated document
+        { _id: req.params.clientId },
+        { $set: updates },
+        { new: true }
     );
-      
       if (!updatedClient) {
         return res.status(404).json({ message: 'Client not found' });
       }
-  
       res.status(200).json({ email: updatedClient.email, name: updatedClient.name,
         second_name: updatedClient.second_name, third_name: updatedClient.third_name,
         phone: updatedClient.phone, passport: updatedClient.passport, _id: updatedClient._id });
@@ -47,22 +64,16 @@ module.exports.edit_client = async (req, res) => {
 module.exports.delete_client = async (req, res) => {
     try {
       const clientId = req.params.clientId;
-  
-      // Find the client by ID and delete it
       const deletedClient = await Client.findByIdAndDelete(clientId);
-  
       if (!deletedClient) {
         return res.status(404).json({ message: 'Client not found' });
       }
-  
       res.json({ message: 'Client deleted successfully' });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Failed to delete client' });
     }
-  }
-
-
+}
 module.exports.add_client = async (req, res) => {
     try {
       const data = JSON.parse(JSON.stringify(req.body));
@@ -84,8 +95,7 @@ module.exports.add_client = async (req, res) => {
     } catch (error) {
     res.status(500).json({ error: 'Registration failed' });
     }
-    };
-
+};
 module.exports.get_client = async (req, res) => {
   try{
     const { passport } = req.params;
@@ -95,11 +105,26 @@ module.exports.get_client = async (req, res) => {
     }
     const pets = await Animal.find({client_id: client._id});
     client.pets = pets;
-    // Return the found client
     res.status(200).json(client);
   }
   catch(error)
   {
     res.status(500).json({ error: 'could not find client' });
+  }
+}
+module.exports.get_main_page = async (req, res) => {
+  try{
+    var {client_id} = req.params;
+    var client = await Client.findOne({_id: client_id});
+    var pets = await Animal.find({client_id: client_id});
+    var data = {
+      pets: pets,
+      client: client
+    }
+    console.log(data);
+    res.render(path.join('client_views', 'main'), data);
+  }catch(error){
+    console.log(error);
+    res.status(500).json({error: error});
   }
 }

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,10 +8,8 @@
     <link rel="stylesheet" href="/styles/css/bookings.css">
     <link rel="stylesheet" href="/styles/css/basic_nav.css">
 </head>
-
 <body>
     <header>
-        <!-- Navbar -->
         <nav>
             <ul>
                 <li><a href="/clients">Управлять клиентами</a></li>
@@ -24,22 +21,15 @@
             </ul>
         </nav>
     </header>
-
     <div class="filter-container">
-        <!-- Фильтры по дате и времени -->
         <label for="date-filter">Фильтр по дате:</label>
         <input type="date" id="date-filter">
         <button onclick="applyFilters()">Применить фильтр</button>
     </div>
-
     <div class="appointments">
-
     </div>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="/scripts/unconfirmed_bookings.js">
-        
     </script>
 </body>
-
 </html>

@@ -1,5 +1,3 @@
-<!-- На этой странице врач смотрит/создает кароточку животного(все приемы и анализы) -->
-<!-- На этой странице врач добавляет результаты тестов к карточке животного -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +10,6 @@
 </head>
 <body>
     <header>
-        <!-- Navbar -->
         <nav>
             <ul>
                 <li><a href="/doctors/<%= doctor._id %>/appointments">Приемы</a></li>
@@ -33,9 +30,7 @@
                 <button type="submit">Поиск</button>
             </div>
         </form>
-    
-            <hr>
-    
+        <hr>
         <h2>Введите данные животного</h2>
         <form id="find-animal-by-pet">
             <div id="animal-search">
@@ -51,18 +46,13 @@
         <select id="pet">
             <option value="not_selected">Не выбран</option>
         </select>
-
     </div>
-    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Функция для отправки GET запроса на сервер
             function findPets(searchType) {
                 const url = '/find_pets';
                 const queryParams = { search_type: searchType };
-
-                // Добавляем параметры из форм
                 if (searchType === 'client') {
                     queryParams.email = $('#emailSearch').val();
                     queryParams.passport = $('#passportSearch').val();
@@ -73,7 +63,6 @@
                     queryParams.name = $('#nameSearch').val(); 
                     queryParams.animal_passport = $('#animalPassportSearch').val();
                 }
-
                 $.ajax({
                 url: url,
                 type: 'GET',
@@ -90,8 +79,6 @@
                 }
                 });
             }
-
-            // Функция для перехода на страницу питомца
             function goToPetPage() {
                 const petId = $('#pet').val();
                 if (petId !== "Не выбрано") {
@@ -100,13 +87,10 @@
                     alert('Пожалуйста, выберите питомца.');
                 }
             }
-
-            // Привязка обработчиков событий
             $('#find-animal-by-client').submit(function(event) {
                 event.preventDefault();
                 findPets('client');
             });
-
             $('#find-animal-by-pet').submit(function(event) {
                 event.preventDefault();
                 findPets('animal');

@@ -5,8 +5,6 @@ $(document).ready(function() {
     const addForm = $('#addForm');
     const filterForm = $('#filterForm');
     var clientId = "";
-
-
     $('#clientTable').on('click', 'button', async function(event) {
         const clickedElement = $(this);
         if (clickedElement.text().trim() === 'Изменить') {
@@ -18,7 +16,6 @@ $(document).ready(function() {
             const clientThirdName = row.find('td:nth-child(4)').text();
             const clientEmail = row.find('td:nth-child(5)').text();
             const clientPhone = row.find('td:nth-child(6)').text();
-
             $('#clientPassport').val(clientPassport);
             $('#clientName').val(clientName);
             $('#clientSecondName').val(clientSecondName);
@@ -31,12 +28,9 @@ $(document).ready(function() {
             await deleteClient(clientId);
         }
     });
-
     closeButton.on('click', function() {
         editModal.css('display', 'none');
     });
-
-    // Handle form submission
     editForm.on('submit', async function(event) {
         event.preventDefault();
         const formData = new FormData(this);
@@ -46,7 +40,6 @@ $(document).ready(function() {
             body: formData
         })
             .then(response => {
-            // Handle successful update
             if (response.status == 200){
                 console.log(response);
                 editModal.css('display', 'none');
@@ -59,7 +52,6 @@ $(document).ready(function() {
             .catch(error => {
             });
     });
-
     function updateRowInTable(clientId, newData) {
         console.log(newData.passport);
         const row = $(`#${clientId}`);
@@ -73,23 +65,14 @@ $(document).ready(function() {
         row.find('td:nth-child(8)').html(`<button class="redBtn" id="del${newData._id}" class="deleteBtn">Удалить</button>`);
         row.find('td:nth-child(9)').html(`<a href="/clients/${newData._id}/pets">Больше</a>`);
     }
-
-    
-
     $(window).on('click', function(event) {
         if ($(event.target).is(editModal)) {
             editModal.css('display', 'none');
         }
     });
-
-    // Добавляем обработчик события клика на кнопку
     addForm.on('submit', async function(event) {
         event.preventDefault();
-
-        // Создаем объект с данными для отправки на сервер
         const fData = new FormData(this);
-        console.log(fData);
-        // Отправляем POST запрос на сервер с помощью fetch API
         await fetch('/clients/', {
             method: 'POST',
             body: fData
@@ -107,8 +90,6 @@ $(document).ready(function() {
             console.error('Произошла ошибка:', error);
         });
     });
-
-
     function addRowToTable(data) {
         const newRow = `<tr id=${data._id}>
             <td>${data.passport}</td>
@@ -127,34 +108,29 @@ $(document).ready(function() {
         </tr>`;
         $('#clientTable').append(newRow);
     }
-
     filterForm.on('submit', function(event) {
         event.preventDefault();
         const formData = $(this).serialize();
+        console.log(formData);
         window.location.href = `/clients?${formData}`;
     });
-
     async function deleteClient(clientsId){
-        await fetch(`/clients/${clientsId}`, { // Replace with your actual endpoint
+        await fetch(`/clients/${clientsId}`, {
             method: 'DELETE'
         })
         .then(response => {
-            // Handle successful update
             if (response.status == 200){
                 console.log("deleted successfully");
                 removeRowFromTable(clientsId);
             }
-            // You might want to refresh the table or update the UI here
             })
             .catch(error => {
             console.error('Error deleting client:', error);
-            // Handle errors
             });
     }
     function removeRowFromTable(clientId) {
         $(`#${clientId}`).remove();
     }
-    
 });
 
 

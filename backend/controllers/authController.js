@@ -6,7 +6,6 @@ const Worker = require("../models/worker.js");
 const Client = require("../models/client.js");
 
 
-
 module.exports.get_login_page = async (req, res) =>{
   try{
     res.render("login.ejs");
@@ -14,9 +13,7 @@ module.exports.get_login_page = async (req, res) =>{
   {
     res.status(500).json({ error: error });
   }
- 
 }
-
 module.exports.login_worker = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -45,8 +42,6 @@ module.exports.login_worker = async (req, res) => {
     res.status(500).json({ error: 'Login failed' });
   }
 };
-
-
 module.exports.login_client = async (req, res) => {
     try {
       const { email, password } = req.body;
@@ -61,7 +56,8 @@ module.exports.login_client = async (req, res) => {
       const token = jwt.sign({ email: client.email }, "secret", {
       expiresIn: '1h',
       });
-      res.status(200).json({ token });
+      var redirect_url = `/clients/${client._id}/main`
+      res.status(200).json({ token, redirect_url });
     } catch (error) {
       res.status(500).json({ error: 'Login failed' });
     }

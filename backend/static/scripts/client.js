@@ -1,133 +1,138 @@
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    const animalTable = document.getElementById('animalTable');
-    const editModal = document.getElementById('editModal');
-    const closeButton = document.querySelector('.close-button');
-    const editForm = document.getElementById('editForm');
-    const addForm = document.getElementById('addForm');
-    const filterForm = document.getElementById('filterForm');
+$(document).ready(function() {
+    const editModal = $('#editModal');
+    const closeButton = $('.close-button');
+    const editForm = $('#editForm');
+    const addForm = $('#addForm');
+    const filterForm = $('#filterForm');
     var animalId = "";
-
-
-    filterForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        // Создаем объект с данными для отправки на сервер
-        const formData = new FormData(filterForm);
-        const queryParams = new URLSearchParams();
-        formData.forEach((value, key) => {
-            if (value != ""){
-                queryParams.append(key, value);
-            }
-            
-        });
-        const clientIdElement = document.querySelector('.client-id');
-        const clientId = clientIdElement.textContent;
-        console.log(queryParams.toString());
-        console.log(clientId);
-        window.location.href = `/clients/${clientId}/pets?${queryParams.toString()}`
+    closeButton.on('click', function() {
+        editModal.css('display', 'none');
     });
-    
-    animalTable.addEventListener('click', (event) => {
-        const clickedElement = event.target;
-        if (clickedElement.tagName === 'BUTTON' && clickedElement.textContent.trim() === 'Изменить') {
-            animalId  = clickedElement.id.substring(3);
-            const animalType = clickedElement.parentNode.parentNode.querySelector('td:first-child').textContent;
-            const animalName = clickedElement.parentNode.parentNode.querySelector('td:nth-child(2)').textContent;
-            const animalBreed = clickedElement.parentNode.parentNode.querySelector('td:nth-child(3)').textContent;
-            const animalPassport = clickedElement.parentNode.parentNode.querySelector('td:nth-child(4)').textContent;
-            const animalAge = clickedElement.parentNode.parentNode.querySelector('td:nth-child(5)').textContent;
-    
-            document.getElementById('animalType').value = animalType;
-            document.getElementById('animalName').value = animalName;
-            document.getElementById('animalBreed').value = animalBreed;
-            document.getElementById('animalPassport').value = animalPassport;
-            document.getElementById('animalAge').value = animalAge;
-            editModal.style.display = 'block';
+    $(window).on('click', function(event) {
+        if ($(event.target).is(editModal)) {
+            editModal.css('display', 'none');
         }
-        else if(clickedElement.tagName === 'BUTTON' && clickedElement.textContent.trim() === 'Удалить'){
-            animalId  = clickedElement.id.substring(3);
+    });
+    filterForm.on('submit', function(event) {
+        event.preventDefault();
+        const formData = $(this).serialize();
+        const clientIdElement = $('.client-id');
+        const clientId = clientIdElement.text();
+        console.log(formData);
+        window.location.href = `/clients/${clientId}/pets?${formData}`
+    });
+    $('#animalTable').on('click', 'button', async function(event) {
+        const clickedElement = $(this);
+        if (clickedElement.text().trim() === 'Изменить') {
+            animalId  = clickedElement.attr('id').substring(3);
+            const row = clickedElement.closest('tr');
+            const animalType = row.find('td:first-child').text();
+            const animalName =  row.find('td:nth-child(2)').text();
+            const animalBreed = row.find('td:nth-child(3)').text();
+            const animalPassport = row.find('td:nth-child(4)').text();
+            const animalAge = row.find('td:nth-child(5)').text();
+            $('#animalType').val(animalType);
+            $('#animalName').val(animalName);
+            $('#animalBreed').val(animalBreed);
+            $('#animalPassport').val(animalPassport);
+            $('#animalAge').val(animalAge);
+            editModal.css('display', 'block');
+        }
+        else if (clickedElement.text().trim() === 'Удалить') {
+            animalId  = clickedElement.attr('id').substring(3);
             deleteAnimal(animalId);
         }
     });
-    
-    closeButton.addEventListener('click', () => {
-        editModal.style.display = 'none';
-    });
-    
-    
-    // Handle form submission
-    editForm.addEventListener('submit',  (event) => {
+    editForm.on('submit', async function(event) {
         event.preventDefault();
-        const formData = new FormData(editForm);
+        console.log(animalId);
+        const formData = new FormData(this);
         console.log(formData)
-        fetch(`/pets/${animalId}`, {
+        await fetch(`/pets/${animalId}`, {
             method: 'PATCH',
             body: formData
         })
             .then(response => {
-            // Handle successful update
             if (response.status == 200){
                 console.log(response);
-                editModal.style.display = 'none';
-                location.reload();
+                editModal.css('display', 'none');
+                $(this)[0].reset();
+                response.json().then(data => {
+                    updateRowInTable(animalId, data)
+                });
             }
             })
             .catch(error => {
             });
     });
-    
-    window.onclick = function(event) {
-        if (event.target === editModal) {
-            editModal.style.display = 'none';
-        }
-    };
-    
-    function deleteAnimal(petId){
-        fetch(`/pets/${petId}`, { // Replace with your actual endpoint
+    function updateRowInTable(animalId, newData) {
+        const row = $(`#${animalId}`);
+        const clientIdElement = $('.client-id');
+        const clientId = clientIdElement.text();
+        row.find('td:nth-child(1)').text(newData.type);
+        row.find('td:nth-child(2)').text(newData.name);
+        row.find('td:nth-child(3)').text(newData.breed);
+        row.find('td:nth-child(4)').text(newData.animal_passport);
+        row.find('td:nth-child(5)').text(newData.age);
+        row.find('td:nth-child(6)').html(`<button id="edt${newData._id}" class="editBtn">Изменить</button>`);
+        row.find('td:nth-child(7)').html(`<button class="redBtn" id="del${newData._id}" class="deleteBtn">Удалить</button>`);
+    }
+    async function deleteAnimal(petId){
+        await fetch(`/pets/${petId}`, {
             method: 'DELETE'
         })
         .then(response => {
-            // Handle successful update
             if (response.status == 200){
                 console.log("deleted successfully");
-                location.reload();
+                removeRowFromTable(petId);
             }
-            // You might want to refresh the table or update the UI here
             })
             .catch(error => {
             console.error('Error deleting client:', error);
-            // Handle errors
             });
     }
-    
-    
-    addForm.addEventListener('submit', (event) => {
+    addForm.on('submit', async function(event) {
         event.preventDefault();
-    
-        // Создаем объект с данными для отправки на сервер
-        const fData = new FormData(addForm);
+        const fData = new FormData(this);
         console.log(fData);
-        // Отправляем POST запрос на сервер с помощью fetch API
-        fetch('/pets', {
+        await fetch('/pets', {
             method: 'POST',
             body: fData
         })
         .then(response => {
             if (response.status == 201){
                 console.log("added successfully");
-                location.reload();
+                response.json().then(data => {
+                    addRowToTable(data);
+                });
+                $(this)[0].reset();
             }
         })
         .catch(error => {
             console.error('Произошла ошибка:', error);
         });
     });
-    
-  });
-
-
-
-
-
+    function addRowToTable(data) {
+        console.log("here")
+        const clientIdElement = $('.client-id');
+        const clientId = clientIdElement.text();
+        console.log(data);
+        const newRow = `<tr id=${data._id}>
+            <td>${data.type}</td>
+            <td>${data.name}</td>
+            <td>${data.breed}</td>
+            <td>${data.animal_passport}</td>
+            <td>${data.age}</td>
+            <td>
+                <button id="edt${data._id}" class="editBtn">Изменить</button>
+            </td>
+            <td>
+                <button class="redBtn" id="del${data._id}" class="deleteBtn">Удалить</button>
+            </td>
+        </tr>`;
+        $('#animalTable').append(newRow);
+    }
+    function removeRowFromTable(petId) {
+        $(`#${petId}`).remove();
+    }
+});

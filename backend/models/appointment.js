@@ -3,26 +3,11 @@ const mongoose = require("mongoose");
 
 const AppointmentSchema = mongoose.Schema(
     {
-        doctor_id: {
-            type: String,
-            required: true
-        },
-        service_id: {
-            type: String,
-            required: true
-        },
-        animal_id: {
-            type: String,
-            required: false
-        },
-        appointment_time: {
-            type: Date,
-            required: true
-        },
-        confirmed: {
-            type: Boolean,
-            required: true
-        },
+        doctor_id: {type: String,required: true},
+        service_id: {type: String,required: true},
+        animal_id: {type: String,required: false},
+        appointment_time: {type: Date,required: true},
+        confirmed: {type: Boolean,required: true},
         service_name: {type: String},
         doctor_full_name: {type: String},
         time: {type: String},
@@ -34,10 +19,7 @@ const AppointmentSchema = mongoose.Schema(
         animal_card_page_id: {type: String},
         status: {type: String},
     },
-    {
-        timestamps: true
-    }
+    {timestamps: true}
 );
-
 const Appointment = mongoose.model("Appointment", AppointmentSchema);
 module.exports = Appointment;

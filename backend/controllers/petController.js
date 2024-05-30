@@ -16,25 +16,20 @@ const Procedure = require("../models/procedure.js");
 module.exports.add_pet_to_client= async (req, res) => {
   try {
     const data = JSON.parse(JSON.stringify(req.body));
-    
     const { type, breed, name, animal_passport, age, client_id } = data;
     const qanimal = await Animal.findOne({animal_passport: animal_passport});
     if (qanimal)
     {
       return res.status(400).json({"message": "animal with this passport already exists"})
     }
-    
     const animal = new Animal({ type: type, breed: breed, name: name,
                               age: age, client_id: client_id, animal_passport: animal_passport });
     await animal.save();
-    
-    res.status(201).json({ message: 'Animal added successfully' });
+    res.status(201).json({ _id: animal._id, name: animal.name, breed: animal.breed, type: animal.type, age: animal.age, animal_passport: animal.animal_passport});
   } catch (error) {
   res.status(500).json({ error: 'Addition of animal failed' });
   }
   };
-
-
 module.exports.edit_client_pet = async (req, res) => {
   try {
     const updates = JSON.parse(JSON.stringify(req.body));
@@ -44,73 +39,66 @@ module.exports.edit_client_pet = async (req, res) => {
       return  res.status(400).json({ message: 'Pet with this passport already exists' });
     }
     const updatedPet = await Animal.findOneAndUpdate(
-      { _id: req.params.petId }, // Filter by serviceId
-      { $set: updates }, // Update with the fields in updates
-      { new: true } // Return the updated document
+      { _id: req.params.petId },
+      { $set: updates },
+      { new: true }
   );
 
     if (!updatedPet) {
       return res.status(404).json({ message: 'Pet not found' });
     }
 
-    res.json({ message: 'Pet updated successfully', pet: updatedPet });
+    res.status(200).json({ _id: updatedPet._id, name: updatedPet.name, type: updatedPet.type, breed: updatedPet.breed, age: updatedPet.age, animal_passport: updatedPet.animal_passport });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Failed to update pet' });
   }
 }
-
-
 module.exports.delete_client_pet = async (req, res) => {
   try {
     const petId = req.params.petId;
-
-    // Find the client by ID and delete it
     const deletedPet = await Animal.findByIdAndDelete(petId);
-
     if (!deletedPet) {
       return res.status(404).json({ message: 'Pet not found' });
     }
-
     res.json({ message: 'Pet deleted successfully' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Failed to delete pet' });
   }
 }
-
-
-
 module.exports.get_all_client_pets = async (req, res) => {
   try {
     const clientId = req.params.clientId;
     const qdata = req.query;
-    console.log(qdata);
-    qdata.client_id = clientId;
-    console.log(qdata);
-    var pets = await Animal.find(  qdata );
-    // if (Object.keys(qdata).length == 0){
-    //   pets = await Animal.find({ client_id: clientId });
-    // }
-    // else{
-      
-    //   temp_pets = await Animal.find(  qdata );
-    //   temp_pets.forEach(pet=>{
-    //     if (pet.client_id == clientId){
-    //       pets.push(pet);
-    //     }
-    //   })
-    // }
+    var query = {}
+    if (qdata){
+      if (qdata.name && qdata.name != ""){
+        query.name = qdata.name;
+      }
+      if (qdata.breed && qdata.breed != ""){
+        query.breed = qdata.breed;
+      }
+      if (qdata.type && qdata.type != ""){
+        query.type = qdata.type;
+      }
+      if (qdata.animal_passport && qdata.animal_passport != ""){
+        query.animal_passport = qdata.animal_passport;
+      }
+      if (qdata.age && qdata.age != ""){
+        query.age = qdata.age;
+      }
+    }
+    query.client_id = clientId;
+    var pets = await Animal.find(  query );
     const client = await Client.find({ _id: clientId })
     data = { client: client[0], pets: pets };
-    
     res.render(path.join('clinic_administation_views', 'client'), data);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Failed to retrieve pets' });
   }
 }
-
 module.exports.find_animal_page = async (req, res) => {
   try{
     var {doctor_id, animal_id} = req.params;
@@ -126,12 +114,10 @@ module.exports.find_animal_page = async (req, res) => {
     console.log(error);
   }
 }
-
 module.exports.get_animal_card_view = async (req, res) => {
   var {doctor_id, pet_id} = req.params;
     var doctor = await Worker.findOne({_id: doctor_id});
     var animal = await Animal.findOne({_id: pet_id});
-    
     var appointments = await Appointment.find({animal_id: animal._id, animal_card_page_id:  { $exists: true}});
     const appointment_promises = appointments.map(async (appointment) => {
         var animal_card_page = await AnimalCardPage.find({_id: appointment.animal_card_page_id});
@@ -163,8 +149,6 @@ module.exports.get_animal_card_view = async (req, res) => {
     }
   res.render(path.join('doctor_views', 'animal_card'), data);
 }
-
-
 module.exports.get_appoinment_diagnosis = async (req, res) =>{
   try{
     const {page_id} = req.params;
@@ -178,7 +162,6 @@ module.exports.get_appoinment_diagnosis = async (req, res) =>{
     res.status(500).json({error: error})
   }
 }
-
 module.exports.get_appoinment_symptoms = async (req, res) =>{
   try{
     const {page_id} = req.params;
@@ -190,9 +173,7 @@ module.exports.get_appoinment_symptoms = async (req, res) =>{
   }catch(error){
     res.status(500).json({error: error})
   }
-  
 }
-
 module.exports.get_appoinment_procedures = async (req, res) =>{
   try{
     const {page_id} = req.params;
@@ -204,35 +185,27 @@ module.exports.get_appoinment_procedures = async (req, res) =>{
   }catch(error){
     res.status(500).json({error: error})
   }
-  
 }
-
 module.exports.get_animal_card_page = async (req, res) => {
   var {doctor_id, pet_id, page_id} = req.params;
     var doctor = await Worker.findOne({_id: doctor_id});
     var animal = await Animal.findOne({_id: pet_id});
     var animal_card_page = await AnimalCardPage.findOne({_id: page_id});
-    
     var appointment = await Appointment.findOne({_id: animal_card_page.appointment_id});
     if (animal_card_page.finished == true){
       appointment.status = "завершен";
     }else{
       appointment.status = "не завершен";
     }
-    
     var service = await Service.findOne({_id: appointment.service_id});
-    
     appointment.service_name = service.name;
-    
     const hours = appointment.appointment_time.getHours().toString().padStart(2, '0');
     const minutes = appointment.appointment_time.getMinutes().toString().padStart(2, '0');
     const timeStr = `${hours}:${minutes}`;
     appointment.time = timeStr;
     var date = appointment.appointment_time.getFullYear() + "." + appointment.appointment_time.getMonth() + "." + appointment.appointment_time.getDate();
     appointment.date = date;
-    
     var animal_doctor = await Worker.findOne({_id: appointment.doctor_id});
-    
     var data = {
       doctor: doctor,
       animal: animal,
@@ -241,8 +214,6 @@ module.exports.get_animal_card_page = async (req, res) => {
     }
   res.render(path.join('doctor_views', 'single_appointment'), data);
 }
-
-
 module.exports.find_animals = async (req, res) => {
   try{
     const {search_type, email, passport, phone, name, breed, type, animal_passport} = req.query;
@@ -251,7 +222,6 @@ module.exports.find_animals = async (req, res) => {
     if(search_type == "client")
     {
       var query = {};
-      // Build client query
       if (email && email != "") {
         query.email = email;
       }
@@ -261,7 +231,6 @@ module.exports.find_animals = async (req, res) => {
       if (phone && phone != "") {
         query.phone = phone;
       }
-    
       var clients = await Client.find(query);
       var clientPromises = [];
       for (const client of clients) {
@@ -293,8 +262,6 @@ module.exports.find_animals = async (req, res) => {
     res.status(500).json({ message: 'Failed to find pets' });
   }
 }
-
-
 module.exports.add_procedure = async (req, res) => {
   try{
     const {name} = JSON.parse(JSON.stringify(req.body));

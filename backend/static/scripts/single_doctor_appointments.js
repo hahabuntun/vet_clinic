@@ -1,5 +1,4 @@
 $(document).ready(function() {
-
     function displaySchedule(date) {
         console.log("here")
         var parent = $(".appointments");
@@ -29,8 +28,6 @@ $(document).ready(function() {
         }
         });
     }
-
-
     async function handleDateChange(event) {
         try {
             const selectedDate = $(event.target).val();
@@ -43,7 +40,6 @@ $(document).ready(function() {
             console.error('Error:', error);
         }
     }
-
     function set_date() {
         $('input[type="date"]').each(function() {
             var selected_date = new Date().toISOString().slice(0, 10);

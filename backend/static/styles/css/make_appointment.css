@@ -1,48 +1,44 @@
-    body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 0;
-    }
-    h1 {
-        color: #333;
-    }
-    select, input[type="date"], input[type="time"] {
-        padding: 5px;
-        margin: 5px;
-    }
-    button {
-        padding: 10px 20px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        cursor: pointer;
-    }
-    button:hover {
-        background-color: #45a049;
-    }
-
-    .filter-container, .add-container, .edit-container, .remove-container{
-    margin-top: 20px;
-    text-align: center;
-    }
-
-    .dataInput {
-        padding: 5px;
-        width: 200px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-
-    #searchButton {
-        padding: 5px 10px;
-        margin-left: 10px;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .appointment{
-        text-align: left;
-    }
+body {
+font-family: Arial, sans-serif;
+text-align: center;
+margin: 0;
+}
+h1 {
+    color: #333;
+}
+select, input[type="date"], input[type="time"] {
+    padding: 5px;
+    margin: 5px;
+}
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #45a049;
+}
+.filter-container, .add-container, .edit-container, .remove-container{
+margin-top: 20px;
+text-align: center;
+}
+.dataInput {
+    padding: 5px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+#searchButton {
+    padding: 5px 10px;
+    margin-left: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.appointment{
+    text-align: left;
+}

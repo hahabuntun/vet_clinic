@@ -38,7 +38,7 @@
         </li> 
     </ul>
 
-    <h2 style="text-align: center;">Животные</h1>
+    <h2 style="text-align: center;">Животные</h2>
 
     <div class="add-container">
         <form id="addForm">
@@ -98,12 +98,11 @@
                         <th>Возраст</th>
                         <th>Изменить</th>
                         <th>Удалить</th>
-                        <th>Карточка животного</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% pets.forEach(pet => { %>
-                        <tr>
+                        <tr id="<%= pet._id %>">
                             <td><%= pet.type %></td>
                             <td><%= pet.name %></td>
                             <td><%= pet.breed %></td>
@@ -111,7 +110,6 @@
                             <td><%= pet.age %></td>
                             <td><button id="edt<%= pet._id %>">Изменить</button></td>
                             <td><button class="redBtn" id="del<%= pet._id %>">Удалить</button></td>
-                            <td><a href="/pets/<%= pet._id %>">Больше</a></td>
                         </tr>
                       <% }); %>
                 </tbody>

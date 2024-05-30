@@ -29,7 +29,6 @@ $(document).ready(function() {
             console.log(error);
         }
     }
-
     async function handleDateChange(event) {
         try {
             const selectedDate = $(event.target).val();
@@ -43,20 +42,13 @@ $(document).ready(function() {
             console.error('Error:', error);
         }
     }
-
-
-
-
     $('#clientForm').submit(function(event) {
-        event.preventDefault(); // Предотвращаем стандартную отправку формы
-
+        event.preventDefault();
         const passport = $('#passportSearch').val();
-
         $.ajax({
           url: `/clients/find_by_passport/${passport}`,
           method: 'GET',
           success: function(data) {
-            // Заполняем список данными клиента
             $('#clientId').text($('#clientId').text() + ": " + data._id);
             $('#clientName').text($('#clientName').text() + ": " + data.name);
             $('#clientSecondName').text($('#clientSecondName').text() + ": " + data.second_name);
@@ -64,8 +56,6 @@ $(document).ready(function() {
             $('#clientPassport').text($('#clientPassport').text() + ": " + data.passport);
             $('#clientPhone').text($('#clientPhone').text() + ": " + data.phone);
             $('#clientEmail').text($('#clientEmail').text() + ": " + data.email);
-
-            // Заполняем список данными питомцев
             data.pets.forEach(pet => {
               $('#pet-select').append(`<option value='${pet._id}'>Питомец: ${pet.name}, Порода: ${pet.breed}</option>`);
             });
@@ -75,8 +65,6 @@ $(document).ready(function() {
           }
         });
       })
-
-
     async function handleBooked(event){
         const petId = $("#pet-select").val();
         if (petId === null || petId === undefined) {
@@ -86,7 +74,6 @@ $(document).ready(function() {
         const appointment_id = $(event.target).parent().attr('id');
         console.log(animal_id);
         console.log(appointment_id);
-
         const fData = new FormData();
         fData.append("animal_id", animal_id);
         fData.append("appointment_id", appointment_id);
@@ -106,22 +93,18 @@ $(document).ready(function() {
             console.error('Произошла ошибка:', error);
         });
     }
-
     function set_date() {
         $('input[type="date"]').each(function() {
             var selected_date = new Date().toISOString().slice(0, 10);
             $(this).val(selected_date).trigger('change');
         });
     }
-
     function add_change_date_handlers() {
         $('input[type="date"]').on('change', handleDateChange);
     }
-
     function add_make_appointment_handlers() {
         $('.bookBtn').on('click', handleBooked);
     }
-
     add_change_date_handlers();
     set_date();
     add_make_appointment_handlers();

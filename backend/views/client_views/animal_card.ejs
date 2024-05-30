@@ -10,7 +10,6 @@
 </head>
 <body>
     <header>
-        <!-- Navbar -->
         <nav>
             <ul>
                 <li><a href="main.html">Животные</a></li>
@@ -21,83 +20,17 @@
     </header>
     <div id="page-container">
         <hr>
-
-        <h1>
-            Данные о приемах
-        </h1>
+        <h1>Данные о приемах</h1>
         <ul id="appointmentsList">
-            <!-- Здесь будут отображаться данные о приемах -->
         </ul>
         <hr>
-    
         <h1>Тесты</h1>
-    
-        
-    
         <div id="petDetails">
             <h2>Результаты анализов для питомца:</h2>
             <div id="analysisResults">
-                <!-- Здесь будут отображаться результаты анализов -->
             </div>
         </div>
     </div>
-    
-
-    <script>
-                // Mock data for pet analysis results
-        const analysisResults = [
-            { name: "ЭКГ", date: "24.02.2022" },
-            { name: "Анализ крови", date: "15.03.2022" }
-        ];
-
-
-        // Function to display pet details and analysis results
-        function displayPetTests() {
-            document.getElementById("petDetails").style.display = "block";
-            const analysisResultsContainer = document.getElementById("analysisResults");
-            analysisResultsContainer.innerHTML = "";
-
-            analysisResults.forEach(result => {
-                const resultElement = document.createElement("p");
-                const hrElement = document.createElement("hr");
-                resultElement.textContent = `${result.name} ${result.date}`;
-                analysisResultsContainer.appendChild(resultElement);
-                analysisResultsContainer.appendChild(hrElement)
-            });
-        }
-
-        const appointments = [
-            { date: "10.02.2022", service: "Общий осмотр" },
-            { date: "15.03.2022", service: "Прививка" }
-        ];
-
-        // Function to display pet appointments
-        function displayPetAppointments() {
-            const appointmentsList = document.getElementById("appointmentsList");
-            appointmentsList.display = 'block';
-            appointmentsList.innerHTML = "";
-            console.log(1);
-            appointments.forEach((appointment, index) => {
-                
-                const listItem = document.createElement("li");
-                listItem.innerHTML = `
-                    <p>Дата: ${appointment.date}</p>
-                    <p>Услуга: ${appointment.service}</p>
-                    <button onclick="viewMore(${index})">Смотреть больше</button>
-                    <hr>
-                `;
-                appointmentsList.appendChild(listItem);
-            });
-        }
-
-        // Function to redirect to details page on "Смотреть больше" button click
-        function viewMore(index) {
-            // Redirect to another page, passing appointment details if needed
-            window.location.href = "card_page.html";
-        }
-
-        displayPetAppointments();
-        displayPetTests();
-    </script>
+    <script></script>
 </body>
 </html>

@@ -11,7 +11,6 @@
 </head>
 <body>
     <header>
-        <!-- Navbar -->
         <nav>
             <ul>
                 <li><a href="/doctors/<%= doctor._id %>/appointments">Приемы</a></li>
@@ -25,16 +24,12 @@
     <h1>Расписание приемов:</h1>
     <input type="hidden" id="doctor-id" value="<%= doctor._id %>" >
     <div class="filter-container">
-        <!-- Фильтры по дате и времени -->
         <label for="date-filter">Фильтр по дате:</label>
         <input type="date" id="date-filter">
         <label for="pet-filt">Фильтр по питомцу:</label>
         <button onclick="">Поиск записей</button>
-
     </div>
-
     <div class="appointments">
-        <!-- Список приемов будет появляться здесь -->
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="/scripts/single_doctor_appointments.js"></script>

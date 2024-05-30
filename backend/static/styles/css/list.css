@@ -1,21 +1,17 @@
-ul.info { /* Стили применяются только к списку с классом "info" */
-    list-style: none;
-    padding: 0;
-    margin-left: 5%;
-    margin-right: 70%;
-    margin-top: 1%;
-  }
-  
-  ul.info li {
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-  }
-  
-  ul.info li:hover {
-    background-color: #e0e0e0;
-  }
-
-  
+ul.info {
+  list-style: none;
+  padding: 0;
+  margin-left: 5%;
+  margin-right: 70%;
+  margin-top: 1%;
+}
+ul.info li {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+}
+ul.info li:hover {
+  background-color: #e0e0e0;
+}

@@ -7,11 +7,11 @@ const upload = multer();
 
 
 var app = express();
-
 const login_routes = require("./routes/login");
 const admin_routes = require("./routes/admin");
 const receptionis_routes = require("./routes/receptionist");
 const doctor_routes = require("./routes/doctor");
+const client_routes = require("./routes/client");
 
 
 
@@ -35,7 +35,7 @@ app.use('/', login_routes);
 app.use('/', admin_routes);
 app.use('/', receptionis_routes);
 app.use('/', doctor_routes);
-
+app.use('/', client_routes);
 
 mongoose.connect("mongodb://127.0.0.1:27017/test").then(()=>{
     console.log("Connected to database");

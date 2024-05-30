@@ -1,5 +1,4 @@
 $(document).ready(function() {
-
     async function refresh_appointments(date){
         console.log("here")
         var parent = $(".appointments");
@@ -33,7 +32,6 @@ $(document).ready(function() {
         }
         });
     }
-
     async function handle_approve(event){
         var appointment_id = $(event.target).parent().attr('id');
         await fetch(`/appointments/approve/${appointment_id}`, {
@@ -53,7 +51,6 @@ $(document).ready(function() {
             console.error('Произошла ошибка:', error);
         });
     }
-
     async function handle_decline(event){
         var appointment_id = $(event.target).parent().attr('id');
         await fetch(`/appointments/decline/${appointment_id}`, {
@@ -73,7 +70,6 @@ $(document).ready(function() {
             console.error('Произошла ошибка:', error);
         });
     }
-
     async function handleDateChange(event) {
         try {
             const selectedDate = $(event.target).val();
@@ -86,7 +82,6 @@ $(document).ready(function() {
             console.error('Error:', error);
         }
     }
-
     function set_date() {
         $('input[type="date"]').each(function() {
             var selected_date = new Date().toISOString().slice(0, 10);

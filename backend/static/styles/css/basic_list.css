@@ -3,31 +3,25 @@ table {
     border-collapse: collapse;
     margin: 2% auto;
     }
-
     th, td {
         border: 1px solid #ddd;
         padding: 5px;
         text-align: center;
     }
-
     th {
         background-color: #f2f2f2;
     }
-
-
     .filter-container, .add-container, .edit-container, .remove-container{
     margin-top: 20px;
     margin-left: 5%;
     text-align: left;
     }
-
     .dataInput {
         padding: 5px;
         width: 200px;
         border: 1px solid #ccc;
         border-radius: 5px;
     }
-
     #searchButton {
         padding: 5px 10px;
         margin-left: 10px;
@@ -55,7 +49,6 @@ table {
         border-radius: 5px;
         cursor: pointer;
     }
-    
     #addButton {
         padding: 5px 10px;
         margin-left: 10px;

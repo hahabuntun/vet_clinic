@@ -1,7 +1,3 @@
-
-
-
-
 $(document).ready(function() {
     function set_date() {
         $('input[type="date"]').each(function() {
@@ -9,7 +5,6 @@ $(document).ready(function() {
             $(this).val(selected_date).trigger('change');
         });
     }
-
     async function refresh_doctor_div(doctor_div, doctor_id, date) {
         try {
             date.setHours(date.getHours());
@@ -49,8 +44,6 @@ $(document).ready(function() {
             console.log(error);
         }
     }
-
-
     async function handleDateChange(event) {
         try {
             const selectedDate = $(event.target).val();
@@ -64,8 +57,6 @@ $(document).ready(function() {
             console.error('Error:', error);
         }
     }
-
-
     async function handleEntryAdded(event) {
         const selectedDate = $(event.target).parent().find('input[type="date"]').val();
         const doctor_id = $(event.target).parent().find('input[type="date"]').attr('id');
@@ -74,16 +65,14 @@ $(document).ready(function() {
             date = new Date(selectedDate);
         }
         try{
-            //send post request
             event.preventDefault();
             const formData = new FormData(event.target);
-            formData.append('date', date); 
+            formData.append('date', date);
             await fetch(`/doctor_schedule`, {
                 method: 'POST',
                 body: formData
             })
             .then(async (response) => {
-            // Handle successful update
             if (response.status == 201){
                 await refresh_doctor_div($(event.target).parent(), doctor_id, date);
             }
@@ -95,8 +84,6 @@ $(document).ready(function() {
             console.log(error);
         }
     }
-
-
     async function handleEntryDeleted(event) {
         try {
             const selectedDate = $(event.target).parent().parent().find('input[type="date"]').val();
@@ -111,7 +98,6 @@ $(document).ready(function() {
                 method: 'delete',
             })
             .then(async (response) => {
-            // Handle successful update
             if (response.status == 200){
                 await refresh_doctor_div($(event.target).parent().parent(), doctor_id, date);
             }
@@ -123,15 +109,12 @@ $(document).ready(function() {
             console.error('Error:', error);
         }
     }
-
     function add_change_date_handlers() {
         $('input[type="date"]').on('change', handleDateChange);
     }
-
     function add_insert_schedule_entry_handlers() {
         $('.add-entry-form').on('submit', handleEntryAdded);
     }
-
     function add_delete_schedule_entry_handlers() {
         $('.deleteBtn').on('click', handleEntryDeleted);
     }

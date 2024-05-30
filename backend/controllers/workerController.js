@@ -13,9 +13,6 @@ module.exports.get_all_workers  = async (req, res) => {
     }
     res.render(path.join('system_administration_views', 'employees'), data);
 };
-
-
-
 module.exports.edit_worker = async (req, res) => {
     try {
 
@@ -24,43 +21,33 @@ module.exports.edit_worker = async (req, res) => {
       if (work && work._id != req.params.workerId){
         return  res.status(400).json({ message: 'Worker with this passport already exists' });
       }
-
       const updatedWorker = await Worker.findOneAndUpdate(
-        { _id: req.params.workerId }, // Filter by serviceId
-        { $set: updates }, // Update with the fields in updates
-        { new: true } // Return the updated document
+        { _id: req.params.workerId },
+        { $set: updates },
+        { new: true }
     );
-  
       if (!updatedWorker) {
         return res.status(404).json({ message: 'Worker not found' });
       }
-  
       res.json({ message: 'Worker updated successfully', worker: updatedWorker });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Failed to update worker' });
     }
 }
-
 module.exports.delete_worker = async (req, res) => {
     try {
       const workerId = req.params.workerId;
-  
-      // Find the worker by ID and delete it
       const deletedWorker = await Worker.findByIdAndDelete(workerId);
-
-  
       if (!deletedWorker) {
         return res.status(404).json({ message: 'Worker not found' });
       }
-  
       res.json({ message: 'Worker deleted successfully' });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Failed to delete worker' });
     }
 }
-
 module.exports.add_worker =  async (req, res) => {
     try {
 
@@ -82,8 +69,6 @@ module.exports.add_worker =  async (req, res) => {
     res.status(500).json({ error: 'Registration failed' });
     }
 };
-
-
 module.exports.get_single_doctor_shedule_page = async (req, res) =>{
   try{
     var {doctor_id} = req.params;
@@ -96,7 +81,6 @@ module.exports.get_single_doctor_shedule_page = async (req, res) =>{
     res.status(500).json({ error: 'could not return page' });
   }
 }
-
 module.exports.get_doctor_appointments_page = async (req, res) => {
   try{
     var {doctor_id} = req.params;

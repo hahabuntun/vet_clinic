@@ -1,5 +1,3 @@
-<!-- На этой странице врач смотрит/создает кароточку животного(все приемы и анализы) -->
-<!-- На этой странице врач добавляет результаты тестов к карточке животного -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +12,6 @@
 </head>
 <body>
     <header>
-        <!-- Navbar -->
         <nav>
             <ul>
                 <li><a href="/doctors/<%= doctor._id %>/appointments">Приемы</a></li>
@@ -32,10 +29,7 @@
             <li>Возраст - <%= animal.age %></li>
         </ul>
         <hr>
-
-        <h2>
-            Данные о приемах
-        </h2>
+        <h2>Данные о приемах</h2>
         <div id="appointments">
             <% appointments.forEach(appointment => { %>
             <div class="appointment">
@@ -48,11 +42,7 @@
             <% }); %>
         </div>
         <hr>
-    
         <h2>Результаты анализов:</h2>
-    
-        
-    
         <div id="petDetails">
             <h3>Результаты анализов для питомца:</h3>
             <div id="analysisResults">
@@ -66,8 +56,6 @@
             </form>
         </div>
     </div>
-    
-
     <script>
         function searchPet() {
         }
