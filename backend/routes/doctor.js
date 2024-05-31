@@ -7,17 +7,14 @@ const { get_single_doctor_shedule_page, get_doctor_appointments_page } = require
 const { get_appoinment_diagnosis, get_appoinment_symptoms, get_appoinment_procedures, add_diagnosis, add_symptom, add_procedure } = require("../controllers/petController");
 const {finish_appointment} = require("../controllers/appointmentController");
 
-
-router.use(verify_doctor_token);
-
-router.get("/doctors/:doctor_id/schedule", get_single_doctor_shedule_page);
-router.get("/doctors/:doctor_id/appointments", get_doctor_appointments_page);
-router.get("/doctors/:doctor_id/find_pets",  find_animal_page);
-router.get("/appointments/:page_id/diagnosis", get_appoinment_diagnosis);
-router.get("/appointments/:page_id/symptoms", get_appoinment_symptoms);
-router.get("/appointments/:page_id/procedures", get_appoinment_procedures);
-router.get("/doctors/:doctor_id/pets/:pet_id/card", get_animal_card_view);
-router.get("/doctors/:doctor_id/pets/:pet_id/card/:page_id", get_animal_card_page);
+router.get("/doctors/:doctor_id/schedule", verify_doctor_token, get_single_doctor_shedule_page);
+router.get("/doctors/:doctor_id/appointments", verify_doctor_token, get_doctor_appointments_page);
+router.get("/doctors/:doctor_id/find_pets", verify_doctor_token,  find_animal_page);
+router.get("/appointments/:page_id/diagnosis", verify_doctor_token, get_appoinment_diagnosis);
+router.get("/appointments/:page_id/symptoms", verify_doctor_token, get_appoinment_symptoms);
+router.get("/appointments/:page_id/procedures", verify_doctor_token, get_appoinment_procedures);
+router.get("/doctors/:doctor_id/pets/:pet_id/card", verify_doctor_token, get_animal_card_view);
+router.get("/doctors/:doctor_id/pets/:pet_id/card/:page_id", verify_doctor_token, get_animal_card_page);
 
 router.get("/find_pets", find_animals);
 

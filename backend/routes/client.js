@@ -5,16 +5,15 @@ const {get_client_appointments_page, get_client_appointments, cancel_appointment
 const { verify_client_token } = require('../middleware/authMiddleware');
 const router = express.Router();
 
-router.use(verify_client_token);
 
-router.get("/clients/:clientId/main", get_main_page);
-router.get("/clients/:client_id/pets/:pet_id/card", get_client_animal_card_view);
-router.get("/clients/:client_id/pets/:pet_id/card/:page_id", get_client_animal_card_page);
-router.get("/clients/:client_id/appointments", get_client_appointments_page);
-router.get("/clients/:client_id/all_appointments", get_client_appointments);
-router.get("/clients/:client_id/make_booking", get_appointment_page);
+router.get("/clients/:clientId/main", verify_client_token, get_main_page);
+router.get("/clients/:client_id/pets/:pet_id/card", verify_client_token, get_client_animal_card_view);
+router.get("/clients/:client_id/pets/:pet_id/card/:page_id", verify_client_token, get_client_animal_card_page);
+router.get("/clients/:client_id/appointments", verify_client_token, get_client_appointments_page);
+router.get("/clients/:client_id/all_appointments", verify_client_token, get_client_appointments);
+router.get("/clients/:client_id/make_booking", verify_client_token, get_appointment_page);
 
-router.post("/clients/:client_id/make_appointment", make_appointment);
-router.patch("/clients/:client_id/appointments/cancel/:appointment_id", cancel_appointment);
+router.post("/clients/:client_id/make_appointment",verify_client_token, make_appointment);
+router.patch("/clients/:client_id/appointments/cancel/:appointment_id",verify_client_token, cancel_appointment);
 
 module.exports = router;
