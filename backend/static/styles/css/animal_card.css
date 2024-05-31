@@ -26,3 +26,50 @@ button {
 button:hover {
     background-color: #45a049;
 }
+
+.centered-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CSS for the form container */
+.form-container {
+    width: 400px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+/* CSS for form elements */
+.form-container label,
+.form-container input,
+.form-container textarea,
+.form-container button {
+    display: block;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+/* CSS for analysis results */
+.analysis-item {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f0f0f0;
+}
+
+.analysis-item p {
+    margin: 5px 0;
+}
+
+.analysis-item a {
+    color: blue;
+    text-decoration: none;
+}
+
+.analysis-item a:hover {
+    text-decoration: underline;
+}

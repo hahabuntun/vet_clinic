@@ -12,6 +12,7 @@ $(document).ready(function() {
                     var appointments = data.appointments;
                     appointments.forEach(function(appointment) {
                         if(!appointment.animal_id){
+                            //console.log(appointment.animal_id);
                             var schedEntry = $('<div></div>').addClass('scheduleEntry').attr('id', appointment._id);
                             var span = $('<span></span>').text(`${appointment.service_name} - ${appointment.time}`);
                             var btn = $('<button></button>').addClass('bookBtn').text('+');
@@ -73,10 +74,10 @@ $(document).ready(function() {
         var url = '/make_appointment';
         const animal_id = $("#pet-select").val();
         const client_id = $("#client-id").val();
-        console.log(client_id);
         if (client_id){
             url = `/clients/${client_id}/make_appointment`;
         }
+        console.log(url);
         const appointment_id = $(event.target).parent().attr('id');
         const fData = new FormData();
         fData.append("animal_id", animal_id);

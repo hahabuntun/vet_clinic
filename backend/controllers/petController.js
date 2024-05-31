@@ -5,7 +5,7 @@ const Client = require("../models/client.js");
 const Animal = require("../models/animal.js");
 const Worker = require("../models/worker.js");
 var AnimalCardPage = require("../models/animal_card_page.js");
-var Analysis = require("../models/analysis_result.js");
+var Analysis = require("../models/analysis.js");
 const Appointment = require("../models/appointment.js");
 const Service = require("../models/service.js");
 const Symptom = require("../models/symptom.js");
@@ -117,6 +117,7 @@ module.exports.find_animal_page = async (req, res) => {
 module.exports.get_animal_card_view = async (req, res) => {
   try{
     var {doctor_id, pet_id} = req.params;
+    var user_type = "doctor";
     var doctor = await Worker.findOne({_id: doctor_id});
     var animal = await Animal.findOne({_id: pet_id});
     var appointments = await Appointment.find({animal_id: animal._id, animal_card_page_id:  { $exists: true}});
@@ -143,11 +144,12 @@ module.exports.get_animal_card_view = async (req, res) => {
     })
     var temp_appointments = await Promise.all(appointment_promises);
     var data = {
+      user_type: user_type,
       doctor: doctor,
       animal: animal,
       appointments: temp_appointments
     }
-    res.render(path.join('doctor_views', 'animal_card'), data);
+    res.render('animal_card', data);
   }catch(error){
     res.status(500).json({error: error});
   }
@@ -156,6 +158,7 @@ module.exports.get_animal_card_view = async (req, res) => {
 module.exports.get_client_animal_card_view = async (req, res) => {
   try{
     var {client_id, pet_id} = req.params;
+    var user_type = "client";
     var client = await Client.findOne({_id: client_id});
     var animal = await Animal.findOne({_id: pet_id});
     var appointments = await Appointment.find({animal_id: animal._id, animal_card_page_id:  { $exists: true}});
@@ -182,11 +185,12 @@ module.exports.get_client_animal_card_view = async (req, res) => {
     })
     var temp_appointments = await Promise.all(appointment_promises);
     var data = {
+      user_type: user_type,
       client: client,
       animal: animal,
       appointments: temp_appointments
     }
-    res.render(path.join('client_views', 'animal_card'), data);
+    res.render('animal_card', data);
   }catch(error){
     res.status(500).json({error: error});
   }

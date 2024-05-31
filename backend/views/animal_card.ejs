@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Страница электронной карты</title>
+    <link rel="stylesheet" href="/styles/css/animal_card.css">
+    <link rel="stylesheet" href="/styles/css/basic_nav.css">
+    <link rel="stylesheet" href="/styles/css/list.css">
+    <link rel="stylesheet" href="/styles/css/bookings.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <% if (user_type == "doctor") { %>
+                    <li><a href="/doctors/<%= doctor._id %>/appointments">Приемы</a></li>
+                    <li><a href="/doctors/<%= doctor._id %>/find_pets">Поиск животного</a></li>
+                    <li><a href="/doctors/<%= doctor._id %>/schedule">Расписание записей</a></li>
+                    <li><a href="#">Выход</a></li>
+                <% } else { %>
+                    <li><a href="/clients/<%= client._id %>/main">Животные</a></li>
+                    <li><a href="/clients/<%= client._id %>/appointments">Записи</a></li>
+                    <li><a href="/clients/<%= client._id %>/make_booking">Записать животное</a></li>
+                    <li><a href="#">Выход</a></li>
+                <% } %>
+            </ul>
+        </nav>
+    </header>
+    <ul class="info">
+        <input type="hidden" id="animal-id" value="<%= animal._id %>"/>
+        <li>Кличка - <%= animal.name %></li>
+        <li>Название - <%= animal.type %></li>
+        <li>Порода - <%= animal.breed %></li>
+        <li>Пасспорт Животного - <%= animal.animal_passport %></li>
+        <li>Возраст - <%= animal.age %></li>
+    </ul>
+    <hr>
+    <h2>Данные о приемах</h2>
+    <div id="appointments">
+        <% appointments.forEach(appointment => { %>
+        <div class="appointment">
+            <p>Дата и время приема: <%= appointment.date %> <%= appointment.time %></p>
+            <p>Принимающий врач: <%= appointment.doctor_full_name %></p>
+            <p>Оказываемая услуга: <%= appointment.service_name %></p>
+            <p>Статус: <%= appointment.status %></p>
+            <% if (user_type == "doctor") { %>
+            <a href="/doctors/<%= doctor._id %>/pets/<%= appointment.animal_id %>/card/<%= appointment.animal_card_page_id %>">Данные приема</a>
+            <% } else { %>
+            <a href="/clients/<%= client._id %>/pets/<%= appointment.animal_id %>/card/<%= appointment.animal_card_page_id %>">Данные приема</a>
+            <% } %>
+            </div>
+        <% }); %>
+    </div>
+    <hr>
+    <h2>Результаты анализов:</h2>
+    <% if (user_type == "doctor") { %>
+    <div class="centered-form">
+        <div class="form-container">
+            <h3>Добавить новый анализ:</h3>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <input type="hidden" id="animal_id" value="<%= animal._id %>" name="animal_id"/>
+                <div>
+                    <label>Analysis Name:</label>
+                    <input type="text" id="name" name="name" required />
+                </div>
+                <div>
+                    <label>Description:</label>
+                    <textarea id="description" name="description" required></textarea>
+                </div>
+                <div>
+                    <input type="file" id="file" name="file" required />
+                </div>
+                <button type="submit">Upload</button>
+            </form>
+        </div>
+    </div>
+    <% } %>
+    <div id="analysisData"></div>
+    <div id="message"></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="/scripts/analysis.js"></script>
+</body>
+</html>

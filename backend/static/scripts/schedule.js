@@ -68,6 +68,7 @@ $(document).ready(function() {
             event.preventDefault();
             const formData = new FormData(event.target);
             formData.append('date', date);
+            console.log(formData)
             await fetch(`/doctor_schedule`, {
                 method: 'POST',
                 body: formData

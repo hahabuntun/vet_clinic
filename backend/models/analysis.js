@@ -5,6 +5,7 @@ const AnalysisSchema = mongoose.Schema(
     {
         name: {type: String,required: true},
         filepath: {type: String,required: true},
+        description: {type: String, required: true},
         animal_id: {type: String,required: true},
         analysis_date: {type: Date,required: true},
     },
