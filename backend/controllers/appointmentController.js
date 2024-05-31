@@ -95,11 +95,23 @@ module.exports.delete_schedule_entry = async (req, res) => {
     }
 }
 module.exports.get_appointment_page = async (req, res) => {
+    var {client_id} = req.params;
+    var client = {}
+    var pets = {};
+    var user_type = "receptionist";
+    if (client_id){
+        user_type = "client";
+        client = await Client.findOne({_id: client_id});
+        pets = await Animal.find({client_id: client_id});
+    }   
     var doctors = await Worker.find({type: "doctor"});
     data = {
-        doctors: doctors
+        doctors: doctors,
+        user_type: user_type,
+        client: client,
+        pets: pets
     }
-    res.render(path.join('clinic_administation_views', 'make_appointment'), data);
+    res.render('make_appointment', data);
 }
 module.exports.make_appointment = async (req, res) => {
     try{
@@ -234,7 +246,7 @@ module.exports.cancel_appointment = async (req, res) => {
         return res.status(200).json({message: "success"});
     }catch(error){
         console.log(error);
-        return res.status(500).json({error: "Could not approve appointment"});
+        return res.status(500).json({error: "Could not cancel appointment"});
     }
 }
 module.exports.finish_appointment = async (req, res) =>{
@@ -249,5 +261,68 @@ module.exports.finish_appointment = async (req, res) =>{
     }catch(error){
         console.log(error);
         res.status(500).json({error:error});
+    }
+}
+module.exports.get_client_appointments_page = async (req, res) => {
+    try{
+        const {client_id} = req.params;
+        const client = await Client.findOne({_id: client_id});
+        var data = {
+            client: client
+        }
+        res.render(path.join('client_views', 'bookings'), data);
+    }catch(error){
+        res.status(500).json({error: error});
+    }
+}
+
+module.exports.get_client_appointments = async (req, res) => {
+    try{
+        const {client_id} = req.params;
+        var queryDate = req.query.date;
+        queryDate = new Date(queryDate);
+        var animals = await Animal.find({client_id: client_id});
+        var animalIds = animals.map(animal => animal._id);
+        var appointments = await Appointment.find({
+            animal_card_page_id:  { $exists: false},
+            animal_id: { $in: animalIds },
+            appointment_time: { $gte: queryDate, $lt: new Date(queryDate.getTime() + 24 * 60 * 60 * 1000) 
+        }})
+        const appointment_promises = appointments.map(async (appointment) => {
+            const serv = await Service.find({_id: appointment.service_id});
+            const service_name = serv[0].name;
+            appointment.service_name = service_name;
+            const hours = appointment.appointment_time.getHours().toString().padStart(2, '0');
+            const minutes = appointment.appointment_time.getMinutes().toString().padStart(2, '0');
+            const timeStr = `${hours}:${minutes}`;
+            appointment.time = timeStr;
+            var doctor = await Worker.findOne({_id: appointment.doctor_id});
+            appointment.doctor_full_name = doctor.name + " " + doctor.second_name + " " + doctor.third_name;
+            var animal = await Animal.findOne({_id: appointment.animal_id});
+            appointment.animal_data = animal.breed + " " +  animal.type + " " + animal.name;
+            var client = await Client.findOne({_id: animal.client_id});
+            appointment.client_data = client.name + " " + client.second_name + " " + client.third_name;
+            appointment.client_id = client._id;
+            appointment.client_phone = client.phone;
+            return appointment;
+        })
+        var temp_appointments = await Promise.all(appointment_promises);
+        const updated_appointments = temp_appointments.sort((a, b) => {
+             const [aHour, aMinute] = a.time.split(':').map(Number);
+             const [bHour, bMinute] = b.time.split(':').map(Number);
+             if (aHour !== bHour) {
+                 return bHour - aHour;
+             } else {
+                 return  bMinute - aMinute;
+             }
+        });
+        
+        var data = {
+            appointments: updated_appointments
+        }
+        console.log(data)
+        return res.status(200).json(data);
+    }catch(error){
+        res.status(500).json({error: error});
     }
 }

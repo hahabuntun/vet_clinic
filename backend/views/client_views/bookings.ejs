@@ -18,87 +18,22 @@
         <!-- Navbar -->
         <nav>
             <ul>
-                <li><a href="main.html">Животные</a></li>
-                <li><a href="bookings.html">Записи</a></li>
+                <li><a href="/clients/<%= client._id %>/main">Животные</a></li>
+                <li><a href="/clients/<%= client._id %>/appointments">Записи</a></li>
+                <li><a href="/clients/<%= client._id %>/make_booking">Записать животное</a></li>
                 <li><a href="#">Выход</a></li>
             </ul>
         </nav>
     </header>
-
-
-    <label for="service">Выберите услугу:</label>
-    <select id="service">
-        <option value="service1">Service 1</option>
-        <option value="service2">Service 2</option>
-        <option value="service3">Service 3</option>
-    </select>
-    <label for="date">Выберите дату:</label>
-    <input type="date" id="date">
-    <label for="doctor">Select Doctor:</label>
-    <select id="doctor">
-        <option value="doctor1">Doctor 1</option>
-        <option value="doctor2">Doctor 2</option>
-    </select>
-    <label for="time">Выберите время:</label>
-    <select id="time">
-        <option value="time1">Time 1</option>
-        <option value="time2">Time 2</option>
-    </select>
-    <label for="pet">Выберите питомца:</label>
-    <select id="pet">
-        <option value="pet1">Pet 1</option>
-        <option value="pet2">Pet 2</option>
-    </select>
-    <button onclick="bookAppointment()">Записаться</button>
-
-    <hr>
-
+    
     <div class="filter-container">
         <label for="date-filter">Фильтр по дате:</label>
         <input type="date" id="date-filter">
-        <label for="pet-filt">Фильтр по питомцу:</label>
-        <select id="pet-filt">
-            <option value="pet1">Pet 1</option>
-            <option value="pet2">Pet 2</option>
-        </select>
-        <button onclick="applyFilters()">Поиск записей</button>
+        <input type="hidden" id="client-id" value="<%= client._id %>">
     </div>
-    
     <div class="appointments">
-        <div class="appointment">
-            <h2>Дата и Время: 25.03.2024 10:00</h2>
-            <p>Принимающий врач: Доктор Иванов</p>
-            <p>Записанное животное: Собака Рекс</p>
-            <img src="" alt="animal-logo">
-            <p>Номер хозяина: 891238123123</p>
-            <p>Status: Подтверждено</p>
-            <button class="reject">Отменить</button>
-        </div>
-
-        <div class="appointment">
-            <h2>Дата и Время: 26.03.2024 11:30</h2>
-            <p>Принимающий врач: Доктор Петров</p>
-            <p>Записанное животное: Кот Барсик</p>
-            <img src="" alt="animal-logo">
-            <p>Номер хозяина: 891238123123</p>
-            <p>Status: Не подтверждено</p>
-            <button class="reject">Отменить</button>
-        </div>
     </div>
-
-
-    <script>
-        function bookAppointment() {
-    const service = document.getElementById('service').value;
-    const selectedDate = document.getElementById('date').value;
-    const doctor = document.getElementById('doctor').value;
-    const time = document.getElementById('time').value;
-    const pet = document.getElementById('pet').value;
-
-    // Here you can add logic to check if the selected date, service, and doctor are available for booking
-    // If available, proceed with the booking process, else show an alert that the slot is not available
-    // You can also send this information to the server for recording the appointment
-}
-    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="/scripts/bookings.js"></script>
 </body>
 </html>

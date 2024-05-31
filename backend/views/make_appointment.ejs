@@ -14,16 +14,24 @@
     <header>
         <nav>
             <ul>
-                <li><a href="/clients">Управлять клиентами</a></li>
-                <li><a href="/doctor_schedule">Управлять расписанием врачей</a></li>
-                <li><a href="/confirmed_bookings">Подтвержденные записи</a></li>
-                <li><a href="/unconfirmed_bookings">Неподтвержденные записи</a></li>
-                <li><a href="/make_appointment">Записть клиента</a></li>
-                <li><a href="#">Выход</a></li>
+                <% if (user_type == "receptionist") { %>
+                    <li><a href="/clients">Управлять клиентами</a></li>
+                    <li><a href="/doctor_schedule">Управлять расписанием врачей</a></li>
+                    <li><a href="/confirmed_bookings">Подтвержденные записи</a></li>
+                    <li><a href="/unconfirmed_bookings">Неподтвержденные записи</a></li>
+                    <li><a href="/make_appointment">Записть клиента</a></li>
+                    <li><a href="#">Выход</a></li>
+                <% } else { %>
+                    <li><a href="/clients/<%= client._id %>/main">Животные</a></li>
+                    <li><a href="/clients/<%= client._id %>/appointments">Записи</a></li>
+                    <li><a href="/clients/<%= client._id %>/make_booking">Записать животное</a></li>
+                    <li><a href="#">Выход</a></li>
+                <% } %>
             </ul>
         </nav>
     </header>
     <h1>Запись в ветеринарную клинику</h1>
+    <% if (user_type == "receptionist") { %>
     <div id="booking_filter" class="filter-container">
         <form id="clientForm" action="/clients/find_by_passport">
             <input name="passport" type="text" class="dataInput" id="passportSearch" placeholder="Серия и номер пасспорта">
@@ -41,6 +49,14 @@
         <label for="pet-select">Питомцы</label>
         <select id="pet-select">
         </select>
+        <% } else { %>
+            <label for="pet-select">Питомцы</label>
+            <select id="pet-select">
+                <% pets.forEach(pet => { %>
+                    <option value="<%= pet._id %>">Питомец: <%= pet.name %>, Название: <%= pet.type %>, Порода: <%= pet.breed %></option>
+                <% }); %>
+                </select>
+        <% } %>
     </div>
     <h1>Врачи</h1>
     <div class="schedule">

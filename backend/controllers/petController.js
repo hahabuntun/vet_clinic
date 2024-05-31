@@ -233,7 +233,8 @@ module.exports.get_appoinment_procedures = async (req, res) =>{
   }
 }
 module.exports.get_animal_card_page = async (req, res) => {
-  var {doctor_id, pet_id, page_id} = req.params;
+  try{
+    var {doctor_id, pet_id, page_id} = req.params;
     var doctor = await Worker.findOne({_id: doctor_id});
     var animal = await Animal.findOne({_id: pet_id});
     var animal_card_page = await AnimalCardPage.findOne({_id: page_id});
@@ -258,12 +259,46 @@ module.exports.get_animal_card_page = async (req, res) => {
       animal_doctor: animal_doctor,
       appointment: appointment
     }
-  res.render(path.join('doctor_views', 'single_appointment'), data);
+    res.render(path.join('doctor_views', 'single_appointment'), data);
+  }catch(error)
+  {
+    res.status(500).json({error: error});
+  }
 }
 
 
 module.exports.get_client_animal_card_page = async (req, res) => {
-
+  try{
+    var {client_id, pet_id, page_id} = req.params;
+    var client = await Client.findOne({_id: client_id});
+    var animal = await Animal.findOne({_id: pet_id});
+    var animal_card_page = await AnimalCardPage.findOne({_id: page_id});
+    var appointment = await Appointment.findOne({_id: animal_card_page.appointment_id});
+    if (animal_card_page.finished == true){
+      appointment.status = "завершен";
+    }else{
+      appointment.status = "не завершен";
+    }
+    var service = await Service.findOne({_id: appointment.service_id});
+    appointment.service_name = service.name;
+    const hours = appointment.appointment_time.getHours().toString().padStart(2, '0');
+    const minutes = appointment.appointment_time.getMinutes().toString().padStart(2, '0');
+    const timeStr = `${hours}:${minutes}`;
+    appointment.time = timeStr;
+    var date = appointment.appointment_time.getFullYear() + "." + appointment.appointment_time.getMonth() + "." + appointment.appointment_time.getDate();
+    appointment.date = date;
+    var animal_doctor = await Worker.findOne({_id: appointment.doctor_id});
+    var data = {
+      client: client,
+      animal: animal,
+      animal_doctor: animal_doctor,
+      appointment: appointment
+    }
+    res.render(path.join('client_views', 'card_page'), data);
+  }catch(error)
+  {
+    res.status(500).json({error: error});
+  }
 }
 
 module.exports.find_animals = async (req, res) => {
