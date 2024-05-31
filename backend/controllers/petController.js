@@ -149,6 +149,12 @@ module.exports.get_animal_card_view = async (req, res) => {
     }
   res.render(path.join('doctor_views', 'animal_card'), data);
 }
+
+module.exports.get_client_animal_card_view = async (req, res) => {
+  
+}
+
+
 module.exports.get_appoinment_diagnosis = async (req, res) =>{
   try{
     const {page_id} = req.params;
@@ -214,6 +220,12 @@ module.exports.get_animal_card_page = async (req, res) => {
     }
   res.render(path.join('doctor_views', 'single_appointment'), data);
 }
+
+
+module.exports.get_client_animal_card_page = async (req, res) => {
+
+}
+
 module.exports.find_animals = async (req, res) => {
   try{
     const {search_type, email, passport, phone, name, breed, type, animal_passport} = req.query;

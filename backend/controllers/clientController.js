@@ -114,9 +114,29 @@ module.exports.get_client = async (req, res) => {
 }
 module.exports.get_main_page = async (req, res) => {
   try{
-    var {client_id} = req.params;
-    var client = await Client.findOne({_id: client_id});
-    var pets = await Animal.find({client_id: client_id});
+    const clientId = req.params.clientId;
+    const qdata = req.query;
+    var query = {}
+    if (qdata){
+      if (qdata.name && qdata.name != ""){
+        query.name = qdata.name;
+      }
+      if (qdata.breed && qdata.breed != ""){
+        query.breed = qdata.breed;
+      }
+      if (qdata.type && qdata.type != ""){
+        query.type = qdata.type;
+      }
+      if (qdata.animal_passport && qdata.animal_passport != ""){
+        query.animal_passport = qdata.animal_passport;
+      }
+      if (qdata.age && qdata.age != ""){
+        query.age = qdata.age;
+      }
+    }
+    query.client_id = clientId;
+    var pets = await Animal.find(  query );
+    var client = await Client.findOne({_id: clientId});
     var data = {
       pets: pets,
       client: client
