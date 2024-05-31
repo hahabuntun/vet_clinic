@@ -57,7 +57,7 @@ $(document).ready(function() {
             $('#clientPhone').text($('#clientPhone').text() + ": " + data.phone);
             $('#clientEmail').text($('#clientEmail').text() + ": " + data.email);
             data.pets.forEach(pet => {
-              $('#pet-select').append(`<option value='${pet._id}'>Питомец: ${pet.name}, Порода: ${pet.breed}</option>`);
+              $('#pet-select').append(`<option value='${pet._id}'>Питомец: ${pet.name}, Название: ${pet.type}, Порода: ${pet.breed}</option>`);
             });
           },
           error: function(error) {

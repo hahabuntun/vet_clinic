@@ -115,7 +115,8 @@ module.exports.find_animal_page = async (req, res) => {
   }
 }
 module.exports.get_animal_card_view = async (req, res) => {
-  var {doctor_id, pet_id} = req.params;
+  try{
+    var {doctor_id, pet_id} = req.params;
     var doctor = await Worker.findOne({_id: doctor_id});
     var animal = await Animal.findOne({_id: pet_id});
     var appointments = await Appointment.find({animal_id: animal._id, animal_card_page_id:  { $exists: true}});
@@ -147,11 +148,50 @@ module.exports.get_animal_card_view = async (req, res) => {
       animal: animal,
       appointments: temp_appointments
     }
-  res.render(path.join('doctor_views', 'animal_card'), data);
+    res.render(path.join('doctor_views', 'animal_card'), data);
+  }catch(error){
+    res.status(500).json({error: error});
+  }
 }
 
 module.exports.get_client_animal_card_view = async (req, res) => {
-  
+  try{
+    var {client_id, pet_id} = req.params;
+    var client = await Client.findOne({_id: client_id});
+    var animal = await Animal.findOne({_id: pet_id});
+    var appointments = await Appointment.find({animal_id: animal._id, animal_card_page_id:  { $exists: true}});
+    const appointment_promises = appointments.map(async (appointment) => {
+        var animal_card_page = await AnimalCardPage.find({_id: appointment.animal_card_page_id});
+        if (animal_card_page.finished == true){
+          appointment.status = "завершен";
+        }else{
+          appointment.status = "не завершен";
+        }
+        const serv = await Service.find({_id: appointment.service_id});
+        const service_name = serv[0].name;
+        appointment.service_name = service_name;
+
+        const hours = appointment.appointment_time.getHours().toString().padStart(2, '0');
+        const minutes = appointment.appointment_time.getMinutes().toString().padStart(2, '0');
+        const timeStr = `${hours}:${minutes}`;
+        appointment.time = timeStr;
+        var date = appointment.appointment_time.getFullYear() + "." + appointment.appointment_time.getMonth() + "." + appointment.appointment_time.getDate();
+        appointment.date = date;
+        var doctor = await Worker.findOne({_id: appointment.doctor_id});
+        appointment.doctor_full_name = doctor.name + " " + doctor.second_name + " " + doctor.third_name;
+        return appointment;
+    })
+    var temp_appointments = await Promise.all(appointment_promises);
+    console.log(temp_appointments);
+    var data = {
+      client: client,
+      animal: animal,
+      appointments: temp_appointments
+    }
+    res.render(path.join('client_views', 'animal_card'), data);
+  }catch(error){
+    res.status(500).json({error: error});
+  }
 }
 
 
