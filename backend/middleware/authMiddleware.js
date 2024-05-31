@@ -6,10 +6,10 @@ const Client = require("../models/client.js");
 
 
 async function verifyClientToken(req, res, next) {
-    const token = req.header('Authorization');
-    if (!token) return res.status(401).json({ error: 'Access denied' });
     try {
-        const decoded = jwt.verify(token.substring(7), "secret");
+        const token = req.cookies.authToken;
+        if (!token) return res.status(401).json({ error: 'Access denied' });
+        const decoded = jwt.verify(token, "secret");
         req.email = decoded.email;
         const client = await Client.findOne({ email:decoded.email });
         if (!client){
@@ -21,10 +21,10 @@ async function verifyClientToken(req, res, next) {
     }
  };
 async function verifyAdminToken(req, res, next) {
-    const token = req.header('Authorization');
-    if (!token) return res.status(401).json({ error: 'Access denied' });
     try {
-        const decoded = jwt.verify(token.substring(7), "secret");
+        const token = req.cookies.authToken;
+        if (!token) return res.status(401).json({ error: 'Access denied' });
+        const decoded = jwt.verify(token, "secret");
         req.email = decoded.email;
         const worker = await Worker.findOne({ email:decoded.email });
         if (!worker || worker.type != "admin"){
@@ -32,14 +32,15 @@ async function verifyAdminToken(req, res, next) {
         }
         next();
     } catch (error) {
+        console.log(error);
         res.status(401).json({ error: error.message, "hello": "world" });
     }
  };
  async function verifyDoctorToken(req, res, next) {
-    const token = req.header('Authorization');
-    if (!token) return res.status(401).json({ error: 'Access denied' });
     try {
-        const decoded = jwt.verify(token.substring(7), "secret");
+        const token = req.cookies.authToken;
+        if (!token) return res.status(401).json({ error: 'Access denied' });
+        const decoded = jwt.verify(token, "secret");
         req.email = decoded.email;
         const worker = await Worker.findOne({ email:decoded.email });
         if (!worker || worker.type != "doctor"){
@@ -51,10 +52,10 @@ async function verifyAdminToken(req, res, next) {
     }
  };
  async function verifyReceptionisToken(req, res, next) {
-    const token = req.header('Authorization');
-    if (!token) return res.status(401).json({ error: 'Access denied' });
     try {
-        const decoded = jwt.verify(token.substring(7), "secret");
+        const token = req.cookies.authToken;
+        if (!token) return res.status(401).json({ error: 'Access denied' });
+        const decoded = jwt.verify(token, "secret");
         req.email = decoded.email;
         const worker = await Worker.findOne({ email:decoded.email });
         if (!worker || worker.type != "receptionist"){
@@ -65,7 +66,29 @@ async function verifyAdminToken(req, res, next) {
         res.status(401).json({ error: error.message });
     }
  };
+
+
+ async function verifyDcotorOrClientisToken(req, res, next) {
+    try {
+        const token = req.cookies.authToken;
+        if (!token) return res.status(401).json({ error: 'Access denied' });
+        const decoded = jwt.verify(token, "secret");
+        req.email = decoded.email;
+        const worker = await Worker.findOne({ email:decoded.email });
+        const client = await Client.findOne({ email:decoded.email });
+        if (worker && worker.type == "doctor"){
+            next();
+        }
+        if (client){
+            next();
+        }
+        return res.status(401).json({ error: 'worker or client does not exist or does not have permission' });
+    } catch (error) {
+        res.status(401).json({ error: error.message });
+    }
+ };
 module.exports.verify_admin_token = verifyAdminToken;
 module.exports.verify_client_token = verifyClientToken;
 module.exports.verify_doctor_token = verifyDoctorToken;
 module.exports.verify_receptionist_token = verifyReceptionisToken;
+module.exports.verify_doctor_or_client_token = verifyDcotorOrClientisToken;

@@ -4,8 +4,13 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const upload = multer();
+const cookieParser = require('cookie-parser');
+
 
 var app = express();
+
+app.use(cookieParser());
+
 const login_routes = require("./routes/login");
 const admin_routes = require("./routes/admin");
 const receptionist_routes = require("./routes/receptionist");

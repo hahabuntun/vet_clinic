@@ -15,13 +15,8 @@ $(document).ready(function() {
           body: JSON.stringify({ email: login, password })
         });
         if (response.status == 200) {
-          const data = await response.json();
-          if (data.token && data.redirect_url) {
-            localStorage.setItem('authToken', data.token);
-            window.location.href = data.redirect_url;
-          } else {
-            alert('Неверные учетные данные или ошибка входа.');
-          }
+          const responseData = await response.json();
+          window.location.href = responseData.redirect_url;
         } else {
           const errorData = await response.json();
           alert(errorData.error || 'Ошибка входа. Пожалуйста, попробуйте снова.');

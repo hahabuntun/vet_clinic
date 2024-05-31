@@ -1,6 +1,5 @@
 $(document).ready(function() {
     async function refresh_appointments(date){
-        console.log("here")
         var parent = $(".appointments");
         var client_id = $("#client-id").val();
         $.ajax({

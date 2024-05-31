@@ -9,6 +9,8 @@ const {approve_appointment, decline_appointment, start_appointment, cancel_appoi
 const { verify_receptionist_token } = require("../middleware/authMiddleware");
 
 
+router.use(verify_receptionist_token);
+
 router.post('/clients', add_client);
 router.get("/clients", get_all_clients)
 router.patch('/clients/:clientId',  edit_client)

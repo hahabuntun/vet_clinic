@@ -8,6 +8,8 @@ const { get_appoinment_diagnosis, get_appoinment_symptoms, get_appoinment_proced
 const {finish_appointment} = require("../controllers/appointmentController");
 
 
+router.use(verify_doctor_token);
+
 router.get("/doctors/:doctor_id/schedule", get_single_doctor_shedule_page);
 router.get("/doctors/:doctor_id/appointments", get_doctor_appointments_page);
 router.get("/doctors/:doctor_id/find_pets",  find_animal_page);
