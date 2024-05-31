@@ -70,14 +70,18 @@ $(document).ready(function() {
         if (petId === null || petId === undefined) {
             return; 
         }
+        var url = '/make_appointment';
         const animal_id = $("#pet-select").val();
+        const client_id = $("#client-id").val();
+        console.log(client_id);
+        if (client_id){
+            url = `/clients/${client_id}/make_appointment`;
+        }
         const appointment_id = $(event.target).parent().attr('id');
-        console.log(animal_id);
-        console.log(appointment_id);
         const fData = new FormData();
         fData.append("animal_id", animal_id);
         fData.append("appointment_id", appointment_id);
-        await fetch('/make_appointment', {
+        await fetch(url, {
             method: 'POST',
             body: fData
         })

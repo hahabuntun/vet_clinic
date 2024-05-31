@@ -41,7 +41,6 @@ module.exports.edit_client = async (req, res) => {
     try {
       const updates = JSON.parse(JSON.stringify(req.body));
       const cli = await Client.findOne({passport: updates.passport});
-      console.log(updates);
       if (cli && cli._id != req.params.clientId){
         return  res.status(400).json({ message: 'Client with this passport already exists' });
       }
@@ -77,7 +76,6 @@ module.exports.delete_client = async (req, res) => {
 module.exports.add_client = async (req, res) => {
     try {
       const data = JSON.parse(JSON.stringify(req.body));
-      console.log(data);
       const { email, password, name, second_name, third_name, phone, passport } = data;
       const qclient = await Client.findOne({passport: passport});
       if (qclient)
@@ -141,7 +139,6 @@ module.exports.get_main_page = async (req, res) => {
       pets: pets,
       client: client
     }
-    console.log(data);
     res.render(path.join('client_views', 'main'), data);
   }catch(error){
     console.log(error);

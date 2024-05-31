@@ -27,7 +27,6 @@ module.exports.edit_service = async (req, res) => {
   try {
     const updates = JSON.parse(JSON.stringify(req.body));
     const serv = await Service.findOne({name: updates.name});
-    console.log(serv)
     if (serv && serv._id != req.params.serviceId){
       return  res.status(400).json({ message: 'Service with this name already exists' });
     }

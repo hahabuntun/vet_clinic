@@ -142,7 +142,6 @@ module.exports.get_animal_card_view = async (req, res) => {
         return appointment;
     })
     var temp_appointments = await Promise.all(appointment_promises);
-    console.log(temp_appointments);
     var data = {
       doctor: doctor,
       animal: animal,
@@ -182,7 +181,6 @@ module.exports.get_client_animal_card_view = async (req, res) => {
         return appointment;
     })
     var temp_appointments = await Promise.all(appointment_promises);
-    console.log(temp_appointments);
     var data = {
       client: client,
       animal: animal,
@@ -304,7 +302,6 @@ module.exports.get_client_animal_card_page = async (req, res) => {
 module.exports.find_animals = async (req, res) => {
   try{
     const {search_type, email, passport, phone, name, breed, type, animal_passport} = req.query;
-    console.log(req.query);
     var animals = [];
     if(search_type == "client")
     {
@@ -324,7 +321,6 @@ module.exports.find_animals = async (req, res) => {
         clientPromises = clientPromises.concat(await Animal.find({ client_id: client._id }));
       }
       animals = await Promise.all(clientPromises);
-      console.log(animals);
     }
     else{
       const animalQuery = {};
@@ -340,7 +336,6 @@ module.exports.find_animals = async (req, res) => {
       if (animal_passport & animal_passport != "") {
         animalQuery.animal_passport = animal_passport;
       }
-      console.log(animalQuery);
       animals = await Animal.find(animalQuery);
     }
     return res.status(200).json({animals: animals});

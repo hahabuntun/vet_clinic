@@ -65,7 +65,6 @@ module.exports.add_schedule_entry = async (req, res) => {
         date = new Date(date);
         const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         const [hours, minutes] = appointment_time.split(':').map(Number);
-        console.log(appointment_time);
         const fullAppointmentTime = new Date(dateOnly);
         fullAppointmentTime.setHours(hours);
         fullAppointmentTime.setMinutes(minutes);
@@ -115,10 +114,15 @@ module.exports.get_appointment_page = async (req, res) => {
 }
 module.exports.make_appointment = async (req, res) => {
     try{
+        var confirmed = true;
+        if (Object.keys(req.params).length != 0){
+            console.log(Object.keys(req.params).length);
+            confirmed = false;
+        }
         var {appointment_id, animal_id} = JSON.parse(JSON.stringify(req.body));
         const updatedAppointment = await Appointment.findOneAndUpdate(
             { _id: appointment_id },
-            { $set: { animal_id: animal_id, confirmed: true } },
+            { $set: { animal_id: animal_id, confirmed: confirmed } },
             { new: true }
           );
         return res.status(200).json({message: "success"});
@@ -320,7 +324,6 @@ module.exports.get_client_appointments = async (req, res) => {
         var data = {
             appointments: updated_appointments
         }
-        console.log(data)
         return res.status(200).json(data);
     }catch(error){
         res.status(500).json({error: error});

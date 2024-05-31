@@ -51,11 +51,12 @@
         </select>
         <% } else { %>
             <label for="pet-select">Питомцы</label>
+            <input type="hidden" id="client-id" value="<%=client._id%>">
             <select id="pet-select">
                 <% pets.forEach(pet => { %>
                     <option value="<%= pet._id %>">Питомец: <%= pet.name %>, Название: <%= pet.type %>, Порода: <%= pet.breed %></option>
                 <% }); %>
-                </select>
+            </select>
         <% } %>
     </div>
     <h1>Врачи</h1>
