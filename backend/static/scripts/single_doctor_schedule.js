@@ -22,7 +22,7 @@ $(document).ready(function() {
                     var client_data = $('<p></p>').text(`Клиент: ${appointment.client_data}`);
                     var client_phone = $('<p></p>').text(`Номер клиента: ${appointment.client_phone}`);
                     if(appointment.animal_card_page_id){
-                        var extra = $('<p></p>').text("Прием осуществл(ен/яется)");
+                        var extra = $('<p></p>').text("Прием осуществлен");
                         appointment_div.append(extra);
                     }
                     appointment_div.append(client_data).append(client_phone);

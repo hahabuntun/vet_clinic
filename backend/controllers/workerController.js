@@ -5,7 +5,7 @@ const {get_all_workers_s, get_worker_by_passport_s, update_worker_s, delete_work
 
 module.exports.get_all_workers  = async (req, res) => {
     const qdata = req.query;
-    var data = await get_all_workers_s( qdata);
+    var data = await get_all_workers_s(qdata);
     res.render(path.join('system_administration_views', 'employees'), data);
 };
 module.exports.edit_worker = async (req, res) => {

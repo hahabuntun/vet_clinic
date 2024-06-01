@@ -38,3 +38,8 @@ module.exports.get_all_services_s = async (qdata) =>{
     }
     return data;
 }
+
+module.exports.get_all_services_without_params_s = async () =>{
+    const services = await Service.find();
+    return services;
+}

@@ -12,6 +12,10 @@ module.exports.get_all_workers_s = async (qdata) => {
     }
     return data;
 }
+module.exports.get_all_doctors_s = async () =>{
+    var doctors = await Worker.find({type: "doctor"});
+    return doctors;
+}
 
 module.exports.get_worker_by_passport_s = async (passport) => {
     const work = await Worker.findOne({passport: passport});
