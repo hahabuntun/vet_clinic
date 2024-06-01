@@ -18,23 +18,26 @@
                     <li><a href="/doctors/<%= doctor._id %>/appointments">Приемы</a></li>
                     <li><a href="/doctors/<%= doctor._id %>/find_pets">Поиск животного</a></li>
                     <li><a href="/doctors/<%= doctor._id %>/schedule">Расписание записей</a></li>
-                    <li><a href="#">Выход</a></li>
+                    <li><a href="/logout">Выход</a></li>
                 <% } else { %>
                     <li><a href="/clients/<%= client._id %>/main">Животные</a></li>
                     <li><a href="/clients/<%= client._id %>/appointments">Записи</a></li>
                     <li><a href="/clients/<%= client._id %>/make_booking">Записать животное</a></li>
-                    <li><a href="#">Выход</a></li>
+                    <li><a href="/logout">Выход</a></li>
                 <% } %>
             </ul>
         </nav>
     </header>
     <ul class="info">
         <input type="hidden" id="animal-id" value="<%= animal._id %>"/>
+        <input type="hidden" id="user_type" value="<%= user_type %>"/>
         <li>Кличка - <%= animal.name %></li>
         <li>Название - <%= animal.type %></li>
         <li>Порода - <%= animal.breed %></li>
         <li>Пасспорт Животного - <%= animal.animal_passport %></li>
         <li>Возраст - <%= animal.age %></li>
+        <li>Клиент - <%= client.name %> <%= client.second_name %> <%= client.third_name %></li>
+        <li>Номер клиента - <%= client.phone %></li>
     </ul>
     <hr>
     <h2>Данные о приемах</h2>
@@ -43,6 +46,8 @@
         <div class="appointment">
             <p>Дата и время приема: <%= appointment.date %> <%= appointment.time %></p>
             <p>Принимающий врач: <%= appointment.doctor_full_name %></p>
+            <p>Клиент: <%= appointment.client_data %> </p>
+            <p>Номер клиента: <%= appointment.client_phone %> </p>
             <p>Оказываемая услуга: <%= appointment.service_name %></p>
             <p>Статус: <%= appointment.status %></p>
             <% if (user_type == "doctor") { %>

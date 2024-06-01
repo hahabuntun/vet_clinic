@@ -15,7 +15,7 @@
                 <li><a href="/doctors/<%= doctor._id %>/appointments">Приемы</a></li>
                 <li><a href="/doctors/<%= doctor._id %>/find_pets">Поиск животного</a></li>
                 <li><a href="/doctors/<%= doctor._id %>/schedule">Расписание записей</a></li>
-                <li><a href="#">Выход</a></li>
+                <li><a href="/logout">Выход</a></li>
             </ul>
         </nav>
     </header>
@@ -31,6 +31,8 @@
         <p>Порода: <span id="breed"><%= animal.breed %></span></p>
         <p>Возраст: <span id="age"><%= animal.age%></span></p>
         <p id="status">Статус приема: <%= appointment.status %></p>
+        <p>Клиент: <%= appointment.client_data %> </p>
+        <p>Номер клиента: <%= appointment.client_phone %> </p>
         <a href="/doctors/<%= appointment.doctor_id %>/pets/<%= animal._id %>/card">Карточка животного</a>
         <hr>
         <h2>Проведенные операции:</h2>

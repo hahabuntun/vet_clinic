@@ -16,7 +16,7 @@
                 <li><a href="/doctors/<%= doctor._id %>/appointments">Приемы</a></li>
                 <li><a href="/doctors/<%= doctor._id %>/find_pets">Поиск животного</a></li>
                 <li><a href="/doctors/<%= doctor._id %>/schedule">Расписание записей</a></li>
-                <li><a href="#">Выход</a></li>
+                <li><a href="/logout">Выход</a></li>
             </ul>
         </nav>
     </header>
@@ -26,7 +26,6 @@
     <div class="filter-container">
         <label for="date-filter">Фильтр по дате:</label>
         <input type="date" id="date-filter">
-        <button>Поиск записей</button>
     </div>
     <div class="appointments">
     </div>

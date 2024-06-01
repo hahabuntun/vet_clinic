@@ -1,11 +1,17 @@
 $(document).ready(function() {
   // Function to fetch and display analysis data for an animal
   var animal_id = $('#animal-id').val();
-  
+  var user_type = $("#user_type").val();
+  var get_all_url = `/download_animal_client/${animal_id}`;
+  var download_url = '/download_client/';
+  if(user_type == "doctor"){
+    get_all_url = `/download_animal_doctor/${animal_id}`
+    download_url = '/download_doctor/'
+  }
   function fetchAnalysisData() {
     console.log(animal_id);;
     $.ajax({
-      url: `/animal/${animal_id}`,
+      url: get_all_url,
       type: 'GET',
       success: function(response) {
         const analysisData = $('#analysisData');
@@ -16,7 +22,7 @@ $(document).ready(function() {
               <p><strong>Name:</strong> ${analysis.name}</p>
               <p><strong>Description:</strong> ${analysis.description}</p>
               <p><strong>Analysis Date:</strong> ${new Date(analysis.analysis_date).toLocaleDateString()}</p>
-              <a href="/download/${analysis._id}">Download File</a>
+              <a href="${download_url}${analysis._id}">Download File</a>
               <hr>
             </div>
           `);

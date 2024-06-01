@@ -1,10 +1,10 @@
 $(document).ready(function() {
-            
+    var url_prefix = '/clients';
     async function refresh_symptoms(){
         var animal_card_page_id = $("#page-id").val();
         var parent = $("#symptomsList");
         await $.ajax({
-        url: `/appointments/${animal_card_page_id}/symptoms`,
+        url: `${url_prefix}/appointments/${animal_card_page_id}/symptoms`,
         method: 'GET',
         success: function(data) {
             parent.empty();
@@ -21,7 +21,7 @@ $(document).ready(function() {
         var animal_card_page_id = $("#page-id").val();
         var parent = $("#diagnosisList");
         await $.ajax({
-        url: `/appointments/${animal_card_page_id}/diagnosis`,
+        url: `${url_prefix}/appointments/${animal_card_page_id}/diagnosis`,
         method: 'GET',
         success: function(data) {
             parent.empty();
@@ -38,7 +38,7 @@ $(document).ready(function() {
         var animal_card_page_id = $("#page-id").val();
         var parent = $("#procedureList");
         await $.ajax({
-        url: `/appointments/${animal_card_page_id}/procedures`,
+        url: `${url_prefix}/appointments/${animal_card_page_id}/procedures`,
         method: 'GET',
         success: function(data) {
             parent.empty();

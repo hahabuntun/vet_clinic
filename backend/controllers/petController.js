@@ -120,6 +120,7 @@ module.exports.get_animal_card_view = async (req, res) => {
     var user_type = "doctor";
     var doctor = await Worker.findOne({_id: doctor_id});
     var animal = await Animal.findOne({_id: pet_id});
+    var client = await Client.findOne({_id: animal.client_id});
     var appointments = await Appointment.find({animal_id: animal._id, animal_card_page_id:  { $exists: true}});
     const appointment_promises = appointments.map(async (appointment) => {
         var animal_card_page = await AnimalCardPage.find({_id: appointment.animal_card_page_id});
@@ -140,10 +141,14 @@ module.exports.get_animal_card_view = async (req, res) => {
         appointment.date = date;
         var doctor = await Worker.findOne({_id: appointment.doctor_id});
         appointment.doctor_full_name = doctor.name + " " + doctor.second_name + " " + doctor.third_name;
+        appointment.client_data = client.name + " " + client.second_name + " " + client.third_name;
+        appointment.client_id = client._id;
+        appointment.client_phone = client.phone;
         return appointment;
     })
     var temp_appointments = await Promise.all(appointment_promises);
     var data = {
+      client: client,
       user_type: user_type,
       doctor: doctor,
       animal: animal,
@@ -239,6 +244,7 @@ module.exports.get_animal_card_page = async (req, res) => {
     var {doctor_id, pet_id, page_id} = req.params;
     var doctor = await Worker.findOne({_id: doctor_id});
     var animal = await Animal.findOne({_id: pet_id});
+    var client = await Client.findOne({_id: animal.client_id});
     var animal_card_page = await AnimalCardPage.findOne({_id: page_id});
     var appointment = await Appointment.findOne({_id: animal_card_page.appointment_id});
     if (animal_card_page.finished == true){
@@ -254,6 +260,9 @@ module.exports.get_animal_card_page = async (req, res) => {
     appointment.time = timeStr;
     var date = appointment.appointment_time.getFullYear() + "." + appointment.appointment_time.getMonth() + "." + appointment.appointment_time.getDate();
     appointment.date = date;
+    appointment.client_data = client.name + " " + client.second_name + " " + client.third_name;
+    appointment.client_id = client._id;
+    appointment.client_phone = client.phone;
     var animal_doctor = await Worker.findOne({_id: appointment.doctor_id});
     var data = {
       doctor: doctor,
@@ -289,6 +298,9 @@ module.exports.get_client_animal_card_page = async (req, res) => {
     appointment.time = timeStr;
     var date = appointment.appointment_time.getFullYear() + "." + appointment.appointment_time.getMonth() + "." + appointment.appointment_time.getDate();
     appointment.date = date;
+    appointment.client_data = client.name + " " + client.second_name + " " + client.third_name;
+    appointment.client_id = client._id;
+    appointment.client_phone = client.phone;
     var animal_doctor = await Worker.findOne({_id: appointment.doctor_id});
     var data = {
       client: client,

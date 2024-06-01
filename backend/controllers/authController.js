@@ -68,7 +68,7 @@ module.exports.login_client = async (req, res) => {
     }
   };
 
-  module.exports.logout = async (req, res) => {
+module.exports.logout = async (req, res) => {
     res.clearCookie('authToken');
     res.redirect('/login'); // Перенаправляем на страницу входа
 }

@@ -20,12 +20,12 @@
                     <li><a href="/confirmed_bookings">Подтвержденные записи</a></li>
                     <li><a href="/unconfirmed_bookings">Неподтвержденные записи</a></li>
                     <li><a href="/make_appointment">Записть клиента</a></li>
-                    <li><a href="#">Выход</a></li>
+                    <li><a href="/logout">Выход</a></li>
                 <% } else { %>
                     <li><a href="/clients/<%= client._id %>/main">Животные</a></li>
                     <li><a href="/clients/<%= client._id %>/appointments">Записи</a></li>
                     <li><a href="/clients/<%= client._id %>/make_booking">Записать животное</a></li>
-                    <li><a href="#">Выход</a></li>
+                    <li><a href="/logout">Выход</a></li>
                 <% } %>
             </ul>
         </nav>

@@ -7,6 +7,8 @@ const { get_single_doctor_shedule_page, get_doctor_appointments_page } = require
 const { get_appoinment_diagnosis, get_appoinment_symptoms, get_appoinment_procedures, add_diagnosis, add_symptom, add_procedure } = require("../controllers/petController");
 const {finish_appointment} = require("../controllers/appointmentController");
 
+
+
 router.get("/doctors/:doctor_id/schedule", verify_doctor_token, get_single_doctor_shedule_page);
 router.get("/doctors/:doctor_id/appointments", verify_doctor_token, get_doctor_appointments_page);
 router.get("/doctors/:doctor_id/find_pets", verify_doctor_token,  find_animal_page);

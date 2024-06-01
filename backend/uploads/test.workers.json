@@ -1,0 +1,180 @@
+[{
+  "_id": {
+    "$oid": "66314077fd04788ba2837822"
+  },
+  "name": "Doen",
+  "second_name": "Smith",
+  "third_name": "john.doe@example.com",
+  "email": "John",
+  "phone": "1234567891",
+  "passport": "ABC12346",
+  "password": "$2b$10$y8iTtD4bV2DGJrHgwSohru/y1jhcV2VVW42xasI7w7PE/63bPmyqe",
+  "type": "admin",
+  "createdAt": {
+    "$date": "2024-04-30T19:03:19.367Z"
+  },
+  "updatedAt": {
+    "$date": "2024-05-01T21:38:08.925Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "663148c7a280140a998310e2"
+  },
+  "name": "Петрович",
+  "second_name": "vasilyp1992@gmail.com",
+  "third_name": "Василий",
+  "email": "Смирнов",
+  "phone": "1234567890",
+  "passport": "ABC12344",
+  "password": "securepassword",
+  "type": "doctor",
+  "__v": 0,
+  "createdAt": {
+    "$date": "2024-04-30T19:38:47.836Z"
+  },
+  "updatedAt": {
+    "$date": "2024-05-01T21:38:29.885Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "663148c7a280140a998310e3"
+  },
+  "name": "Иван",
+  "second_name": "Иванов",
+  "third_name": "Иванович",
+  "email": "ivan@example.com",
+  "phone": "9876543210",
+  "passport": "XYZ54321",
+  "password": "strongpassword",
+  "type": "doctor",
+  "__v": 0,
+  "createdAt": {
+    "$date": "2024-04-30T19:38:47.836Z"
+  },
+  "updatedAt": {
+    "$date": "2024-04-30T19:38:47.836Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "663148c7a280140a998310e4"
+  },
+  "name": "Алексей",
+  "second_name": "Сидоров",
+  "third_name": "Андреевич",
+  "email": "alex@example.com",
+  "phone": "5555555555",
+  "passport": "DEF67890",
+  "password": "password123",
+  "type": "doctor",
+  "__v": 0,
+  "createdAt": {
+    "$date": "2024-04-30T19:38:47.836Z"
+  },
+  "updatedAt": {
+    "$date": "2024-04-30T19:38:47.836Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "663148c7a280140a998310e5"
+  },
+  "name": "Елена",
+  "second_name": "Павлова",
+  "third_name": "Игоревна",
+  "email": "elena@example.com",
+  "phone": "9999999999",
+  "passport": "GHI45678",
+  "password": "letmein123",
+  "type": "doctor",
+  "__v": 0,
+  "createdAt": {
+    "$date": "2024-04-30T19:38:47.837Z"
+  },
+  "updatedAt": {
+    "$date": "2024-04-30T19:38:47.837Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "663148c7a280140a998310e6"
+  },
+  "name": "Александровна",
+  "second_name": "maria@example.com",
+  "third_name": "Мария",
+  "email": "Петрова",
+  "phone": "5555555555",
+  "passport": "JKL98765",
+  "password": "mypassword",
+  "type": "doctor",
+  "__v": 0,
+  "createdAt": {
+    "$date": "2024-04-30T19:38:47.837Z"
+  },
+  "updatedAt": {
+    "$date": "2024-05-01T21:45:46.013Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "663148c7a280140a998310e7"
+  },
+  "name": "Дмитрий",
+  "second_name": "Козлов",
+  "third_name": "Сергеевич",
+  "email": "dmitry@example.com",
+  "phone": "7777777777",
+  "passport": "MNO54321",
+  "password": "dmitry123",
+  "type": "receptionist",
+  "__v": 0,
+  "createdAt": {
+    "$date": "2024-04-30T19:38:47.837Z"
+  },
+  "updatedAt": {
+    "$date": "2024-04-30T19:38:47.837Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "663148c7a280140a998310e8"
+  },
+  "name": "olga@example.com",
+  "second_name": "Ольга",
+  "third_name": "Сергеева",
+  "email": "Владимировна",
+  "phone": "3333333333",
+  "passport": "PQR12341",
+  "password": "olga321",
+  "type": "receptionist",
+  "__v": 0,
+  "createdAt": {
+    "$date": "2024-04-30T19:38:47.837Z"
+  },
+  "updatedAt": {
+    "$date": "2024-05-01T21:40:27.899Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6632bf7a3972b775811f87e7"
+  },
+  "name": "vitaly",
+  "second_name": "chervov",
+  "third_name": "andreevich",
+  "email": "asdas@gmail.com",
+  "phone": "12312321312321",
+  "passport": "1231231",
+  "password": "$2b$10$dVS//9VLMULWd0qEoS/pte9Exmo4mXqgyOaeJJ/KfL3C4YWxwTZUu",
+  "type": "admin",
+  "createdAt": {
+    "$date": "2024-05-01T22:17:30.254Z"
+  },
+  "updatedAt": {
+    "$date": "2024-05-01T22:17:30.254Z"
+  },
+  "__v": 0
+}]

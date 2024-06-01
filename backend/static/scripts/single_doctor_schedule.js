@@ -19,10 +19,13 @@ $(document).ready(function() {
                 if (appointment.animal_id){
                     var animal_p = $('<p></p>').html(`<a href="/doctors/${doctor_id}/pets/${appointment.animal_id}/card">Записанное животное: ${appointment.animal_data}</a>`);
                     appointment_div.append(animal_p);
+                    var client_data = $('<p></p>').text(`Клиент: ${appointment.client_data}`);
+                    var client_phone = $('<p></p>').text(`Номер клиента: ${appointment.client_phone}`);
                     if(appointment.animal_card_page_id){
                         var extra = $('<p></p>').text("Прием осуществл(ен/яется)");
                         appointment_div.append(extra);
                     }
+                    appointment_div.append(client_data).append(client_phone);
                 }
                 else{
                     var no_appointment = $('<p></p>').text('Пока нет записи');

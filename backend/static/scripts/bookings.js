@@ -15,10 +15,16 @@ $(document).ready(function() {
                 var day = datetime.getDate()
                 var header = $('<h2></h2>').text(`Дата и Время: ${year}.${month}.${day} ${appointment.time}`);
                 var doctor_p = $('<p></p>').text(`Принимающий врач: ${appointment.doctor_full_name}`);
+                var status = $('<p></p>')
+                if (appointment.confirmed){
+                    status.text(`Статус: Запись подтверждена`);
+                }else{
+                    status.text(`Статус: Запись не подтверждена`);
+                }
                 var animal_p = $('<p></p>').text(`Записанное животное: ${appointment.animal_data}`);
                 var btn_cancel = $('<button></button>').addClass('reject').text(`Отменить`);
                 btn_cancel.on("click", handle_cancel);
-                appointment_div.append(header).append(doctor_p).append(animal_p).append(btn_cancel);
+                appointment_div.append(header).append(doctor_p).append(animal_p).append(status).append(btn_cancel);
                 parent.append(appointment_div);
             })
         },
