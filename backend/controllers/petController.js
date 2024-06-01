@@ -1,18 +1,7 @@
 const mongoose = require("mongoose");
 const path = require('path');
 
-const Client = require("../models/client.js");
-const Animal = require("../models/animal.js");
-const Worker = require("../models/worker.js");
-var AnimalCardPage = require("../models/animal_card_page.js");
-var Analysis = require("../models/analysis.js");
-const Appointment = require("../models/appointment.js");
-const Service = require("../models/service.js");
-const Symptom = require("../models/symptom.js");
-const Diagnosis = require("../models/diagnosis.js");
-const Procedure = require("../models/procedure.js");
-
-const {get_animal_by_animal_passport_s, get_animal_by_id_s, get_animals_by_query_s, add_animal_s, update_pet_s, delete_pet_s} = require("../services/petService.js");
+const {find_animals_by_query_s, get_animal_by_animal_passport_s, get_animal_by_id_s, get_animals_by_query_s, add_animal_s, update_pet_s, delete_pet_s} = require("../services/petService.js");
 const {get_client_by_id_s} = require("../services/clientService.js");
 const {get_doctor_by_id_s} = require("../services/workerService.js");
 const {get_animal_appointments_s, get_appointment_by_id_and_add_client_s} = require("../services/appointmentService.js");
@@ -133,6 +122,7 @@ module.exports.get_animal_card_view = async (req, res) => {
     }
     res.render('animal_card', data);
   }catch(error){
+    console.log(error);
     res.status(500).json({error: error});
   }
 }
@@ -193,7 +183,7 @@ module.exports.get_animal_card_page = async (req, res) => {
     var animal = await get_animal_by_id_s(pet_id);
     var client = await get_client_by_id_s(animal.client_id);
     var animal_card_page = await get_page_by_id_s(page_id);
-    var appointment = get_appointment_by_id_and_add_client_s(animal_card_page.appointment_id, client);
+    var appointment = await get_appointment_by_id_and_add_client_s(animal_card_page.appointment_id, client);
     var animal_doctor = await get_doctor_by_id_s(appointment.doctor_id);
     var data = {
       doctor: doctor,
@@ -232,43 +222,7 @@ module.exports.get_client_animal_card_page = async (req, res) => {
 
 module.exports.find_animals = async (req, res) => {
   try{
-    const {search_type, email, passport, phone, name, breed, type, animal_passport} = req.query;
-    var animals = [];
-    if(search_type == "client")
-    {
-      var query = {};
-      if (email && email != "") {
-        query.email = email;
-      }
-      if (passport && passwport != "") {
-        query.passport = passport;
-      }
-      if (phone && phone != "") {
-        query.phone = phone;
-      }
-      var clients = await Client.find(query);
-      var clientPromises = [];
-      for (const client of clients) {
-        clientPromises = clientPromises.concat(await Animal.find({ client_id: client._id }));
-      }
-      animals = await Promise.all(clientPromises);
-    }
-    else{
-      const animalQuery = {};
-      if (name && name != "") {
-        animalQuery.name = name;
-      }
-      if (breed && breed != "") {
-        animalQuery.breed = breed;
-      }
-      if (type && type != "") {
-        animalQuery.type = type;
-      }
-      if (animal_passport & animal_passport != "") {
-        animalQuery.animal_passport = animal_passport;
-      }
-      animals = await Animal.find(animalQuery);
-    }
+    var animals = await find_animals_by_query_s(req.query);
     return res.status(200).json({animals: animals});
   }catch(error){
     console.log(error);

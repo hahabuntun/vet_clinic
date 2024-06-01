@@ -38,7 +38,7 @@
         <h2>Проведенные операции:</h2>
         <ul id="procedureList">
         </ul>
-        <% if (doctor._id.equals(animal_doctor._id)) { %>
+        <% if (doctor._id.equals(animal_doctor._id) && appointment.status == "не завершен") { %>
         <form id="procedureForm">
             <label for="procedure_name">Название операции:</label>
             <input type="text" id="procedure_name" name="name">
@@ -49,7 +49,7 @@
         <h2>Симптомы животного: </h2>
         <ul id="symptomsList">
         </ul>
-        <% if (doctor._id.equals(animal_doctor._id)) { %>
+        <% if (doctor._id.equals(animal_doctor._id) && appointment.status == "не завершен") { %>
         <form id="symptomForm">
             <label for="symptom_name">Название симптома:</label>
             <input type="text" id="symptom_name" name="name">
@@ -60,7 +60,7 @@
         <h2>Поставленный диагноз: </h2>
         <ul id="diagnosisList">
         </ul>
-        <% if (doctor._id.equals(animal_doctor._id)) { %>
+        <% if (doctor._id.equals(animal_doctor._id) && appointment.status == "не завершен")  { %>
         <form id="diagnosisForm">
             <label for="diagnosis_name">Диагноз:</label>
             <input type="text" id="diagnosis_name" name="name">
