@@ -6,10 +6,6 @@ const {get_client_by_id_s} = require("../services/clientService.js");
 const {get_doctor_by_id_s} = require("../services/workerService.js");
 const {get_animal_appointments_s, get_appointment_by_id_and_add_client_s} = require("../services/appointmentService.js");
 const {get_page_by_id_s} = require("../services/animalCardPageService.js");
-const {add_procedure_s, get_procedure_by_card_page_id_s} = require("../services/procedureService.js");
-const {add_symptom_s, get_symptom_by_card_page_id_s} = require("../services/symptomService.js");
-const {add_diagnosis_s, get_diagnosis_by_card_page_id_s} = require("../services/diagnosisService.js");
-
 
 module.exports.add_pet_to_client= async (req, res) => {
   try {
@@ -25,12 +21,11 @@ module.exports.add_pet_to_client= async (req, res) => {
   } catch (error) {
   res.status(500).json({ error: 'Addition of animal failed' });
   }
-  };
+};
 module.exports.edit_client_pet = async (req, res) => {
   try {
     const updates = JSON.parse(JSON.stringify(req.body));
     const pet = await get_animal_by_animal_passport_s(updates.animal_passport);
-    
     if (pet && pet._id != req.params.petId){
       return  res.status(400).json({ message: 'Pet with this passport already exists' });
     }
@@ -126,7 +121,6 @@ module.exports.get_animal_card_view = async (req, res) => {
     res.status(500).json({error: error});
   }
 }
-
 module.exports.get_client_animal_card_view = async (req, res) => {
   try{
     var {client_id, pet_id} = req.params;
@@ -144,36 +138,6 @@ module.exports.get_client_animal_card_view = async (req, res) => {
   }catch(error){
     console.log(error);
     res.status(500).json({error: error});
-  }
-}
-
-
-module.exports.get_appoinment_diagnosis = async (req, res) =>{
-  try{
-    const {page_id} = req.params;
-    var data = await get_diagnosis_by_card_page_id_s(page_id);
-    return res.status(200).json(data);
-  }
-  catch(error){
-    res.status(500).json({error: error})
-  }
-}
-module.exports.get_appoinment_symptoms = async (req, res) =>{
-  try{
-    const {page_id} = req.params;
-    var data = await get_symptom_by_card_page_id_s(page_id);
-    return res.status(200).json(data);
-  }catch(error){
-    res.status(500).json({error: error})
-  }
-}
-module.exports.get_appoinment_procedures = async (req, res) =>{
-  try{
-    const {page_id} = req.params;
-    var data = await get_procedure_by_card_page_id_s(page_id);
-    return res.status(200).json(data);
-  }catch(error){
-    res.status(500).json({error: error})
   }
 }
 module.exports.get_animal_card_page = async (req, res) => {
@@ -197,8 +161,6 @@ module.exports.get_animal_card_page = async (req, res) => {
     res.status(500).json({error: error});
   }
 }
-
-
 module.exports.get_client_animal_card_page = async (req, res) => {
   try{
     var {client_id, pet_id, page_id} = req.params;
@@ -219,7 +181,6 @@ module.exports.get_client_animal_card_page = async (req, res) => {
     res.status(500).json({error: error});
   }
 }
-
 module.exports.find_animals = async (req, res) => {
   try{
     var animals = await find_animals_by_query_s(req.query);
@@ -229,34 +190,5 @@ module.exports.find_animals = async (req, res) => {
     res.status(500).json({ message: 'Failed to find pets' });
   }
 }
-module.exports.add_procedure = async (req, res) => {
-  try{
-    const {name} = JSON.parse(JSON.stringify(req.body));
-    const {page_id} = req.params;
-    const procedure = await add_procedure_s(name, page_id);
-    return res.status(201).json({procedure: procedure});
-  }catch(error){
-    res.status(500).json({error: error});
-    console.log(error);
-  }
-}
-module.exports.add_symptom = async (req, res) => {
-  try{
-    const {name} = JSON.parse(JSON.stringify(req.body));
-    const {page_id} = req.params;
-    const symptom = await add_symptom_s(name, page_id);
-    return res.status(201).json({symptom: symptom});
-  }catch(error){
-    res.status(500).json({error: error});
-  }
-}
-module.exports.add_diagnosis = async (req, res) => {
-  try{
-    const {name} = JSON.parse(JSON.stringify(req.body));
-    const {page_id} = req.params;
-    const diagnosis = await add_diagnosis_s(name, page_id);
-    return res.status(201).json({diagnosis: diagnosis});
-  }catch(error){
-    res.status(500).json({error: error});
-  }
-}
+
+

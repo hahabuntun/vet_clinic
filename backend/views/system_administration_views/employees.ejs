@@ -28,7 +28,11 @@
             <input name="email" type="text" class="dataInput" id="emailAdd" placeholder="Email">
             <input name="password" type="text" class="dataInput" id="passwordAdd" placeholder="Пароль">
             <input name="phone" type="text" class="dataInput" id="phoneAdd" placeholder="Телефон">
-            <input name="type" type="text" class="dataInput" id="typeAdd" placeholder="Тип">
+            <select name="type" class="dataInput" id="typeAdd">
+                <option value="receptionist">Receptionist</option>
+                <option value="admin">Администратор</option>
+                <option value="doctor">Врач-ветеринар</option>
+              </select>
             <button type="submit" id="addButton">Добавить</button>
         </form>
     </div>
@@ -72,7 +76,7 @@
             <table class="employee-table" id="employeeTable">
                 <thead>
                     <tr>
-                        <th width="15%">Passport</th>
+                        <th width="15%">Пасспорт</th>
                         <th width="15%">Email</th>
                         <th width="10%">Имя</th>
                         <th width="10%">Фамилия</th>

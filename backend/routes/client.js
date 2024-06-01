@@ -2,7 +2,9 @@ const express = require('express');
 const { get_main_page } = require('../controllers/clientController');
 const {get_client_animal_card_page, get_client_animal_card_view} = require("../controllers/petController");
 const {get_client_appointments_page, get_client_appointments, cancel_appointment, get_appointment_page, make_appointment} = require("../controllers/appointmentController");
-const { get_appoinment_diagnosis, get_appoinment_symptoms, get_appoinment_procedures } = require("../controllers/petController");
+const {get_appoinment_diagnosis} = require("../controllers/diagnosisController");
+const {get_appoinment_symptoms} = require("../controllers/symptomController");
+const {get_appoinment_procedures} = require("../controllers/procedureController");
 
 const { verify_client_token } = require('../middleware/authMiddleware');
 const router = express.Router();

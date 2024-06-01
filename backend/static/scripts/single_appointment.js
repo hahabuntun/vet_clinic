@@ -125,6 +125,7 @@ $(document).ready(function() {
             if (response.status == 200){
                 $("#status").text("Статус приема: завершен");
                 $('#finish-header, #btn-finish').remove();
+                location.reload();
             }
             })
             .catch(error => {
