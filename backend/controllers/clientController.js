@@ -1,10 +1,7 @@
 const mongoose = require("mongoose");
-const bcrypt = require('bcrypt');
 const path = require('path');
-
-const Client = require("../models/client.js");
-const Animal = require("../models/animal.js");
-
+const {get_all_clients_s, get_client_by_passport_s, get_client_by_id_s, update_client_s, delete_client_s, add_client_s} = require("../services/clientService.js");
+const {get_animals_by_client_id_s, get_animals_by_query_s} = require("../services/petService.js");
 
 module.exports.get_all_clients  = async (req, res) => {
     const qdata = req.query;
@@ -29,10 +26,7 @@ module.exports.get_all_clients  = async (req, res) => {
         query.passport = qdata.passport;
       }
     }
-    const clients = await Client.find(query);
-    data = {
-        clients: clients
-    }
+    var data = await get_all_clients_s(query);
     res.render(path.join('clinic_administation_views', 'clients'), data);
 };
 
@@ -40,15 +34,11 @@ module.exports.get_all_clients  = async (req, res) => {
 module.exports.edit_client = async (req, res) => {
     try {
       const updates = JSON.parse(JSON.stringify(req.body));
-      const cli = await Client.findOne({passport: updates.passport});
+      const cli = await get_client_by_passport_s(updates.passport);
       if (cli && cli._id != req.params.clientId){
         return  res.status(400).json({ message: 'Client with this passport already exists' });
       }
-      const updatedClient = await Client.findOneAndUpdate(
-        { _id: req.params.clientId },
-        { $set: updates },
-        { new: true }
-    );
+      const updatedClient = await update_client_s(req.params.clientId, updates);
       if (!updatedClient) {
         return res.status(404).json({ message: 'Client not found' });
       }
@@ -63,7 +53,7 @@ module.exports.edit_client = async (req, res) => {
 module.exports.delete_client = async (req, res) => {
     try {
       const clientId = req.params.clientId;
-      const deletedClient = await Client.findByIdAndDelete(clientId);
+      const deletedClient = await delete_client_s(clientId);
       if (!deletedClient) {
         return res.status(404).json({ message: 'Client not found' });
       }
@@ -77,16 +67,12 @@ module.exports.add_client = async (req, res) => {
     try {
       const data = JSON.parse(JSON.stringify(req.body));
       const { email, password, name, second_name, third_name, phone, passport } = data;
-      const qclient = await Client.findOne({passport: passport});
+      const qclient = await get_client_by_passport_s(passport);
       if (qclient)
       {
         return res.status(400).json({"message": "client with this passport already exists"})
       }
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const client = new Client({ email: email, password: hashedPassword, name: name,
-                                second_name: second_name, third_name: third_name,
-                                phone: phone, passport: passport });
-      await client.save();
+      const client = await add_client_s(email, password, name, second_name, third_name, phone, passport);
       res.status(201).json({ email: client.email, name: client.name,
         second_name: client.second_name, third_name: client.third_name,
         phone: client.phone, passport: client.passport, _id: client._id });
@@ -97,11 +83,11 @@ module.exports.add_client = async (req, res) => {
 module.exports.get_client = async (req, res) => {
   try{
     const { passport } = req.params;
-    const client = await Client.findOne({ passport });
+    const client = await get_client_by_passport_s(passport);
     if (!client) {
       return res.status(404).json({ message: 'Client not found' });
     }
-    const pets = await Animal.find({client_id: client._id});
+    const pets = await get_animals_by_client_id_s(client._id);
     client.pets = pets;
     res.status(200).json(client);
   }
@@ -133,8 +119,8 @@ module.exports.get_main_page = async (req, res) => {
       }
     }
     query.client_id = clientId;
-    var pets = await Animal.find(  query );
-    var client = await Client.findOne({_id: clientId});
+    var pets = await get_animals_by_query_s(query);
+    var client = await get_client_by_id_s(clientId);
     var data = {
       pets: pets,
       client: client

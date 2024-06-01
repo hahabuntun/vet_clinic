@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const bcrypt = require('bcrypt');
 const path = require('path');
 const {get_all_workers_s, get_worker_by_passport_s, update_worker_s, delete_worker_s, add_worker_s, get_doctor_by_id_s} = require("../services/workerService.js")
 
