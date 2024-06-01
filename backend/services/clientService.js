@@ -23,6 +23,11 @@ module.exports.get_client_by_id_s = async (client_id) =>{
     return client;
 }
 
+module.exports.get_client_by_email_s = async (email) =>{
+    const client = await Client.findOne({ email });
+    return client;
+}
+
 module.exports.update_client_s = async (client_id, updates) =>{
     const updatedClient = await Client.findOneAndUpdate(
         { _id: client_id },

@@ -17,6 +17,10 @@ module.exports.get_worker_by_passport_s = async (passport) => {
     const work = await Worker.findOne({passport: passport});
     return work;
 }
+module.exports.get_worker_by_email_s = async (email) => {
+    const worker = await Worker.findOne({ email });
+    return worker;
+}
 
 module.exports.get_doctor_by_id_s = async (doctor_id) =>{
     const doctor = await Worker.findOne({_id: doctor_id});

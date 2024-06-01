@@ -2,9 +2,8 @@ const mongoose = require("mongoose");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const Worker = require("../models/worker.js");
-const Client = require("../models/client.js");
-
+const {get_client_by_email_s} = require("../services/clientService.js");
+const {get_worker_by_email_s} = require("../services/workerService.js");
 
 module.exports.get_login_page = async (req, res) =>{
   try{
@@ -17,7 +16,7 @@ module.exports.get_login_page = async (req, res) =>{
 module.exports.login_worker = async (req, res) => {
   try {
       const { email, password } = req.body;
-      const worker = await Worker.findOne({ email });
+      const worker = await get_worker_by_email_s(email);
       if (!worker) {
         return res.status(401).json({ error: 'Authentication failed' });
       }
@@ -48,7 +47,7 @@ module.exports.login_worker = async (req, res) => {
 module.exports.login_client = async (req, res) => {
     try {
       const { email, password } = req.body;
-      const client = await Client.findOne({ email });
+      const client = await get_client_by_email_s(email);
       if (!client) {
       return res.status(401).json({ error: 'Authentication failed' });
       }

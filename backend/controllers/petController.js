@@ -12,19 +12,26 @@ const Symptom = require("../models/symptom.js");
 const Diagnosis = require("../models/diagnosis.js");
 const Procedure = require("../models/procedure.js");
 
+const {get_animal_by_animal_passport_s, get_animal_by_id_s, get_animals_by_query_s, add_animal_s, update_pet_s, delete_pet_s} = require("../services/petService.js");
+const {get_client_by_id_s} = require("../services/clientService.js");
+const {get_doctor_by_id_s} = require("../services/workerService.js");
+const {get_animal_appointments_s, get_appointment_by_id_and_add_client_s} = require("../services/appointmentService.js");
+const {get_page_by_id_s} = require("../services/animalCardPageService.js");
+const {add_procedure_s, get_procedure_by_card_page_id_s} = require("../services/procedureService.js");
+const {add_symptom_s, get_symptom_by_card_page_id_s} = require("../services/symptomService.js");
+const {add_diagnosis_s, get_diagnosis_by_card_page_id_s} = require("../services/diagnosisService.js");
+
 
 module.exports.add_pet_to_client= async (req, res) => {
   try {
     const data = JSON.parse(JSON.stringify(req.body));
     const { type, breed, name, animal_passport, age, client_id } = data;
-    const qanimal = await Animal.findOne({animal_passport: animal_passport});
+    const qanimal = await get_animal_by_animal_passport_s(animal_passport);
     if (qanimal)
     {
       return res.status(400).json({"message": "animal with this passport already exists"})
     }
-    const animal = new Animal({ type: type, breed: breed, name: name,
-                              age: age, client_id: client_id, animal_passport: animal_passport });
-    await animal.save();
+    const animal = await add_animal_s(type, breed, name, animal_passport, age, client_id);
     res.status(201).json({ _id: animal._id, name: animal.name, breed: animal.breed, type: animal.type, age: animal.age, animal_passport: animal.animal_passport});
   } catch (error) {
   res.status(500).json({ error: 'Addition of animal failed' });
@@ -33,17 +40,12 @@ module.exports.add_pet_to_client= async (req, res) => {
 module.exports.edit_client_pet = async (req, res) => {
   try {
     const updates = JSON.parse(JSON.stringify(req.body));
-    const pet = await Animal.findOne({animal_passport: updates.animal_passport});
+    const pet = await get_animal_by_animal_passport_s(updates.animal_passport);
     
     if (pet && pet._id != req.params.petId){
       return  res.status(400).json({ message: 'Pet with this passport already exists' });
     }
-    const updatedPet = await Animal.findOneAndUpdate(
-      { _id: req.params.petId },
-      { $set: updates },
-      { new: true }
-  );
-
+    const updatedPet = await update_pet_s(req.params.petId, updates);
     if (!updatedPet) {
       return res.status(404).json({ message: 'Pet not found' });
     }
@@ -57,7 +59,7 @@ module.exports.edit_client_pet = async (req, res) => {
 module.exports.delete_client_pet = async (req, res) => {
   try {
     const petId = req.params.petId;
-    const deletedPet = await Animal.findByIdAndDelete(petId);
+    const deletedPet = await delete_pet_s(petId);
     if (!deletedPet) {
       return res.status(404).json({ message: 'Pet not found' });
     }
@@ -90,9 +92,9 @@ module.exports.get_all_client_pets = async (req, res) => {
       }
     }
     query.client_id = clientId;
-    var pets = await Animal.find(  query );
-    const client = await Client.find({ _id: clientId })
-    data = { client: client[0], pets: pets };
+    var pets = await get_animals_by_query_s(query);
+    const client = await get_client_by_id_s(clientId);
+    var data = { client: client, pets: pets };
     res.render(path.join('clinic_administation_views', 'client'), data);
   } catch (error) {
     console.error(error);
@@ -102,7 +104,7 @@ module.exports.get_all_client_pets = async (req, res) => {
 module.exports.find_animal_page = async (req, res) => {
   try{
     var {doctor_id, animal_id} = req.params;
-    var doctor = await Worker.findOne({_id: doctor_id});
+    var doctor = await get_doctor_by_id_s(doctor_id);
     var data = {
       doctor: doctor
     }
@@ -118,41 +120,16 @@ module.exports.get_animal_card_view = async (req, res) => {
   try{
     var {doctor_id, pet_id} = req.params;
     var user_type = "doctor";
-    var doctor = await Worker.findOne({_id: doctor_id});
-    var animal = await Animal.findOne({_id: pet_id});
-    var client = await Client.findOne({_id: animal.client_id});
-    var appointments = await Appointment.find({animal_id: animal._id, animal_card_page_id:  { $exists: true}});
-    const appointment_promises = appointments.map(async (appointment) => {
-        var animal_card_page = await AnimalCardPage.find({_id: appointment.animal_card_page_id});
-        if (animal_card_page.finished == true){
-          appointment.status = "завершен";
-        }else{
-          appointment.status = "не завершен";
-        }
-        const serv = await Service.find({_id: appointment.service_id});
-        const service_name = serv[0].name;
-        appointment.service_name = service_name;
-
-        const hours = appointment.appointment_time.getHours().toString().padStart(2, '0');
-        const minutes = appointment.appointment_time.getMinutes().toString().padStart(2, '0');
-        const timeStr = `${hours}:${minutes}`;
-        appointment.time = timeStr;
-        var date = appointment.appointment_time.getFullYear() + "." + appointment.appointment_time.getMonth() + "." + appointment.appointment_time.getDate();
-        appointment.date = date;
-        var doctor = await Worker.findOne({_id: appointment.doctor_id});
-        appointment.doctor_full_name = doctor.name + " " + doctor.second_name + " " + doctor.third_name;
-        appointment.client_data = client.name + " " + client.second_name + " " + client.third_name;
-        appointment.client_id = client._id;
-        appointment.client_phone = client.phone;
-        return appointment;
-    })
-    var temp_appointments = await Promise.all(appointment_promises);
+    var doctor = await get_doctor_by_id_s(doctor_id);
+    var animal = await get_animal_by_id_s(pet_id);
+    var client = await get_client_by_id_s(animal.client_id);
+    var appointments = await get_animal_appointments_s(animal._id, true);
     var data = {
       client: client,
       user_type: user_type,
       doctor: doctor,
       animal: animal,
-      appointments: temp_appointments
+      appointments: appointments
     }
     res.render('animal_card', data);
   }catch(error){
@@ -164,39 +141,18 @@ module.exports.get_client_animal_card_view = async (req, res) => {
   try{
     var {client_id, pet_id} = req.params;
     var user_type = "client";
-    var client = await Client.findOne({_id: client_id});
-    var animal = await Animal.findOne({_id: pet_id});
-    var appointments = await Appointment.find({animal_id: animal._id, animal_card_page_id:  { $exists: true}});
-    const appointment_promises = appointments.map(async (appointment) => {
-        var animal_card_page = await AnimalCardPage.find({_id: appointment.animal_card_page_id});
-        if (animal_card_page.finished == true){
-          appointment.status = "завершен";
-        }else{
-          appointment.status = "не завершен";
-        }
-        const serv = await Service.find({_id: appointment.service_id});
-        const service_name = serv[0].name;
-        appointment.service_name = service_name;
-
-        const hours = appointment.appointment_time.getHours().toString().padStart(2, '0');
-        const minutes = appointment.appointment_time.getMinutes().toString().padStart(2, '0');
-        const timeStr = `${hours}:${minutes}`;
-        appointment.time = timeStr;
-        var date = appointment.appointment_time.getFullYear() + "." + appointment.appointment_time.getMonth() + "." + appointment.appointment_time.getDate();
-        appointment.date = date;
-        var doctor = await Worker.findOne({_id: appointment.doctor_id});
-        appointment.doctor_full_name = doctor.name + " " + doctor.second_name + " " + doctor.third_name;
-        return appointment;
-    })
-    var temp_appointments = await Promise.all(appointment_promises);
+    var animal = await get_animal_by_id_s(pet_id);
+    var client = await get_client_by_id_s(animal.client_id);
+    var appointments = await get_animal_appointments_s(animal._id, true);
     var data = {
       user_type: user_type,
       client: client,
       animal: animal,
-      appointments: temp_appointments
+      appointments: appointments
     }
     res.render('animal_card', data);
   }catch(error){
+    console.log(error);
     res.status(500).json({error: error});
   }
 }
@@ -205,10 +161,7 @@ module.exports.get_client_animal_card_view = async (req, res) => {
 module.exports.get_appoinment_diagnosis = async (req, res) =>{
   try{
     const {page_id} = req.params;
-    var diagnosises = await Diagnosis.find({animal_card_page_id: page_id});
-    var data = {
-      diagnosises: diagnosises,
-    }
+    var data = await get_diagnosis_by_card_page_id_s(page_id);
     return res.status(200).json(data);
   }
   catch(error){
@@ -218,10 +171,7 @@ module.exports.get_appoinment_diagnosis = async (req, res) =>{
 module.exports.get_appoinment_symptoms = async (req, res) =>{
   try{
     const {page_id} = req.params;
-    var symptoms = await Symptom.find({animal_card_page_id: page_id});
-    var data = {
-      symptoms: symptoms,
-    }
+    var data = await get_symptom_by_card_page_id_s(page_id);
     return res.status(200).json(data);
   }catch(error){
     res.status(500).json({error: error})
@@ -230,10 +180,7 @@ module.exports.get_appoinment_symptoms = async (req, res) =>{
 module.exports.get_appoinment_procedures = async (req, res) =>{
   try{
     const {page_id} = req.params;
-    var procedures = await Procedure.find({animal_card_page_id: page_id});
-    var data = {
-      procedures: procedures,
-    }
+    var data = await get_procedure_by_card_page_id_s(page_id);
     return res.status(200).json(data);
   }catch(error){
     res.status(500).json({error: error})
@@ -242,28 +189,12 @@ module.exports.get_appoinment_procedures = async (req, res) =>{
 module.exports.get_animal_card_page = async (req, res) => {
   try{
     var {doctor_id, pet_id, page_id} = req.params;
-    var doctor = await Worker.findOne({_id: doctor_id});
-    var animal = await Animal.findOne({_id: pet_id});
-    var client = await Client.findOne({_id: animal.client_id});
-    var animal_card_page = await AnimalCardPage.findOne({_id: page_id});
-    var appointment = await Appointment.findOne({_id: animal_card_page.appointment_id});
-    if (animal_card_page.finished == true){
-      appointment.status = "завершен";
-    }else{
-      appointment.status = "не завершен";
-    }
-    var service = await Service.findOne({_id: appointment.service_id});
-    appointment.service_name = service.name;
-    const hours = appointment.appointment_time.getHours().toString().padStart(2, '0');
-    const minutes = appointment.appointment_time.getMinutes().toString().padStart(2, '0');
-    const timeStr = `${hours}:${minutes}`;
-    appointment.time = timeStr;
-    var date = appointment.appointment_time.getFullYear() + "." + appointment.appointment_time.getMonth() + "." + appointment.appointment_time.getDate();
-    appointment.date = date;
-    appointment.client_data = client.name + " " + client.second_name + " " + client.third_name;
-    appointment.client_id = client._id;
-    appointment.client_phone = client.phone;
-    var animal_doctor = await Worker.findOne({_id: appointment.doctor_id});
+    var doctor = await get_doctor_by_id_s(doctor_id);
+    var animal = await get_animal_by_id_s(pet_id);
+    var client = await get_client_by_id_s(animal.client_id);
+    var animal_card_page = await get_page_by_id_s(page_id);
+    var appointment = get_appointment_by_id_and_add_client_s(animal_card_page.appointment_id, client);
+    var animal_doctor = await get_doctor_by_id_s(appointment.doctor_id);
     var data = {
       doctor: doctor,
       animal: animal,
@@ -281,27 +212,11 @@ module.exports.get_animal_card_page = async (req, res) => {
 module.exports.get_client_animal_card_page = async (req, res) => {
   try{
     var {client_id, pet_id, page_id} = req.params;
-    var client = await Client.findOne({_id: client_id});
-    var animal = await Animal.findOne({_id: pet_id});
-    var animal_card_page = await AnimalCardPage.findOne({_id: page_id});
-    var appointment = await Appointment.findOne({_id: animal_card_page.appointment_id});
-    if (animal_card_page.finished == true){
-      appointment.status = "завершен";
-    }else{
-      appointment.status = "не завершен";
-    }
-    var service = await Service.findOne({_id: appointment.service_id});
-    appointment.service_name = service.name;
-    const hours = appointment.appointment_time.getHours().toString().padStart(2, '0');
-    const minutes = appointment.appointment_time.getMinutes().toString().padStart(2, '0');
-    const timeStr = `${hours}:${minutes}`;
-    appointment.time = timeStr;
-    var date = appointment.appointment_time.getFullYear() + "." + appointment.appointment_time.getMonth() + "." + appointment.appointment_time.getDate();
-    appointment.date = date;
-    appointment.client_data = client.name + " " + client.second_name + " " + client.third_name;
-    appointment.client_id = client._id;
-    appointment.client_phone = client.phone;
-    var animal_doctor = await Worker.findOne({_id: appointment.doctor_id});
+    var client = await get_client_by_id_s(client_id);
+    var animal = await get_animal_by_id_s(pet_id);
+    var animal_card_page = await get_page_by_id_s(page_id);
+    var appointment = await get_appointment_by_id_and_add_client_s(animal_card_page.appointment_id, client);
+    var animal_doctor = await get_doctor_by_id_s(appointment.doctor_id);
     var data = {
       client: client,
       animal: animal,
@@ -364,8 +279,7 @@ module.exports.add_procedure = async (req, res) => {
   try{
     const {name} = JSON.parse(JSON.stringify(req.body));
     const {page_id} = req.params;
-    const procedure = new Procedure({name: name, animal_card_page_id: page_id});
-    await procedure.save();
+    const procedure = await add_procedure_s(name, page_id);
     return res.status(201).json({procedure: procedure});
   }catch(error){
     res.status(500).json({error: error});
@@ -376,8 +290,7 @@ module.exports.add_symptom = async (req, res) => {
   try{
     const {name} = JSON.parse(JSON.stringify(req.body));
     const {page_id} = req.params;
-    const symptom = new Symptom({name: name, animal_card_page_id: page_id});
-    await symptom.save();
+    const symptom = await add_symptom_s(name, page_id);
     return res.status(201).json({symptom: symptom});
   }catch(error){
     res.status(500).json({error: error});
@@ -387,8 +300,7 @@ module.exports.add_diagnosis = async (req, res) => {
   try{
     const {name} = JSON.parse(JSON.stringify(req.body));
     const {page_id} = req.params;
-    const diagnosis = new Diagnosis({name: name, animal_card_page_id: page_id});
-    await diagnosis.save();
+    const diagnosis = await add_diagnosis_s(name, page_id);
     return res.status(201).json({diagnosis: diagnosis});
   }catch(error){
     res.status(500).json({error: error});
