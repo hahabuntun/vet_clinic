@@ -37,12 +37,12 @@ module.exports.get_single_doctor_shedule = async(req, res) => {
             const timeStr = `${hours}:${minutes}`;
             appointment.time = timeStr;
             var animal = await Animal.findOne({_id: appointment.animal_id});
-            var client = await Client.findOne({_id: animal.client_id});
-            appointment.client_data = client.name + " " + client.second_name + " " + client.third_name;
-            appointment.client_id = client._id;
-            appointment.client_phone = client.phone;
             if (animal){
                 appointment.animal_data = animal.breed + " " +  animal.type + " " + animal.name;
+                var client = await Client.findOne({_id: animal.client_id});
+                appointment.client_data = client.name + " " + client.second_name + " " + client.third_name;
+                appointment.client_id = client._id;
+                appointment.client_phone = client.phone;
             }
             return appointment;
         })
@@ -64,6 +64,7 @@ module.exports.get_single_doctor_shedule = async(req, res) => {
 }
 module.exports.add_schedule_entry = async (req, res) => {
     try {
+        console.log("here");
         var data = JSON.parse(JSON.stringify(req.body));
         var { service_id, doctor_id, appointment_time, date } = data;
         date = new Date(date);
