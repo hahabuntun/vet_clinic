@@ -73,6 +73,12 @@ module.exports.get_doctor_schedule_s = async (doctor_id, date) => {
   });
   var appointments = temp;
   const appointment_promises = appointments.map(async (appointment) => {
+      var animal_card_page = await AnimalCardPage.findOne({_id: appointment.animal_card_page_id});
+      if (animal_card_page.finished == true){
+        appointment.status = "завершен";
+      }else{
+        appointment.status = "не завершен";
+      }
       const serv = await Service.find({_id: appointment.service_id});
       const service_name = serv[0].name;
       appointment.service_name = service_name;
