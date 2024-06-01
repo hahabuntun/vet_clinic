@@ -3,29 +3,22 @@ const bcrypt = require('bcrypt');
 const path = require('path');
 
 const Worker = require("../models/worker.js");
+const {get_all_workers_s, get_worker_by_passport_s, update_worker_s, delete_worker_s, add_worker_s, get_doctor_by_id_s} = require("../services/workerService.js")
 
 
 module.exports.get_all_workers  = async (req, res) => {
     const qdata = req.query;
-    const employees = await Worker.find(qdata);
-    data = {
-        employees: employees
-    }
+    var data = await get_all_workers_s( qdata);
     res.render(path.join('system_administration_views', 'employees'), data);
 };
 module.exports.edit_worker = async (req, res) => {
     try {
-
       const updates = JSON.parse(JSON.stringify(req.body));
-      const work = await Worker.findOne({passport: updates.passport});
+      const work = await get_worker_by_passport_s(updates.passport);
       if (work && work._id != req.params.workerId){
         return  res.status(400).json({ message: 'Worker with this passport already exists' });
       }
-      const updatedWorker = await Worker.findOneAndUpdate(
-        { _id: req.params.workerId },
-        { $set: updates },
-        { new: true }
-    );
+      const updatedWorker = await update_worker_s(req.params.workerId, updates);
       if (!updatedWorker) {
         return res.status(404).json({ message: 'Worker not found' });
       }
@@ -38,7 +31,7 @@ module.exports.edit_worker = async (req, res) => {
 module.exports.delete_worker = async (req, res) => {
     try {
       const workerId = req.params.workerId;
-      const deletedWorker = await Worker.findByIdAndDelete(workerId);
+      const deletedWorker = await delete_worker_s(workerId);
       if (!deletedWorker) {
         return res.status(404).json({ message: 'Worker not found' });
       }
@@ -53,16 +46,12 @@ module.exports.add_worker =  async (req, res) => {
 
       const data = JSON.parse(JSON.stringify(req.body));
       const { email, password, name, second_name, third_name, phone, passport, type } = data;
-      const qworker = await Worker.findOne({passport: passport});
+      const qworker = await get_worker_by_passport_s(passport);
       if (qworker)
       {
         return res.status(400).json({"message": "employee with this passport already exists"})
       }
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const worker = new Worker({ email: email, password: hashedPassword, name: name,
-                                second_name: second_name, third_name: third_name,
-                                phone: phone, passport: passport, type: type });
-      await worker.save();
+      await add_worker_s(email, password, name, second_name, third_name, phone, passport, type);
       res.status(201).json({ message: 'Worker registered successfully' });
     } catch (error) {
         console.log(error)
@@ -72,7 +61,7 @@ module.exports.add_worker =  async (req, res) => {
 module.exports.get_single_doctor_shedule_page = async (req, res) =>{
   try{
     var {doctor_id} = req.params;
-    var doctor = await Worker.findOne({_id: doctor_id});
+    var doctor = await get_doctor_by_id_s(doctor_id);
     var data = {
       doctor: doctor
     }
@@ -84,7 +73,7 @@ module.exports.get_single_doctor_shedule_page = async (req, res) =>{
 module.exports.get_doctor_appointments_page = async (req, res) => {
   try{
     var {doctor_id} = req.params;
-    var doctor = await Worker.findOne({_id: doctor_id});
+    var doctor = await get_doctor_by_id_s(doctor_id);
     var data = {
       doctor: doctor
     }
