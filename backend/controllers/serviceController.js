@@ -1,22 +1,17 @@
 const mongoose = require("mongoose");
 const path = require('path');
-
-const Service = require("../models/service.js");
+const {get_service_by_name_s, add_service_s, update_service_s, delete_service_s, get_all_services_s} = require("../services/serviceService.js");
 
 
 module.exports.add_service = async (req, res) => {
     try {
         const data = JSON.parse(JSON.stringify(req.body));
         const { name, price } = data;
-        const serv = await Service.findOne({name: name});
+        const serv = await get_service_by_name_s(name);
         if (serv){
           return  res.status(400).json({ message: 'Service with this name already exists' });
         }
-        const newService = new Service({
-          name: name,
-          price: price
-        });
-        await newService.save();
+        var newService = await add_service_s(name, price);
         res.status(201).json({ message: 'Service added successfully', service: newService });
       } catch (error) {
         console.error(error);
@@ -26,15 +21,11 @@ module.exports.add_service = async (req, res) => {
 module.exports.edit_service = async (req, res) => {
   try {
     const updates = JSON.parse(JSON.stringify(req.body));
-    const serv = await Service.findOne({name: updates.name});
+    const serv = await get_service_by_name_s(updates.name);
     if (serv && serv._id != req.params.serviceId){
       return  res.status(400).json({ message: 'Service with this name already exists' });
     }
-    const updatedService = await Service.findOneAndUpdate(
-      { _id: req.params.serviceId },
-      { $set: updates },
-      { new: true }
-  );
+    const updatedService = await update_service_s(req.params.serviceId, updates);
     if (!updatedService) {
       return res.status(404).json({ message: 'Service not found' });
     }
@@ -47,7 +38,7 @@ module.exports.edit_service = async (req, res) => {
 module.exports.delete_service = async (req, res) => {
   try {
     const serviceId = req.params.serviceId;
-    const deletedService = await Service.findByIdAndDelete(serviceId);
+    const deletedService = await delete_service_s(serviceId);
     if (!deletedService) {
       return res.status(404).json({ message: 'Service not found' });
     }
@@ -59,9 +50,6 @@ module.exports.delete_service = async (req, res) => {
 }
 module.exports.get_all_services = async (req, res) => {
     const qdata = req.query;
-    const services = await Service.find(qdata);
-    const data = {
-        services: services
-    }
+    const data = await get_all_services_s(qdata);
     res.render(path.join('system_administration_views', 'services'), data);
 };
