@@ -192,7 +192,7 @@ module.exports.get_client_appointments = async (req, res) => {
         var appointments = await get_client_appointments_s(client_id, queryDate);
         
         var data = {
-            appointments: updated_appointments
+            appointments: appointments
         }
         return res.status(200).json(data);
     }catch(error){

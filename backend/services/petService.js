@@ -54,7 +54,7 @@ module.exports.find_animals_by_query_s = async (req_query) =>{
       if (email && email != "") {
         query.email = email;
       }
-      if (passport && passwport != "") {
+      if (passport && passport != "") {
         query.passport = passport;
       }
       if (phone && phone != "") {

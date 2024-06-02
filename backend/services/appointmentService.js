@@ -15,10 +15,12 @@ module.exports.get_animal_appointments_s = async (animal_id, appointment_exists)
     var client = await Client.findOne({_id: animal.client_id});
     const appointment_promises = appointments.map(async (appointment) => {
         var animal_card_page = await AnimalCardPage.findOne({_id: appointment.animal_card_page_id});
-        if (animal_card_page.finished == true){
-          appointment.status = "завершен";
-        }else{
-          appointment.status = "не завершен";
+        if (animal_card_page){
+          if (animal_card_page.finished == true){
+            appointment.status = "завершен";
+          }else{
+            appointment.status = "не завершен";
+          }
         }
         const serv = await Service.find({_id: appointment.service_id});
         const service_name = serv[0].name;
@@ -45,10 +47,12 @@ module.exports.get_animal_appointments_s = async (animal_id, appointment_exists)
 module.exports.get_appointment_by_id_and_add_client_s = async (appointment_id, client) => {
   var appointment = await Appointment.findOne({_id: appointment_id});
   var animal_card_page = await AnimalCardPage.findOne({_id: appointment.animal_card_page_id});
-  if (animal_card_page.finished == true){
-    appointment.status = "завершен";
-  }else{
-    appointment.status = "не завершен";
+  if (animal_card_page){
+    if (animal_card_page.finished == true){
+      appointment.status = "завершен";
+    }else{
+      appointment.status = "не завершен";
+    }
   }
   var service = await Service.findOne({_id: appointment.service_id});
   appointment.service_name = service.name;
@@ -74,10 +78,12 @@ module.exports.get_doctor_schedule_s = async (doctor_id, date) => {
   var appointments = temp;
   const appointment_promises = appointments.map(async (appointment) => {
       var animal_card_page = await AnimalCardPage.findOne({_id: appointment.animal_card_page_id});
-      if (animal_card_page.finished == true){
-        appointment.status = "завершен";
-      }else{
-        appointment.status = "не завершен";
+      if (animal_card_page){
+        if (animal_card_page.finished == true){
+          appointment.status = "завершен";
+        }else{
+          appointment.status = "не завершен";
+        }
       }
       const serv = await Service.find({_id: appointment.service_id});
       const service_name = serv[0].name;
