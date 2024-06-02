@@ -19,10 +19,10 @@ $(document).ready(function() {
         response.forEach(analysis => {
           analysisData.append(`
             <div class="analysis-item">
-              <p><strong>Name:</strong> ${analysis.name}</p>
-              <p><strong>Description:</strong> ${analysis.description}</p>
-              <p><strong>Analysis Date:</strong> ${new Date(analysis.analysis_date).toLocaleDateString()}</p>
-              <a href="${download_url}${analysis._id}">Download File</a>
+              <p><strong>Название:</strong> ${analysis.name}</p>
+              <p><strong>Описание:</strong> ${analysis.description}</p>
+              <p><strong>Дата:</strong> ${new Date(analysis.analysis_date).toLocaleDateString()}</p>
+              <a href="${download_url}${analysis._id}">Скачать файл</a>
               <hr>
             </div>
           `);

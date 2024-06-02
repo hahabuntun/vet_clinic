@@ -19,8 +19,9 @@ $(document).ready(function() {
                     var client_data = $('<p></p>').text(`Клиент: ${appointment.client_data}`);
                     var client_phone = $('<p></p>').text(`Номер клиента: ${appointment.client_phone}`);
                     appointment_div.append(header);
+                    var link_to_animal_card_page = $('<p></p>').html(`<a href="/doctors/${doctor_id}/pets/${appointment.animal_id}/card/${appointment.animal_card_page_id}">Данные приема</a>`);
                     var animal_p = $('<p></p>').html(`<a href="/doctors/${doctor_id}/pets/${appointment.animal_id}/card">Животное: ${appointment.animal_data}</a>`);
-                    appointment_div.append(animal_p).append(client_data).append(client_phone);
+                    appointment_div.append(animal_p).append(client_data).append(link_to_animal_card_page).append(client_phone);
                     parent.append(appointment_div);
                 }
             })
