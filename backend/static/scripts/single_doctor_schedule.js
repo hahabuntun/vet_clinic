@@ -12,13 +12,14 @@ $(document).ready(function() {
                 var appointment_div = $('<div></div>').addClass('appointment').attr('id', appointment._id);
                 var datetime = new Date(appointment.appointment_time);
                 var year = datetime.getFullYear();
-                var month = datetime.getMonth();
+                var month = datetime.getMonth()  + 1;
                 var day = datetime.getDate()
                 var header = $('<h2></h2>').text(`Дата и Время: ${year}.${month}.${day} ${appointment.time}`);
                 appointment_div.append(header);
                 if (appointment.animal_id){
                     var animal_p = $('<p></p>').html(`<a href="/doctors/${doctor_id}/pets/${appointment.animal_id}/card">Записанное животное: ${appointment.animal_data}</a>`);
-                    appointment_div.append(animal_p);
+                    var service_p = $('<p></p>').text(`Оказываемая услуга: ${appointment.service_name}`);
+                    appointment_div.append(animal_p).append(service_p);
                     var client_data = $('<p></p>').text(`Клиент: ${appointment.client_data}`);
                     var client_phone = $('<p></p>').text(`Номер клиента: ${appointment.client_phone}`);
                     if(appointment.animal_card_page_id){

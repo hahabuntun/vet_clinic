@@ -11,18 +11,19 @@ $(document).ready(function() {
                 var appointment_div = $('<div></div>').addClass('appointment').attr('id', appointment._id);
                 var datetime = new Date(appointment.appointment_time);
                 var year = datetime.getFullYear();
-                var month = datetime.getMonth();
+                var month = datetime.getMonth() + 1;
                 var day = datetime.getDate()
                 var header = $('<h2></h2>').text(`Дата и Время: ${year}.${month}.${day} ${appointment.time}`);
                 var doctor_p = $('<p></p>').text(`Принимающий врач: ${appointment.doctor_full_name}`);
                 var animal_p = $('<p></p>').text(`Записанное животное: ${appointment.animal_data}`);
+                var service_p = $('<p></p>').text(`Оказываемая услуга: ${appointment.service_name}`);
                 var client_p = $('<p></p>').html(`Хозяин животного: <a href="/clients/${appointment.client_id}/pets">${appointment.client_data}</a>`);
                 var client_phone_p = $('<p></p>').text(`Номер хозяина: ${appointment.client_phone}`);
                 var btn_approve = $('<button></button>').addClass('approve').text(`Одобрить`);
                 btn_approve.on("click", handle_approve);
                 var btn_decline = $('<button></button>').addClass('reject').text(`Отказать`);
                 btn_decline.on("click", handle_decline);
-                appointment_div.append(header).append(doctor_p).append(animal_p).append(client_p).append(client_phone_p)
+                appointment_div.append(header).append(doctor_p).append(animal_p).append(service_p).append(client_p).append(client_phone_p)
                 .append(btn_approve).append(btn_decline);
                 parent.append(appointment_div);
             })

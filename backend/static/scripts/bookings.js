@@ -11,7 +11,7 @@ $(document).ready(function() {
                 var appointment_div = $('<div></div>').addClass('appointment').attr('id', appointment._id);
                 var datetime = new Date(appointment.appointment_time);
                 var year = datetime.getFullYear();
-                var month = datetime.getMonth();
+                var month = datetime.getMonth() + 1;
                 var day = datetime.getDate()
                 var header = $('<h2></h2>').text(`Дата и Время: ${year}.${month}.${day} ${appointment.time}`);
                 var doctor_p = $('<p></p>').text(`Принимающий врач: ${appointment.doctor_full_name}`);
@@ -22,9 +22,10 @@ $(document).ready(function() {
                     status.text(`Статус: Запись не подтверждена`);
                 }
                 var animal_p = $('<p></p>').text(`Записанное животное: ${appointment.animal_data}`);
+                var service_p = $('<p></p>').text(`Оказываемая услуга: ${appointment.service_name}`);
                 var btn_cancel = $('<button></button>').addClass('reject').text(`Отменить`);
                 btn_cancel.on("click", handle_cancel);
-                appointment_div.append(header).append(doctor_p).append(animal_p).append(status).append(btn_cancel);
+                appointment_div.append(header).append(doctor_p).append(animal_p).append(service_p).append(status).append(btn_cancel);
                 parent.append(appointment_div);
             })
         },
